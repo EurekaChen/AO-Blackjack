@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,17 +15,23 @@
 		body {
 			height: 100%;
 		}
+
+		body {
+			background: url(%sveltekit.assets%/img/back.jpg) no-repeat center 0px;
+			background-size: cover;
+			background-position: center 0;
+			background-attachment: fixed;
+		}
 	</style>
 
-<body data-sveltekit-preload-data="hover" class="d-flex" style="background: url(%sveltekit.assets%/img/back.jpg)  no-repeat center 0px;
-		background-size: cover;
-		background-position: center 0;
-		background-attachment: fixed;">
+<body data-sveltekit-preload-data="hover" class="d-flex">
 	<div class="container m-auto">
+		<!--考虑再三，使用1024x576象素大小的牌桌！576暂不包括标题和尾注！再加100-->
 		<div class="row border-secondary border border-3 shadow-lg"
-			style="background-color:#333333;opacity:0.75;height:600px">
+			style="background-color:#333333;opacity:0.75;width:1024px">
 			%sveltekit.body%
 		</div>
 	</div>
 </body>
+
 </html>

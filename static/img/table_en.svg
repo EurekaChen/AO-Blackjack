@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 576" width="1024" height="576">
+	
+	<path d="M 150 0 C 300 300 724 300 874 0 M 804 0 C 684 220 340 219 220 0" stroke="#2196f3" stroke-width="4"
+		fill="none" />
+
+	<defs>
+		<path id="myPath1" d="M 260 0 C 364 170 660 170 764 0" fill="none" stroke="lightgrey" />
+
+		<path id="myPath" d="M 180 0 C 320 260 704 260 830 0" fill="none" stroke="lightgrey" />
+	</defs>
+
+	<use href="#myPath" />
+	<rect width="1024" height="576" fill="none" stroke="gray" />
+	<text x="400" y="50" font-family="Arial" font-size="40">
+		Blackjack 3:2
+	</text>
+	<text font-family="Arial" font-size="30">
+		<textPath href="#myPath">
+			<tspan dy="8" dx="250">2:1 赔付 保险 2:1 赔付</tspan>
+		</textPath>
+	</text>
+
+	<text font-family="Arial" font-size="30">
+		<textPath href="#myPath1">
+			<tspan dy="8" dx="100">庄家可用牌至16点及在17点时停牌</tspan>
+		</textPath>
+	</text>
+	<circle cx="512" cy="340" r="80" fill="none" stroke="#2196f3" />
+
+	<path d="M 0 320 C 400 540 624 540 1024 320 L 1025 400 C 624 600 400 600 0 400 Z" stroke="#2196f3" stroke-width="4" fill="#2196f3" />
+	
+</svg>

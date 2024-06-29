@@ -1,11 +1,4 @@
 <script>
-	import { t, l, locales } from '$lib';
-	const link = 'https://kit.svelte.dev';
+	import { t, l, locales } from '$lib';	
 </script>
 
-<h1>{$t('content.title')}</h1>
-<p>{@html $t('content.info')}</p>
-<br />
-{#each $locales as locale}
-	<p>{@html $l(locale, 'content.text', { link })}</p>
-{/each}
