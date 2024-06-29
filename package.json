@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^3.0.2"
+		"@sveltejs/adapter-static": "^3.0.2",
+		"sveltekit-i18n": "^2.4.2"
 	}
 }
