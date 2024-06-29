@@ -1,32 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 576" width="1024" height="576">
-	
-	<path d="M 150 0 C 300 300 724 300 874 0 M 804 0 C 684 220 340 219 220 0" stroke="#2196f3" stroke-width="4"
-		fill="none" />
-
-	<defs>
-		<path id="myPath1" d="M 260 0 C 364 170 660 170 764 0" fill="none" stroke="lightgrey" />
-
-		<path id="myPath" d="M 180 0 C 320 260 704 260 830 0" fill="none" stroke="lightgrey" />
-	</defs>
-
-	<use href="#myPath" />
+	<!--辅助边框可删除-->
 	<rect width="1024" height="576" fill="none" stroke="gray" />
-	<text x="400" y="50" font-family="Arial" font-size="40">
+
+	<rect width="126" height="60" x="18" y="18" fill="none" stroke="#2196f3" />
+	<text x="30" y="40" font-size="12" font-weight="bold" fill="#2196f3">最小下注 </text>
+	<text x="103" y="40" font-size="12" font-weight="bold" fill="#2196f3">5 EGC</text>
+	<text x="30" y="65" font-size="12" font-weight="bold" fill="#2196f3">最大小注 5000 EGC</text>
+
+
+	<!--从上往下设计-->
+	<text x="512" y="55" fill="#2196F3" font-family="Arial" font-size="40" text-anchor="middle">
 		黑杰克赔付3:2
 	</text>
+
+	<path id="textPath1" d="M 260 0 C 364 170 660 170 764 0" fill="none" />
 	<text font-family="Arial" font-size="30">
-		<textPath href="#myPath">
-			<tspan dy="8" dx="250">2:1 赔付 保险 2:1 赔付</tspan>
+		<textPath href="#textPath1" text-anchor="middle" fill="#2196f3">
+			<tspan dy="10" dx="295">庄家可要牌至16点 - 在17点时必须停牌</tspan>
 		</textPath>
 	</text>
 
-	<text font-family="Arial" font-size="30">
-		<textPath href="#myPath1">
-			<tspan dy="8" dx="100">庄家可用牌至16点及在17点时停牌</tspan>
+	<path d="M 804 0 C 684 220 340 219 220 0" stroke="#2196f3" stroke-width="4" fill="none" />
+
+	<path id="textPath2" d="M 180 0 C 320 260 704 260 830 0" fill="none" />
+	<text font-family="Arial" font-size="30" fill="#2196f3">
+		<textPath href="#textPath2" text-anchor="middle">
+			<tspan dy="8" dx="405">2 : 1 赔付 - 保 险 - 2 : 1 赔付</tspan>
 		</textPath>
 	</text>
-	<circle cx="512" cy="340" r="80" fill="none" stroke="#2196f3" />
 
-	<path d="M 0 320 C 400 540 624 540 1024 320 L 1025 400 C 624 600 400 600 0 400 Z" stroke="#2196f3" stroke-width="4" fill="#2196f3" />
-	
+	<path d="M 150 0 C 300 300 724 300 874 0" stroke="#2196f3" stroke-width="4" fill="none" />
+
+
+	<defs>
+		<filter id="glow">
+			<feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+			<feMerge>
+				<feMergeNode in="coloredBlur" />
+				<feMergeNode in="SourceGraphic" />
+			</feMerge>
+		</filter>
+	</defs>
+
+	<circle cx="512" cy="320" r="60" fill="none" stroke-width="3" stroke-dasharray="5" stroke="#2196f3"
+		filter="url(#glow)" />
+
+	<path d="M 0 320 c 400 220 624 220 1024 0 H 1024 V 576 H 0 Z" fill="black" />
+
+	<path d="M 0 320 C 400 540 624 540 1024 320 L 1025 400 C 624 600 400 600 0 400 Z" stroke-width="4" fill="#2196f3"
+		stroke="#0d47a1" filter="url(#glow)" />
+
+
+
+
+
 </svg>
