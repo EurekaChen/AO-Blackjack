@@ -1,10 +1,11 @@
-<script lang="ts">
-	import { t } from '$lib/translations';
-	const pageName = 'This page is Home page!';
+<script>
+	import { t, l, locales } from '$lib';
+	const link = 'https://kit.svelte.dev';
 </script>
 
-<div>
-	<!-- you can use `placeholders` and `modifiers` in your definitions (see docs) -->
-	<h2>{$t('common.page', { pageName })}</h2>
-	<p>{$t('home.content')}</p>
-</div>
+<h1>{$t('content.title')}</h1>
+<p>{@html $t('content.info')}</p>
+<br />
+{#each $locales as locale}
+	<p>{@html $l(locale, 'content.text', { link })}</p>
+{/each}
