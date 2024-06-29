@@ -8,18 +8,29 @@
 	<header
 		class="d-flex align-items-center justify-content-center justify-content-md-between"
 	>
-		<div class="col-md-3">
-			<span role="img" aria-label="Choose Language">🌐</span>
+		<div class="col-md-3">			
+            <span class="dropdown">
+                <span class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                   ☰
+                </span>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#">选项 1</a></li>
+                <li><a class="dropdown-item" href="#">选项 2</a></li>
+                <li><a class="dropdown-item" href="#">选项 3</a></li>
+                </ul>
+          </span>
+		</div>
+       
+		<div class="nav col-12 col-md-auto justify-content-center">
+			<h2><strong>{$t('content.title')}</strong></h2>
+		</div>
+		<div class="col-md-3 text-end">		
+            <span role="img" aria-label="Choose Language">🌐</span>
 			<select bind:value={$locale} style="background-color: #333;border:none">
 				{#each $locales as value}
 					<option {value}>{$t(`lang.${value}`)}</option>
 				{/each}
-			</select>
-		</div>
-		<div class="nav col-12 col-md-auto justify-content-center">
-			<h2><strong>{$t('content.title')}</strong></h2>
-		</div>
-		<div class="col-md-3 text-end">			
+			</select> 	
 			<button type="button" class="btn btn-primary">Connect Wallet</button>
 		</div>
 	</header>   
