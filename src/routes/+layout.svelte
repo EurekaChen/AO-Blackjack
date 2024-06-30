@@ -2,16 +2,13 @@
 	import { t, locales, locale } from '$lib';
 </script>
 <style>
-	.test-box{
-		border:2px solid red;
-	}
-	.test-box2{
-		border:2px solid green;
+	.main{
+		width:1032px;
+		border: 4px solid #1565c0;
 	}
 
 	.back{
 		background-color:#333333;opacity:0.9;width:1024px
-
 	}
 </style>
 
@@ -43,13 +40,13 @@
 <!-- #endregion -->
 
 <!--垂直居中容器-->
-<div class="container m-auto test-box" >	
-
-	<div class="row border-secondary border border-3 shadow-lg test-box2 back" >
-		<!--经考虑后牌桌固定大小1024x576，其它（顶部和底部）可以再加 -->		
-		<div class="container contaner-fruid text-bg-dark mx-0 my-0" style="height: 44px;">
-			<!--顶部标题区域-->
+<div class="container m-auto main shadow-lg" >	
+	<!--经考虑后牌桌固定大小1024x576，其它（顶部和底部）可以再加 -->	
+	<div class="row back" >
+		<!--顶部标题区域-->
+		<div class="container text-bg-dark" style="height: 45px;width:1024px">			
 			<header class="d-flex align-items-center justify-content-center justify-content-md-between">
+				<!--下拦菜单-->
 				<div class="col-md-3">
 					<span class="dropdown">
 						<span
@@ -81,9 +78,12 @@
 					</span>
 				</div>
 
+				<!--标题-->
 				<div class="nav col-12 col-md-auto justify-content-center">
 					<h2><strong>{$t('content.title')}</strong></h2>
 				</div>
+
+				<!--语言和连接钱包-->
 				<div class="col-md-3 text-end">
 					<span role="img" aria-label="Choose Language">🌐</span>
 					<select bind:value={$locale} style="background-color: #333;border:none">
@@ -96,8 +96,8 @@
 			</header>
 		</div>
 
-		<!--牌桌区域-->
-		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px">
+		<!--牌桌区域，使用固定宽度1024x756-->
+		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
 			<slot />
 		</div>
 	</div>
