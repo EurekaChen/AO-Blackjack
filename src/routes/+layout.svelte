@@ -4,6 +4,7 @@
 <style>
 	.main{
 		width:1032px;
+		min-width: 1032px;		
 		border: 4px solid #1565c0;
 	}
 
