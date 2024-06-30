@@ -1,28 +1,34 @@
 import lang from './lang.json';
+import rule_en from './rule_en.html?raw';
+import rule_zh from './rule_zh.html?raw';
 
-export default ({
-  en: {
-    lang,
-    menu: {
-      notification: 'You have {{count:gt; 0:{{count}} new {{count; 1:message; default:messages}}!; default:no messages...}}',
-    },
-    table:'table_en',
-    content: {
-      title: 'AO Blackjack',
-      info: 'You can now access all your language mutations using <code>{$l(LOCALE, TRANSLATION_KEY)}</code>:',
-      text: 'Visit <a href="{{link}}">kit.svelte.dev</a> to read the documentation',
-    },
-  },
-  zh: {
-    lang,    
-    table:'table_zh',
-    menu: {
-      notification: '{{count:gt; 0:Máte {{count}} {{count:gte; 1:novou zprávu; 2:nové zprávy; 5:nových zpráv}}!; default:Nemáte žádné zprávy...}}',
-    },
-    content: {
-      title: 'AO 21点',
-      info: 'Nyní máte přístup ke všem jazykovým mutacím prostřednictvím <code>{$l(LOCALE, TRANSLATION_KEY)}</code>:',
-      text: 'Dokumentace je k přečtení na <a href="{{link}}">kit.svelte.dev</a>',
-    },
-  },
-});
+export default {
+	en: {
+		lang,
+		top: {
+			rule: {
+				title: 'Standard Rule',
+				content: rule_en,
+				close: 'Close'
+			},
+      settings:"Settings",
+			title: 'AO Standard Blackjack',
+      connect:'Connect Wallet'
+		},
+		table: 'table_en'
+	},
+	zh: {
+		lang,
+		top: {
+			rule: {
+				title: '标准21点规则',
+				content: rule_zh,
+				close: '关闭'
+			},
+      settings:"设置",
+			title: 'AO 标准21点',
+      connect:'连接钱包'
+		},
+		table: 'table_zh'
+	}
+};

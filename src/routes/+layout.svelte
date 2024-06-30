@@ -24,13 +24,11 @@
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">Modal title</h1>
+				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">{$t('top.rule.title')}</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p>这里是关于21点的规则 。。。</p>
-				<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-				<p>Just like that.</p>
+				{@html $t('top.rule.content')}				
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
@@ -64,7 +62,7 @@
 									class="dropdown-item"
 									href="./#"
 									data-bs-toggle="modal"
-									data-bs-target="#exampleModalCenteredScrollable">规则</a
+									data-bs-target="#exampleModalCenteredScrollable">{$t('top.rule.title')}</a
 								>
 							</li>
 							<li>
@@ -72,7 +70,7 @@
 									class="dropdown-item"
 									href="./#"
 									data-bs-toggle="modal"
-									data-bs-target="#exampleModalCenteredScrollable">设置</a
+									data-bs-target="#exampleModalCenteredScrollable">{$t('top.settings')}</a
 								>
 							</li>
 						</ul>
@@ -81,7 +79,7 @@
 
 				<!--标题-->
 				<div class="nav col-12 col-md-auto justify-content-center">
-					<h2><strong>{$t('content.title')}</strong></h2>
+					<h2><strong>{$t('top.title')}</strong></h2>
 				</div>
 
 				<!--语言和连接钱包-->
@@ -92,7 +90,7 @@
 							<option {value}>{$t(`lang.${value}`)}</option>
 						{/each}
 					</select>
-					<button type="button" class="btn btn-primary">Connect Wallet</button>
+					<button type="button" class="btn btn-primary">{$t('top.connect')}</button>
 				</div>
 			</header>
 		</div>
