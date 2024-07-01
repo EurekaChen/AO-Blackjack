@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t, l, locales } from '$lib';
+	import { t, l, locales } from '$lib/i18n';
 
 	var Game = {
 		Busy: false,

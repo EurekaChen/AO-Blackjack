@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t, locales, locale } from '$lib';
+	import { t, locales, locale } from '$lib/i18n';
 </script>
 <style>
 	.main{
