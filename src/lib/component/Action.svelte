@@ -3,6 +3,8 @@
 	import { Player }from '$lib/store/Player';
 	import { Dealer }from '$lib/store/Dealer';
 	import {Action} from '$lib/store/Action';
+
+	import clearSvg from '/img/action/clear.svg?component';
 	
 	//不会更新！
 	console.log("double:",doubleChip);
@@ -101,32 +103,7 @@
 
 
 <div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear?"block":"none"}" on:click={clear}>
-	<svg  width="60" height="60">
-		<style>
-			.back {
-				fill: #223344;
-			}        
-	
-			text {
-				fill: #cccccc;
-				font-weight: bolder;
-			}
-	
-			.hoverCircle {
-				stroke-width: 2;
-				stroke: #cccccc;
-				fill: transparent;
-				transition: all 0.3s ease;
-			}
-	
-			.hoverCircle:hover {
-				stroke-width: 6;
-			}
-		</style>
-		<circle class="back" cx="30" cy="30" r="25" />
-		<text x="19" y="39" font-size="26">✕</text>  
-		<circle class="hoverCircle" cx="30" cy="30" r="25" />
-	</svg>
+	<clearSvg />
  	<div class="text" style="color:#cccccc">清 除</div>	
 </div>
 
