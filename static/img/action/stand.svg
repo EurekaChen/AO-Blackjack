@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+    <style>
+        .back {
+            fill: #223344;
+        }        
+
+        text {
+            fill: #DD443B;
+            font-weight: bolder;
+        }
+
+        .hoverCircle {
+            stroke-width: 2;
+            stroke: #DD443B;
+            fill: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .hoverCircle:hover {
+            stroke-width: 6;
+        }
+    </style>
+    <circle class="back" cx="30" cy="30" r="25" />
+    <text x="30" y="43" font-size="35">⃠</text>  
+    <circle class="hoverCircle" cx="30" cy="30" r="25" />
+</svg>

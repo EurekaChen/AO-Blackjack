@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 
 const initialDealer = {   
     Balance:10000000,   
-    Hand:["7s","?"]  
+    Hand:[]  
 	};
   
-export const Player=writable(initialDealer);
+export const Dealer=writable(initialDealer);

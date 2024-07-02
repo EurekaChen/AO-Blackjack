@@ -9,7 +9,7 @@ const initialPlayer = {
     Hands: 0,
     CurrentHand: 0,
 
-    Hand:["As","Jh"],
+    Hand:[],
    
     Insurance: null,
     CardIndex: [[], [], [], []],

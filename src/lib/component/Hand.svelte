@@ -1,15 +1,12 @@
 <script lang="ts">
-	import Stack from '$lib/component/Stack.svelte'  
-	import { Player} from '$lib/store/Player';
+	export let hand:string[]=[];
 </script>
 
-{#key $Player.Balance}
-<div style="position:absolute;left:120px;top:360px;">
-	<Stack amount={$Player.Balance}/>
-</div>
-
-<div style="position:absolute;left:477px;top:340px;">
-	<Stack amount={$Player.Wager[0]}/>
+{#key hand}
+<div style="position:absolute">
+	{#each hand as card,i }
+		<img src="/img/card/{card}.png" width="80px" alt="{card}" style="position:absolute;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);left:{25*i}px" />
+	{/each}
 </div>
 {/key}
 

@@ -43,7 +43,7 @@
 		$Player.Balance-=amt;
 		$Player.Wager[0]+=amt;		
 
-		$Action.double=true;
+		$Action.doubleChip=true;
 		$Action.deal=true;
 		$Action.clear=true;
 
