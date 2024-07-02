@@ -84,7 +84,7 @@
 
 <div style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.stand?"block":"none"}" on:click={stand}>	
 	<object data="/img/action/stand.svg" title="double" style="width:60;height:60;" />
- 	<div class="text" style="color:#ff9800">停 牌</div>	
+ 	<div class="text" style="color:#DD443B">停 牌</div>	
 	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
@@ -110,7 +110,7 @@
 
 <div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.doubleBet?"block":"none"}" on:click={doubleBet}>
 	<object data="/img/action/double.svg" title="hit" style="width:60;height:60;fill:green" />
- 	<div class="text" style="color:#cccccc">加 倍</div>
+ 	<div class="text" style="color:#ff9800">加 倍</div>
 	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
