@@ -3,9 +3,12 @@ import { writable } from 'svelte/store';
 export const count = writable(0);
 
 const initialPlayer = {
+    //从钱包提到游戏进程的EGC数量，变成数字，随着游戏变化。
+    Balance:100,
+    Wager:[0, 0, 0, 0],
     Hands: 0,
     CurrentHand: 0,
-    Wager: [null, null, null, null],
+   
     Insurance: null,
     CardIndex: [[], [], [], []],
     CardValue: [[], [], [], []],
@@ -24,4 +27,4 @@ const initialPlayer = {
     LastPlay: ''
 	};
   
-export const Player=writable(initialGame);
+export const Player=writable(initialPlayer);
