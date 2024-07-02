@@ -4,6 +4,7 @@
 	import { Dealer }from '$lib/store/Dealer';
 	import {Action} from '$lib/store/Action';
 
+	import doubleSvg from '$lib/svg/double.svg?raw';
 	import clearSvg from '$lib/svg/clear.svg?raw';
 	
 	//不会更新！
@@ -76,8 +77,8 @@
 </style>
 
 {#key doubleChip}
-<div style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.doubleChip?"block":"none"}" on:click={doubleChip}>	
-	<object data="/img/action/double.svg" title="double" style="width:60;height:60;" />
+<div style="color:green; position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.doubleChip?"block":"none"}" on:click={doubleChip}>	
+	{@html doubleSvg }
  	<div class="text" style="color:#ff9800">加 倍</div>	
 	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
