@@ -48,7 +48,9 @@
 		/>
 	{/each}
 	<div class="amount">
+		{#if amount>0}
 		{amount}
+		{/if}
 	</div>
 </div>
 
