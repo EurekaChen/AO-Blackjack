@@ -4,7 +4,7 @@
 	import { Dealer }from '$lib/store/Dealer';
 	import {Action} from '$lib/store/Action';
 
-	import clearSvg from '/img/action/clear.svg?component';
+	import clearSvg from '$lib/svg/clear.svg?raw';
 	
 	//不会更新！
 	console.log("double:",doubleChip);
@@ -103,7 +103,7 @@
 
 
 <div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear?"block":"none"}" on:click={clear}>
-	<clearSvg />
+	{@html clearSvg }
  	<div class="text" style="color:#cccccc">清 除</div>	
 </div>
 
