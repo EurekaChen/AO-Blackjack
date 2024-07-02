@@ -99,11 +99,38 @@
 	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
+
 <div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear?"block":"none"}" on:click={clear}>
-	<object data="/img/action/clear.svg" title="hit" style="width:60;height:60;fill:green" />
- 	<div class="text" style="color:#cccccc">清 除</div>
-	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+	<svg  width="60" height="60">
+		<style>
+			.back {
+				fill: #223344;
+			}        
+	
+			text {
+				fill: #cccccc;
+				font-weight: bolder;
+			}
+	
+			.hoverCircle {
+				stroke-width: 2;
+				stroke: #cccccc;
+				fill: transparent;
+				transition: all 0.3s ease;
+			}
+	
+			.hoverCircle:hover {
+				stroke-width: 6;
+			}
+		</style>
+		<circle class="back" cx="30" cy="30" r="25" />
+		<text x="19" y="39" font-size="26">✕</text>  
+		<circle class="hoverCircle" cx="30" cy="30" r="25" />
+	</svg>
+ 	<div class="text" style="color:#cccccc">清 除</div>	
 </div>
+
+
 <div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.doubleBet?"block":"none"}" on:click={doubleBet}>
 	<object data="/img/action/double.svg" title="hit" style="width:60;height:60;fill:green" />
  	<div class="text" style="color:#cccccc">加 倍</div>
