@@ -1,31 +1,20 @@
 <script lang="ts">
 	import { Game } from '$lib/store/Game';
-	import { Player }from '$lib/store/Player'
-
-
-	function betChip(amt:number) {
-		if ($Game.State == 1) return;		
-
-		if ($Player.Balance < amt) {
-			amt = $Player.Balance;
-		}
-
-		if (amt < 5) {
-			//Game.UpdateButtons();
-			return;
-		}
-		$Player.Balance-=amt;
-		$Player.Wager[0]+=amt;
-
-		console.log($Player.Wager);		
-	}
+	import { Player }from '$lib/store/Player';
+	import {Action} from '$lib/store/Action';
+	
+	//不会更新！
+	console.log("double:",double);
 
 	function clear() {
 		//if ($Game.State == 1) return;		
 
 		let amt=$Player.Wager[0];
 		$Player.Balance +=amt;
-		$Player.Wager[0] =0;			
+		$Player.Wager[0] =0;		
+		$Action.clear=false;
+		$Action.deal=false;
+		$Action.double=false;	
 	}
 
 	function double() {
@@ -39,6 +28,8 @@
 		}
 	}
 
+	
+
 </script>
 <style>
 	.text{
@@ -46,22 +37,24 @@
 	}	 
 </style>
 
-<div style="position:absolute;left:580px;top:480px;cursor:pointer;" on:click={double}>	
+{#key double}
+<div style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.double?"block":"none"}" on:click={double}>	
 	<object data="/img/action/double.svg" title="double" style="width:60;height:60;" />
  	<div class="text" style="color:#ff9800">加 倍</div>	
 	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
 
-<div id="deal" style="position:absolute;left:680px;top:458px;cursor:pointer;">
+<div id="deal" style="position:absolute;left:680px;top:458px;cursor:pointer;display:{$Action.deal?"block":"none"}" on:click={double}>
 	<object data="/img/action/deal.svg" title="hit" style="width:60;height:60;fill:green" />
  	<div class="text" style="color:#90caf9">发 牌</div>
+	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
-<div style="position:absolute;left:780px;top:426px;cursor:pointer;" on:click={clear}>
+<div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear?"block":"none"}" on:click={clear}>
 	<object data="/img/action/clear.svg" title="hit" style="width:60;height:60;fill:green" />
  	<div class="text" style="color:#cccccc">清 除</div>
 	<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
-
+{/key}

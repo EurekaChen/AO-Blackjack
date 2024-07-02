@@ -2,6 +2,7 @@
 	import {ChipRank} from '$lib/store/Setting'
 	import { Game } from '$lib/store/Game';
 	import { Player} from '$lib/store/Player';
+	import {Action} from '$lib/store/Action';
 
 	let chipOffset=0;
 
@@ -40,10 +41,13 @@
 			return;
 		}
 		$Player.Balance-=amt;
-		$Player.Wager[0]+=amt;
+		$Player.Wager[0]+=amt;		
+
+		$Action.double=true;
+		$Action.deal=true;
+		$Action.clear=true;
 
 		console.log($Player.Wager);
-
 		
 	}
 </script>
