@@ -8,6 +8,8 @@ const initialPlayer = {
     Wager:[0, 0, 0, 0],
     Hands: 0,
     CurrentHand: 0,
+
+    Hand:["As","Jh"],
    
     Insurance: null,
     CardIndex: [[], [], [], []],

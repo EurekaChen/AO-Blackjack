@@ -26,9 +26,7 @@
 			$Player.Balance -=amt;
 			$Player.Wager[0] +=amt;			
 		}
-	}
-
-	
+	}	
 
 </script>
 <style>
