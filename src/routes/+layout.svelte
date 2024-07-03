@@ -2,12 +2,15 @@
 	import { t, locales, locale } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
+	import Prompt from '$lib/component/Prompt.svelte';
 
+	let walletInstalled=false;
 	let walletConnected = false;
 	let	joinModal: { show: () => void; };
 	onMount(() => {
 		// 检查 ArConnect 是否已安装
 		if (!window.arweaveWallet) {
+
 			console.error('没有安装ArConnect');
 		}	
 	   joinModal = new bootstrap.Modal(document.getElementById('prompt'));		
@@ -165,8 +168,8 @@
 		<!--牌桌区域，使用固定宽度1024x756-->
 		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
 			<slot />
-		</div>
-		<div style="height: 50px; color:#cccccc">信息提示：</div>
+		</div>		
+		<Prompt />
 	</div>
 </div>
 
