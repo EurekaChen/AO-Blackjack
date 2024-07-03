@@ -19,16 +19,31 @@
 	$: modalTitle = '请先连接钱包';
 	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
+	$: querying = false;
+
 	onMount(async () => {
 		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
 		depositModal = new bootstrap.Modal(document.getElementById('deposit'));
 
 		if (window.arweaveWallet) {
 			walletInstalled = true;
-			const activeAddress = await window.arweaveWallet.getActiveAddress();
+			//如果没有连接，则下面这代码会没有权限！
+			let activeAddress;
+			try {
+				activeAddress = await window.arweaveWallet.getActiveAddress();
+			} catch (error) {
+				modalTitle = '请先连接钱包';
+				modalContent = `<p>
+					AO 21点游戏基于Arweave AO，玩游戏需要首先连接Arweave钱包！
+				 </p>
+				 <div class="alert-warning alert">提示信息：${error}
+				 `;
+				promptModal.show();
+			}
 			if (activeAddress) {
 				walletConnected = true;
-				
+
+				querying = true;
 				//查询是否已经注册：
 				let getPlayer = await dryrun({
 					process: bjProcess,
@@ -44,6 +59,7 @@
 						{ name: 'Target', value: activeAddress }
 					]
 				});
+				querying = false;
 
 				console.log('余额数据:', queryBalance);
 				max = queryBalance.Messages[0].Data;
@@ -51,7 +67,7 @@
 				if (getPlayer.Messages.length > 0) {
 					let playerInfo = JSON.parse(getPlayer.Messages[0].Data);
 					let addrFirst6 = playerInfo.addr.substring(0, 6);
-					let addrLast6=	playerInfo.addr.substring(playerInfo.addr.length - 6);		
+					let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);
 
 					modalTitle = '欢迎回来';
 					modalContent = `
@@ -98,20 +114,18 @@
 
 	async function connectWallet() {
 		try {
-			promptModal.show();
 			await window.arweaveWallet.connect([
 				'ACCESS_ADDRESS',
 				'ACCESS_PUBLIC_KEY',
 				'SIGN_TRANSACTION'
 			]);
-			promptModal.hide();
 			walletConnected = true;
 		} catch (error) {
 			modalTitle = '连接钱包失败';
 			modalContent = `<p>
 					AO 21点游戏基于Arweave AO,需要首先连接Arweave钱包！
 				 </p>
-				 <p class="text-center text-danger ">
+				 <p class="text-center alert-danger ">
 					错误信息: ${error}
 				 </p>`;
 			walletConnected = false;
@@ -152,13 +166,7 @@
 </script>
 
 <!-- #region 规则弹出窗口-->
-<div
-	class="modal fade"
-	id="rule"
-	tabindex="-1"
-	aria-labelledby="ruleTitle"
-	aria-hidden="true"
->
+<div class="modal fade" id="rule" tabindex="-1" aria-labelledby="ruleTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -182,11 +190,11 @@
 <div class="modal fade" id="prompt" tabindex="-1" aria-labelledby="promptTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
-			<div class="modal-header p-5 pb-4 border-bottom-0">
+			<div class="modal-header p-4 pb-4 border-bottom-0">
 				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">{modalTitle}</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body p-5 pt-0">
+			<div class="modal-body p-4 pt-0">
 				<div class="form-floating mb-3">
 					{@html modalContent}
 				</div>
@@ -216,13 +224,14 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-8">
-							<label for="floatingInput">请输入数量 
+							<label for="floatingInput"
+								>请输入数量
 								{#if max}
-								(共有{max})
+									(共有{max})
 								{/if}
-								</label>
-							<br/>
-							<br/>
+							</label>
+							<br />
+							<br />
 							<input
 								type="number"
 								step="5"
@@ -231,14 +240,14 @@
 								bind:value={depositAmount}
 								placeholder="请输入数量"
 							/>
-							<br/>
+							<br />
 							<input class="w-75" type="range" bind:value={depositAmount} min="5" step="5" {max} />
 						</div>
 						<div class="col-4">
 							{#key depositAmount}
-							<div style="position:absolute;left:320px; top:130px">
-								<Stack amount={depositAmount} />
-							</div>
+								<div style="position:absolute;left:320px; top:130px">
+									<Stack amount={depositAmount} />
+								</div>
 							{/key}
 						</div>
 					</div>
@@ -271,11 +280,8 @@
 						</span>
 						<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 							<li>
-								<a
-									class="dropdown-item"
-									href="./#"
-									data-bs-toggle="modal"
-									data-bs-target="#rule">{$t('top.rule.title')}</a
+								<a class="dropdown-item" href="./#" data-bs-toggle="modal" data-bs-target="#rule"
+									>{$t('top.rule.title')}</a
 								>
 							</li>
 							<li>
@@ -323,7 +329,14 @@
 
 		<!--牌桌区域，使用固定宽度1024x756-->
 		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
-			<slot />
+			{#if querying}
+				<h2
+					class="text-center"
+					style="padding:20px; margin:100px; margin-top:200px;color:white;background-color:#0d47a1"
+				>
+					数据请求中，请稍候...
+				</h2>
+			{/if}
 
 			<div style="width:1024px;height:576px;position:fixed">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
@@ -336,9 +349,10 @@
 					</div>
 				</a>
 			</div>
+			<slot />			
 		</div>
-		<PromptDiv />
 	</div>
+	<PromptDiv />
 </div>
 
 <style>
