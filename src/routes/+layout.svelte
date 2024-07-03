@@ -1,46 +1,120 @@
-<script lang="ts">	
+<script lang="ts">
 	import { t, locales, locale } from '$lib/i18n';
+	import { message, spawn, result, dryrun } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
 	import PromptDiv from '$lib/component/Prompt.svelte';
-	import {Prompt,AddPrompt} from '$lib/store/Prompt';
+	import Stack from '$lib/component/Stack.svelte';
+	import { bjProcess, egcProcess } from '$lib/index';
+	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 
-
-	let walletInstalled=false;
+	let walletInstalled = false;
 	let walletConnected = false;
-	let	joinModal: { show: () => void; };
-	onMount(() => {
-		// 检查 ArConnect 是否已安装
+	let promptModal: { show: () => void };
+	let depositModal;
+
+	let depositAmount = 1000;
+	let max: number;
+
+	$: modalTitle = '请先连接钱包';
+	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
+
+	onMount(async () => {
+		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
+		depositModal = new bootstrap.Modal(document.getElementById('deposit'));
+
 		if (window.arweaveWallet) {
-			walletInstalled=true;
-						
-		}	
-		else{
-			walletInstalled=false;		   
-			AddPrompt("没有安装ArConnect，请先安装钱包！")
-			//直接push不会触发$Prompt的更新！
-			//$Prompt.push("没装钱包");
-			
-			console.log('没有安装ArConnect')
+			walletInstalled = true;
+			const activeAddress = await window.arweaveWallet.getActiveAddress();
+			if (activeAddress) {
+				walletConnected = true;
+				
+				//查询是否已经注册：
+				let getPlayer = await dryrun({
+					process: bjProcess,
+					tags: [{ name: 'Action', value: 'GetPlayer' }],
+					data: activeAddress
+				});
+
+				//查询EGC余额：
+				let queryBalance = await dryrun({
+					process: egcProcess,
+					tags: [
+						{ name: 'Action', value: 'Balance' },
+						{ name: 'Target', value: activeAddress }
+					]
+				});
+
+				console.log('余额数据:', queryBalance);
+				max = queryBalance.Messages[0].Data;
+
+				if (getPlayer.Messages.length > 0) {
+					let playerInfo = JSON.parse(getPlayer.Messages[0].Data);
+					let addrFirst6 = playerInfo.addr.substring(0, 6);
+					let addrLast6=	playerInfo.addr.substring(playerInfo.addr.length - 6);		
+
+					modalTitle = '欢迎回来';
+					modalContent = `
+					 <dl class="row">
+					    <dt class="col-3">钱包地址</dt>
+						<dd class="col-9" title="${playerInfo.addr}"> ${addrFirst6}......${addrLast6}</dd>
+						<dt class="col-3">玩家名称</dt>
+						<dd class="col-9">${playerInfo.name}</dd>
+						<dt class="col-3">钱包余额</dt>
+						<dd class="col-9">${max} EGC</dd>
+						<dt class="col-3">在桌筹码</dt>
+						<dd class="col-9">${playerInfo.balance} EGC</dd>
+					</dl>					
+					`;
+					if (playerInfo.balance < 5) {
+						modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
+					}
+
+					promptModal.show();
+					console.log('palyerInfo:', playerInfo);
+				} else {
+					//需要加入
+				}
+				console.log('dryRunResult:', getPlayer);
+			} else {
+				walletConnected = false;
+			}
+			//尝试连接：
+			//await connectWallet();
+		} else {
+			walletInstalled = false;
+			//未安装钱包，跳出提示框，提示安装钱包：
+			modalTitle = '请先安装钱包';
+			modalContent = `<p>
+					AO 21点游戏基于Arweave AO,需要首先安装Arweave钱包！
+				 </p>
+				 <p class="text-center">
+					<a class="btn btn-primary " href="https://www.arconnect.io/download">钱包下载地址</a>
+				 </p>`;
+
+			promptModal.show();
 		}
-	   joinModal = new bootstrap.Modal(document.getElementById('prompt'));		
-	   joinModal.show();   
 	});
 
 	async function connectWallet() {
 		try {
-			// 请求连接 ArConnect 钱包
+			promptModal.show();
 			await window.arweaveWallet.connect([
 				'ACCESS_ADDRESS',
 				'ACCESS_PUBLIC_KEY',
 				'SIGN_TRANSACTION'
 			]);
+			promptModal.hide();
 			walletConnected = true;
-			joinModal.show();
-			//await tick(); //强制更新UI
-			console.log('Connected to ArConnect wallet');
 		} catch (error) {
-			console.error('Failed to connect to ArConnect wallet', error);
+			modalTitle = '连接钱包失败';
+			modalContent = `<p>
+					AO 21点游戏基于Arweave AO,需要首先连接Arweave钱包！
+				 </p>
+				 <p class="text-center text-danger ">
+					错误信息: ${error}
+				 </p>`;
+			walletConnected = false;
 		}
 	}
 
@@ -54,20 +128,41 @@
 			console.error('Failed to disconnect from ArConnect wallet', error);
 		}
 	}
+
+	function openDeposit() {
+		depositModal.show();
+	}
+
+	async function deposit() {
+		//直接发送转账信息
+		let msgId = await message({
+			process: egcProcess,
+			tags: [
+				{ name: 'Action', value: 'Transfer' },
+				{ name: 'Target', value: 'JsroQVXlDCD9Ansr-n45SrTTB2LwqX_X6jDeaGiIHMo' },
+				{ name: 'Quantity', value: amount.toString() },
+				{ name: 'Recipient', value: 'lKZ6SpyB_V8YwewgPmctsRDWaKQaLY3fP_3s-AnjzAs' }
+			],
+			signer: createDataItemSigner(globalThis.arweaveWallet)
+		});
+		console.log('msgId', msgId);
+
+		tableInfoResult = result({ message: msgId, process: egcProcess });
+	}
 </script>
 
 <!-- #region 规则弹出窗口-->
 <div
 	class="modal fade"
-	id="promptedScrollable"
+	id="rule"
 	tabindex="-1"
-	aria-labelledby="promptedScrollableTitle"
+	aria-labelledby="ruleTitle"
 	aria-hidden="true"
 >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="promptedScrollableTitle">
+				<h1 class="modal-title fs-5" id="ruleTitle">
 					{$t('top.rule.title')}
 				</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -83,27 +178,75 @@
 </div>
 <!-- #endregion -->
 
-<!--输入信息-->
+<!--提示信息-->
+<div class="modal fade" id="prompt" tabindex="-1" aria-labelledby="promptTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
+			<div class="modal-header p-5 pb-4 border-bottom-0">
+				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">{modalTitle}</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-5 pt-0">
+				<div class="form-floating mb-3">
+					{@html modalContent}
+				</div>
+			</div>
+			<div class="modal-footer text-center">
+				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--添加筹码-->
 <div
 	class="modal fade"
-	id="prompt"
+	id="deposit"
 	tabindex="-1"
-	aria-labelledby="promptTitle"
+	aria-labelledby="depositTitle"
 	aria-hidden="true"
 >
 	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content rounded-4 shadow">			
-			<div class="modal-header">
-				<h1 class="modal-title fs-5 mx-auto text-center" style="border:1px solid green"  id="promptTitle">提示请先连接钱包</h1>
+		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
+			<div class="modal-header p-5 pb-4 border-bottom-0">
+				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">带入更多筹码</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<p>This is a vertically centered modal.</p>
+			<div class="modal-body p-5 pt-0">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-8">
+							<label for="floatingInput">请输入数量 
+								{#if max}
+								(共有{max})
+								{/if}
+								</label>
+							<br/>
+							<br/>
+							<input
+								type="number"
+								step="5"
+								class="form-control rounded-3 w-50"
+								id="floatingInput"
+								bind:value={depositAmount}
+								placeholder="请输入数量"
+							/>
+							<br/>
+							<input class="w-75" type="range" bind:value={depositAmount} min="5" step="5" {max} />
+						</div>
+						<div class="col-4">
+							{#key depositAmount}
+							<div style="position:absolute;left:320px; top:130px">
+								<Stack amount={depositAmount} />
+							</div>
+							{/key}
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="modal-footer text-center" style="border:1px solid green">
-				<button type="button" class="btn btn-lg btn-primary mt-5 w-100" data-bs-dismiss="modal">Great, thanks!</button>			
+			<div class="modal-footer text-center">
+				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal">OK</button>
 			</div>
-		
 		</div>
 	</div>
 </div>
@@ -132,15 +275,12 @@
 									class="dropdown-item"
 									href="./#"
 									data-bs-toggle="modal"
-									data-bs-target="#promptedScrollable">{$t('top.rule.title')}</a
+									data-bs-target="#rule">{$t('top.rule.title')}</a
 								>
 							</li>
 							<li>
-								<a
-									class="dropdown-item"
-									href="./#"
-									data-bs-toggle="modal"
-									data-bs-target="#prompt">{$t('top.settings')}</a
+								<a class="dropdown-item" href="./#" data-bs-toggle="modal" data-bs-target="#prompt"
+									>{$t('top.settings')}</a
 								>
 							</li>
 						</ul>
@@ -162,18 +302,19 @@
 					</select>
 					<div class="d-none d-md-inline">
 						{#if walletInstalled}
-						{#if walletConnected}
-							<button type="button" class="btn btn-primary" on:click={disconnectWallet}
-								>{$t('top.disconnect')}</button
-							>
+							{#if walletConnected}
+								<button type="button" class="btn btn-primary" on:click={disconnectWallet}
+									>{$t('top.disconnect')}</button
+								>
+							{:else}
+								<button type="button" class="btn btn-primary" on:click={connectWallet}
+									>{$t('top.connect')}</button
+								>
+							{/if}
 						{:else}
-							<button type="button" class="btn btn-primary" on:click={connectWallet}
-								>{$t('top.connect')}</button
+							<a class="btn btn-primary" href="https://www.arconnect.io/download">
+								{$t('top.installWallet')}</a
 							>
-						{/if}
-						{:else}
-						<a class="btn btn-primary" href="https://www.arconnect.io/download">
-							{$t('top.installWallet')}</a>
 						{/if}
 					</div>
 				</div>
@@ -183,7 +324,19 @@
 		<!--牌桌区域，使用固定宽度1024x756-->
 		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
 			<slot />
-		</div>		
+
+			<div style="width:1024px;height:576px;position:fixed">
+				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
+					玩家:lzETTe0
+				</div>
+				<a href="/#" on:click={openDeposit}>
+					<div style="position:absolute;left:18px;top:120px;text-align:center">
+						<img id="addChip" src="/img/chip/addchip.png" alt="add chip" style="width:55px" />
+						<div style="color:#bbdefb;font-weight:bold">增加筹码</div>
+					</div>
+				</a>
+			</div>
+		</div>
 		<PromptDiv />
 	</div>
 </div>
