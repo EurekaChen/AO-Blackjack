@@ -328,17 +328,10 @@
 		</div>
 
 		<!--牌桌区域，使用固定宽度1024x756-->
-		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
-			{#if querying}
-				<h2
-					class="text-center"
-					style="padding:20px; margin:100px; margin-top:200px;color:white;background-color:#0d47a1"
-				>
-					数据请求中，请稍候...
-				</h2>
-			{/if}
-
-			<div style="width:1024px;height:576px;position:fixed">
+		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">			
+			<slot />	
+			<!--防止div覆盖导致无法点击！-->
+			<div style="width:130px;height:200px;position:absolute;border:2px solid red">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
 					玩家:lzETTe0
 				</div>
@@ -348,9 +341,18 @@
 						<div style="color:#bbdefb;font-weight:bold">增加筹码</div>
 					</div>
 				</a>
-			</div>
-			<slot />			
+			</div>		
 		</div>
+		{#if querying}
+				<h2
+					class="text-center"
+					style="position:absolute; width:1024px; margin-top:200px;padding:40px; color:white;background-color:#0d47a1"
+				>
+					数据请求中，请稍候...
+				</h2>
+			{/if}
+
+
 	</div>
 	<PromptDiv />
 </div>
