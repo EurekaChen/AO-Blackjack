@@ -53,21 +53,23 @@
 </script>
 
 <div id="chipSelector">
+	<a href="./#" on:click={downChip}>
 	<img
 		id="down"
 		src="/img/chip/left-arrow.png"
-		alt="5"
-		style="width:30px;position:absolute;left:-2px;top:357px;cursor:pointer;display:none"
-		on:click={downChip}
+		alt="down"
+		style="width:30px;position:absolute;left:-2px;top:357px;cursor:pointer;display:none"		
 	/>
+	</a>
 
+	<a href="./#" on:click={() => betChip($ChipRank[chipOffset])}>
 	<img
 		id="chip0"
 		src="/img/chip/{$ChipRank[chipOffset]}.png"
 		alt="5"
-		style="width:50px;position:absolute;left:20px;top:367px;cursor:pointer;"
-		on:click={() => betChip($ChipRank[chipOffset])}
+		style="width:50px;position:absolute;left:20px;top:367px;cursor:pointer;"		
 	/>
+	</a>
 
 	<img
 		id="chip1"
