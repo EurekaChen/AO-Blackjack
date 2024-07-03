@@ -2,17 +2,27 @@
 	import { t, locales, locale } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
-	import Prompt from '$lib/component/Prompt.svelte';
+	import PromptDiv from '$lib/component/Prompt.svelte';
+	import {Prompt,AddPrompt} from '$lib/store/Prompt';
+
 
 	let walletInstalled=false;
 	let walletConnected = false;
 	let	joinModal: { show: () => void; };
 	onMount(() => {
 		// 检查 ArConnect 是否已安装
-		if (!window.arweaveWallet) {
-
-			console.error('没有安装ArConnect');
+		if (window.arweaveWallet) {
+			walletInstalled=true;
+						
 		}	
+		else{
+			walletInstalled=false;		   
+			AddPrompt("没有安装ArConnect，请先安装钱包！")
+			//直接push不会触发$Prompt的更新！
+			//$Prompt.push("没装钱包");
+			
+			console.log('没有安装ArConnect')
+		}
 	   joinModal = new bootstrap.Modal(document.getElementById('prompt'));		
 	   joinModal.show();   
 	});
@@ -151,6 +161,7 @@
 						{/each}
 					</select>
 					<div class="d-none d-md-inline">
+						{#if walletInstalled}
 						{#if walletConnected}
 							<button type="button" class="btn btn-primary" on:click={disconnectWallet}
 								>{$t('top.disconnect')}</button
@@ -159,6 +170,10 @@
 							<button type="button" class="btn btn-primary" on:click={connectWallet}
 								>{$t('top.connect')}</button
 							>
+						{/if}
+						{:else}
+						<a class="btn btn-primary" href="https://www.arconnect.io/download">
+							{$t('top.installWallet')}</a>
 						{/if}
 					</div>
 				</div>
@@ -169,7 +184,7 @@
 		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
 			<slot />
 		</div>		
-		<Prompt />
+		<PromptDiv />
 	</div>
 </div>
 

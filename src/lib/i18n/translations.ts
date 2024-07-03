@@ -13,6 +13,7 @@ export default {
 			},
 			settings: 'Settings',
 			title: 'AO Standard Blackjack',
+			installWallet:"Install Wallet",
 			connect: 'Connect Wallet',
 			disconnect: 'Disconnect'
 		},
@@ -28,6 +29,7 @@ export default {
 			},
 			settings: '设置',
 			title: 'AO 标准21点',
+			installWallet:"请先安装钱包",
 			connect: '连接钱包',
 			disconnect: '断开钱包'
 		},
