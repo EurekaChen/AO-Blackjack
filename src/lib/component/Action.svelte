@@ -3,6 +3,8 @@
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
 
+	import DoubleChip from './action/DoubleChip.svelte';
+
 	//import doubleSvg from '$lib/svg/double.svg?raw';
 	//import clearSvg from '$lib/svg/clear.svg?raw';
 
@@ -64,23 +66,7 @@
 </script>
 
 {#key doubleChip}
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.doubleChip
-			? 'block'
-			: 'none'}"
-		on:click={doubleChip}
-	>
-		<svg width="60" height="60">
-			<circle class="action-back" cx="30" cy="30" r="25" />
-			<text class="double-text" x="9" y="38" font-size="26">×</text>
-			<text class="double-text" x="18" y="43" font-size="36">２</text>
-			<circle class="hover-circle double-circle" cx="30" cy="30" r="25" />
-		</svg>
-		<div class="text" style="color:#ff9800">加 倍</div>
-	</div>
-
+	<DoubleChip />
 	<div
 		style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.stand
 			? 'block'
