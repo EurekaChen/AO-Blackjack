@@ -67,7 +67,9 @@
 </script>
 
 {#key doubleChip}
-	<DoubleChip />
+	<div style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.doubleChip	? 'block'	: 'none'}"><DoubleChip /></div>
+	
+
 	<a href="./#"  on:click={stand}>
 	<div
 		style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.stand
@@ -76,8 +78,8 @@
 		
 	>
 		<object data="/img/action/stand.svg" title="double" style="width:60;height:60;" />
-		<div class="text" style="color:#DD443B">停 牌</div>
-		<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+		
+		
 	</div>
 </a>
 
@@ -105,7 +107,12 @@
 		<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 	</div>
 	
-	<Clear />
+	<div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear
+	? 'block'
+	: 'none'}">
+		<Clear />
+	</div>
+
 
 	<div
 		style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.doubleBet

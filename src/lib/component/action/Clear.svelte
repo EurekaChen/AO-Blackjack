@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
-	import { Action } from '$lib/store/Action';
-	import clearSvg from './clear.svg?raw';
-	import {Dealer} from '$lib/store/Dealer'
+	import { Action } from '$lib/store/Action';	
+	import { Dealer } from '$lib/store/Dealer';
 
 	function clear() {
 		//if ($Game.State == 1) return;
@@ -17,29 +16,21 @@
 		$Action.doubleChip = false;
 		$Action.hit = false;
 	}
-
 </script>
-<a href="./#" on:click={clear} > 
-	<div
-		style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear
-			? 'block'
-			: 'none'}"
-		
-	>
+
+<a href="./#" on:click={clear} style="text-decoration: none;">
 	<svg width="60" height="60">
-		
 		<circle class="back" cx="30" cy="30" r="25" />
-		<text x="19" y="39" font-size="26">✕</text>  
+		<text x="19" y="39" font-size="26">✕</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-
-</div>
+	<div style="color:#cccccc;text-align:center;font-weight:bolder">清 除</div>
 </a>
 
 <style>
 	.back {
 		fill: #223344;
-	}        
+	}
 
 	text {
 		fill: #cccccc;

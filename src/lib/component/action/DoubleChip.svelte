@@ -12,13 +12,9 @@
 		}
 	}
 </script>
-<a href="./#" on:click={doubleChip} > 
-<div 
-	style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.doubleChip
-		? 'block'
-		: 'none'}"	
->
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+
+<a href="./#" on:click={doubleChip} style="text-decoration: none;">
+	<svg width="60" height="60">
 		<style>
 			.back {
 				fill: #223344;
@@ -51,6 +47,5 @@
 		<text x="18" y="43" font-size="36">２</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div class="text" style="color:#ff9800">加 倍</div>
-</div>
+	<div style="color:#ff9800;text-align:center;font-weight:bolder">加 倍</div>
 </a>
