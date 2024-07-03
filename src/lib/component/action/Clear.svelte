@@ -26,7 +26,34 @@
 			: 'none'}"
 		
 	>
-{@html clearSvg}
+	<svg width="60" height="60">
+		
+		<circle class="back" cx="30" cy="30" r="25" />
+		<text x="19" y="39" font-size="26">✕</text>  
+		<circle class="hoverCircle" cx="30" cy="30" r="25" />
+	</svg>
 
 </div>
 </a>
+
+<style>
+	.back {
+		fill: #223344;
+	}        
+
+	text {
+		fill: #cccccc;
+		font-weight: bolder;
+	}
+
+	.hoverCircle {
+		stroke-width: 2;
+		stroke: #cccccc;
+		fill: transparent;
+		transition: all 0.3s ease;
+	}
+
+	.hoverCircle:hover {
+		stroke-width: 6;
+	}
+</style>
