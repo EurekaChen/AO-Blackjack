@@ -11,9 +11,10 @@ export default {
 				content: rule_en,
 				close: 'Close'
 			},
-      settings:"Settings",
+			settings: 'Settings',
 			title: 'AO Standard Blackjack',
-      connect:'Connect Wallet'
+			connect: 'Connect Wallet',
+			disconnect: 'Disconnect'
 		},
 		table: 'table_en'
 	},
@@ -25,9 +26,10 @@ export default {
 				content: rule_zh,
 				close: '关闭'
 			},
-      settings:"设置",
+			settings: '设置',
 			title: 'AO 标准21点',
-      connect:'连接钱包'
+			connect: '连接钱包',
+			disconnect: '断开钱包'
 		},
 		table: 'table_zh'
 	}
