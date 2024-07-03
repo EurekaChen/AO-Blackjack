@@ -67,16 +67,18 @@
 
 {#key doubleChip}
 	<DoubleChip />
+	<a href="./#"  on:click={stand}>
 	<div
 		style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.stand
 			? 'block'
 			: 'none'}"
-		on:click={stand}
+		
 	>
 		<object data="/img/action/stand.svg" title="double" style="width:60;height:60;" />
 		<div class="text" style="color:#DD443B">停 牌</div>
 		<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 	</div>
+</a>
 
 	<div
 		id="deal"
