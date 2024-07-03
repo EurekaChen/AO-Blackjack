@@ -1,5 +1,43 @@
 <script lang="ts">
+	interface window {  arweaveWallet: any;}
 	import { t, locales, locale } from '$lib/i18n';
+	import { onMount } from 'svelte';
+
+	let walletConnected = false;
+    onMount(() => {
+		// 检查 ArConnect 是否已安装
+		// @ts-expect-error arweaveWallet存在
+		if (!window.arweaveWallet) {
+			console.error('没有安装ArConnect');
+		}
+	});
+
+	async function connectWallet() {
+		try {
+			// 请求连接 ArConnect 钱包
+			await window.arweaveWallet.connect([
+				'ACCESS_ADDRESS',
+				'ACCESS_PUBLIC_KEY',
+				'SIGN_TRANSACTION'
+			]);
+			walletConnected = true;
+			//await tick(); //强制更新UI
+			console.log('Connected to ArConnect wallet');
+		} catch (error) {
+			console.error('Failed to connect to ArConnect wallet', error);
+		}
+	}
+
+	async function disconnectWallet() {
+		try {
+			// 请求断开 ArConnect 钱包
+			await window.arweaveWallet.disconnect();
+			walletConnected = false;
+			console.log('Disconnected from ArConnect wallet');
+		} catch (error) {
+			console.error('Failed to disconnect from ArConnect wallet', error);
+		}
+	}
 </script>
 <style>
 	.main{
