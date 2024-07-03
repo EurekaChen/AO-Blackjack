@@ -2,11 +2,11 @@
 	interface window {  arweaveWallet: any;}
 	import { t, locales, locale } from '$lib/i18n';
 	import { onMount } from 'svelte';
+	import 'arweave/web'
 
 	let walletConnected = false;
     onMount(() => {
-		// 检查 ArConnect 是否已安装
-		// @ts-expect-error arweaveWallet存在
+		// 检查 ArConnect 是否已安装		
 		if (!window.arweaveWallet) {
 			console.error('没有安装ArConnect');
 		}
