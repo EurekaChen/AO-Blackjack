@@ -5,7 +5,6 @@
 
 	function clear() {
 		//if ($Game.State == 1) return;
-
 		$Dealer.Hand = [];
 		$Player.Hand = [];
 		let amt = $Player.Wager[0];

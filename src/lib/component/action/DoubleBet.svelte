@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 
-	function doubleChip() {
+	function doubleBet() {
 		let amt = $Player.Wager[0];
 		if ($Player.Balance >= amt) {
 			$Player.Balance -= amt;
@@ -10,7 +10,7 @@
 	}
 </script>
 
-<a href="./#" on:click={doubleChip} style="text-decoration: none;">
+<a href="./#" on:click={doubleBet} style="text-decoration: none;">
 	<svg width="60" height="60">
 		<circle class="back" cx="30" cy="30" r="25" />
 		<text x="9" y="38" font-size="26">×</text>
