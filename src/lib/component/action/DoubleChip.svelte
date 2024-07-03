@@ -13,7 +13,7 @@
 	}
 </script>
 <a href="./#" on:click={doubleChip} > 
-<div aria-label="d"
+<div 
 	style="position:absolute;left:580px;top:480px;cursor:pointer;display:{$Action.doubleChip
 		? 'block'
 		: 'none'}"	

@@ -4,6 +4,7 @@
 	import { Action } from '$lib/store/Action';
 
 	import DoubleChip from './action/DoubleChip.svelte';
+	import Clear from './action/Clear.svelte';
 
 	//import doubleSvg from '$lib/svg/double.svg?raw';
 	//import clearSvg from '$lib/svg/clear.svg?raw';
@@ -103,21 +104,8 @@
 		<div class="text" style="color:#90caf9">要 牌</div>
 		<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 	</div>
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.clear
-			? 'block'
-			: 'none'}"
-		on:click={clear}
-	>
-		<svg width="60" height="60">
-			<circle class="action-back" cx="30" cy="30" r="25" />
-			<text class="clear-text" x="19" y="39" font-size="26">✕</text>
-			<circle class="hover-circle clear-circle" cx="30" cy="30" r="25" />
-		</svg>
-		<div class="text" style="color:#cccccc">清 除</div>
-	</div>
+	
+	<Clear />
 
 	<div
 		style="position:absolute;left:780px;top:426px;cursor:pointer;display:{$Action.doubleBet
