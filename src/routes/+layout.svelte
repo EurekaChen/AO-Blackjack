@@ -12,6 +12,8 @@
 	let walletConnected = false;
 	let promptModal: { show: () => void };
 	let depositModal;
+	let joinModal;
+	let activeAddress: string;
 
 	let depositAmount = 1000;
 	let max: number;
@@ -20,15 +22,20 @@
 	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
 	$: querying = false;
+	$: waitingAlert = 'info';
+	$: waitingText = '数据正在请求中，请稍候...';
+
+	$: nickname = 'player';
 
 	onMount(async () => {
 		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
 		depositModal = new bootstrap.Modal(document.getElementById('deposit'));
+		joinModal = new bootstrap.Modal(document.getElementById('join'));
 
 		if (window.arweaveWallet) {
 			walletInstalled = true;
 			//如果没有连接，则下面这代码会没有权限！
-			let activeAddress;
+			//let activeAddress;
 			try {
 				activeAddress = await window.arweaveWallet.getActiveAddress();
 			} catch (error) {
@@ -40,60 +47,68 @@
 				 `;
 				promptModal.show();
 			}
-			if (activeAddress) {
-				walletConnected = true;
 
-				querying = true;
-				//查询是否已经注册：
-				let getPlayer = await dryrun({
-					process: bjProcess,
-					tags: [{ name: 'Action', value: 'GetPlayer' }],
-					data: activeAddress
-				});
+			try {
+				if (activeAddress) {
+					walletConnected = true;
 
-				//查询EGC余额：
-				let queryBalance = await dryrun({
-					process: egcProcess,
-					tags: [
-						{ name: 'Action', value: 'Balance' },
-						{ name: 'Target', value: activeAddress }
-					]
-				});
-				querying = false;
+					querying = true;
+					//查询是否已经注册：
+					let getPlayer = await dryrun({
+						process: bjProcess,
+						tags: [{ name: 'Action', value: 'GetPlayer' }],
+						data: activeAddress
+					});
 
-				console.log('余额数据:', queryBalance);
-				max = queryBalance.Messages[0].Data;
+					//查询EGC余额：
+					let queryBalance = await dryrun({
+						process: egcProcess,
+						tags: [
+							{ name: 'Action', value: 'Balance' },
+							{ name: 'Target', value: activeAddress }
+						]
+					});
+					querying = false;
 
-				if (getPlayer.Messages.length > 0) {
-					let playerInfo = JSON.parse(getPlayer.Messages[0].Data);
-					let addrFirst6 = playerInfo.addr.substring(0, 6);
-					let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);
+					console.log('余额数据:', queryBalance);
+					max = queryBalance.Messages[0].Data;
 
-					modalTitle = '欢迎回来';
-					modalContent = `
-					 <dl class="row">
-					    <dt class="col-3">钱包地址</dt>
-						<dd class="col-9" title="${playerInfo.addr}"> ${addrFirst6}......${addrLast6}</dd>
-						<dt class="col-3">玩家名称</dt>
-						<dd class="col-9">${playerInfo.name}</dd>
-						<dt class="col-3">钱包余额</dt>
-						<dd class="col-9">${max} EGC</dd>
-						<dt class="col-3">在桌筹码</dt>
-						<dd class="col-9">${playerInfo.balance} EGC</dd>
-					</dl>					
-					`;
-					if (playerInfo.balance < 5) {
-						modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
+					if (getPlayer.Messages.length > 0) {
+						let playerInfo = JSON.parse(getPlayer.Messages[0].Data);
+						let addrFirst6 = playerInfo.addr.substring(0, 6);
+						let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);
+
+						modalTitle = '欢迎回来';
+						modalContent = `
+						<dl class="row">
+							<dt class="col-3">钱包地址</dt>
+							<dd class="col-9" title="${playerInfo.addr}"> ${addrFirst6}......${addrLast6}</dd>
+							<dt class="col-3">玩家名称</dt>
+							<dd class="col-9">${playerInfo.name}</dd>
+							<dt class="col-3">钱包余额</dt>
+							<dd class="col-9">${max} EGC</dd>
+							<dt class="col-3">在桌筹码</dt>
+							<dd class="col-9">${playerInfo.balance} EGC</dd>
+						</dl>					
+						`;
+						if (playerInfo.balance < 5) {
+							modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
+						}
+
+						promptModal.show();
+						console.log('palyerInfo:', playerInfo);
+					} else {
+						//需要加入
+						nickname = activeAddress.substring(activeAddress.length - 8);
+						joinModal.show();
 					}
-
-					promptModal.show();
-					console.log('palyerInfo:', playerInfo);
+					console.log('dryRunResult:', getPlayer);
 				} else {
-					//需要加入
+					walletConnected = false;
 				}
-				console.log('dryRunResult:', getPlayer);
-			} else {
-				walletConnected = false;
+			} catch {
+				waitingAlert = 'danger';
+				waitingText = '数据请求失败，请刷新重试';
 			}
 			//尝试连接：
 			//await connectWallet();
@@ -201,6 +216,37 @@
 			</div>
 			<div class="modal-footer text-center">
 				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--加入游戏-->
+<div class="modal fade" id="join" tabindex="-1" aria-labelledby="joinTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
+			<div class="modal-header p-4 pb-4 border-bottom-0">
+				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">欢迎加入21点游戏</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-4 pt-0">
+				<div class="mb-3 text-center">
+					<div class="fs-4">您的钱包地址</div>
+					<div>{activeAddress}</div>
+					<div class="fs-4">请输入昵称</div>
+					<input
+						type="text"
+						class="form-control rounded-3 w-50 mx-auto m-1 h-75"
+						bind:value={nickname}
+						placeholder="请输入昵称"
+					/>
+					<div class="alert alert-info fs-5">首次加入赠送 100EGC 筹码</div>
+				</div>
+			</div>
+			<div class="modal-footer text-center">
+				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal"
+					>加 入</button
+				>
 			</div>
 		</div>
 	</div>
@@ -328,8 +374,8 @@
 		</div>
 
 		<!--牌桌区域，使用固定宽度1024x756-->
-		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">			
-			<slot />	
+		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
+			<slot />
 			<!--防止div覆盖导致无法点击！-->
 			<div style="width:130px;height:200px;position:absolute;border:2px solid red">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
@@ -341,18 +387,16 @@
 						<div style="color:#bbdefb;font-weight:bold">增加筹码</div>
 					</div>
 				</a>
-			</div>		
+			</div>
 		</div>
 		{#if querying}
-				<h2
-					class="text-center"
-					style="position:absolute; width:1024px; margin-top:200px;padding:40px; color:white;background-color:#0d47a1"
-				>
-					数据请求中，请稍候...
-				</h2>
-			{/if}
-
-
+			<h2
+				class="text-center alert alert-{waitingAlert}"
+				style="position:absolute; width:1024px; margin-top:220px;padding:40px;"
+			>
+				{waitingText}
+			</h2>
+		{/if}
 	</div>
 	<PromptDiv />
 </div>
