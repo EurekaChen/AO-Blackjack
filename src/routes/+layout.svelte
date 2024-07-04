@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { t, locales, locale } from '$lib/i18n';
-	import { message, spawn, result, dryrun } from '@permaweb/aoconnect';
+	import { message, spawn, result, dryrun, createDataItemSigner } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
 	import PromptDiv from '$lib/component/Prompt.svelte';
 	import Stack from '$lib/component/Stack.svelte';
-	import { bjProcess, egcProcess } from '$lib/index';
+	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 
 	let walletInstalled = false;
@@ -21,7 +21,7 @@
 	$: modalTitle = '请先连接钱包';
 	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
-	$: querying = false;
+	$: waiting = false;
 	$: waitingAlert = 'info';
 	$: waitingText = '数据正在请求中，请稍候...';
 
@@ -52,7 +52,7 @@
 				if (activeAddress) {
 					walletConnected = true;
 
-					querying = true;
+					waiting = true;
 					//查询是否已经注册：
 					let getPlayer = await dryrun({
 						process: bjProcess,
@@ -68,7 +68,7 @@
 							{ name: 'Target', value: activeAddress }
 						]
 					});
-					querying = false;
+					waiting = false;
 
 					console.log('余额数据:', queryBalance);
 					max = queryBalance.Messages[0].Data;
@@ -178,6 +178,43 @@
 
 		tableInfoResult = result({ message: msgId, process: egcProcess });
 	}
+
+	async function join(name, addr) {
+		//生成新进程
+		waiting = true;
+		waitingText = '新用户加入中，请稍候...';
+		const userProcessId = await spawn({
+			module,
+			scheduler,
+			signer: createDataItemSigner(window.arweaveWallet),
+			tags: [{ name: 'Name', value: name }]
+		});
+
+		//用户信息
+		console.log('新生成进程:', userProcessId);
+
+		const userInfo = { name, addr: addr, process: userProcessId };
+		const userJsonStr = JSON.stringify(userInfo);
+
+		console.log('注册信息:', userJsonStr);
+
+		//直接发送注册信息
+		const regMsgId = await message({
+			process: bjProcess,
+			tags: [{ name: 'Action', value: 'JoinBlackjack' }],
+			signer: createDataItemSigner(window.arweaveWallet),
+			data: userJsonStr
+		});
+
+		console.log('加入牌桌msgid：', regMsgId);
+		waitingAlert = 'primary';
+		waitingText = '加入成功...';
+		setTimeout(() => {
+			waiting = false;
+		}, 500);
+
+		return userProcessId;
+	}
 </script>
 
 <!-- #region 规则弹出窗口-->
@@ -244,8 +281,11 @@
 				</div>
 			</div>
 			<div class="modal-footer text-center">
-				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal"
-					>加 入</button
+				<button
+					type="button"
+					class="btn btn-primary mx-5 w-100"
+					data-bs-dismiss="modal"
+					on:click={() => join(nickname, activeAddress)}>加 入</button
 				>
 			</div>
 		</div>
@@ -389,7 +429,7 @@
 				</a>
 			</div>
 		</div>
-		{#if querying}
+		{#if waiting}
 			<h2
 				class="text-center alert alert-{waitingAlert}"
 				style="position:absolute; width:1024px; margin-top:220px;padding:40px;"
