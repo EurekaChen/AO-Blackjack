@@ -7,6 +7,7 @@
 	import Stack from '$lib/component/Stack.svelte';
 	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
+	import { Player } from '$lib/store/Player';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -71,12 +72,14 @@
 					waiting = false;
 
 					console.log('余额数据:', queryBalance);
-					max = queryBalance.Messages[0].Data;
+					max = queryBalance.Messages[0].Data/100;
 
 					if (getPlayer.Messages.length > 0) {
 						let playerInfo = JSON.parse(getPlayer.Messages[0].Data);
 						let addrFirst6 = playerInfo.addr.substring(0, 6);
 						let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);
+
+						
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -88,7 +91,7 @@
 							<dt class="col-3">钱包余额</dt>
 							<dd class="col-9">${max} EGC</dd>
 							<dt class="col-3">在桌筹码</dt>
-							<dd class="col-9">${playerInfo.balance} EGC</dd>
+							<dd class="col-9">${playerInfo.balance/100} EGC</dd>
 						</dl>					
 						`;
 						if (playerInfo.balance < 5) {
@@ -162,21 +165,30 @@
 		depositModal.show();
 	}
 
-	async function deposit() {
+	async function deposit(amount:number) {
 		//直接发送转账信息
+		waiting=true;
+		waitingText="请用钱包转入筹码..."
+		waitingAlert="primary";
+		let quantity=amount*100;
 		let msgId = await message({
 			process: egcProcess,
 			tags: [
 				{ name: 'Action', value: 'Transfer' },
 				{ name: 'Target', value: 'JsroQVXlDCD9Ansr-n45SrTTB2LwqX_X6jDeaGiIHMo' },
-				{ name: 'Quantity', value: amount.toString() },
+				{ name: 'Quantity', value: quantity.toString() },
 				{ name: 'Recipient', value: 'lKZ6SpyB_V8YwewgPmctsRDWaKQaLY3fP_3s-AnjzAs' }
 			],
-			signer: createDataItemSigner(globalThis.arweaveWallet)
+			signer: createDataItemSigner(window.arweaveWallet)
 		});
+
 		console.log('msgId', msgId);
 
-		tableInfoResult = result({ message: msgId, process: egcProcess });
+	    let depositResult = result({ message: msgId, process: egcProcess });
+		console.log(depositResult);
+		waiting=false;
+
+		$Player.Balance+=amount;
 	}
 
 	async function join(name, addr) {
@@ -340,7 +352,7 @@
 				</div>
 			</div>
 			<div class="modal-footer text-center">
-				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal">OK</button>
+				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal" on:click={()=>deposit(depositAmount)}>带入筹码</button>
 			</div>
 		</div>
 	</div>
