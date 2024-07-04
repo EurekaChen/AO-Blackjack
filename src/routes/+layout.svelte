@@ -54,12 +54,7 @@
 					walletConnected = true;
 
 					waiting = true;
-					//查询是否已经注册：
-					let getPlayer = await dryrun({
-						process: bjProcess,
-						tags: [{ name: 'Action', value: 'GetPlayer' }],
-						data: activeAddress
-					});
+					
 
 					//查询EGC余额：
 					let queryBalance = await dryrun({
@@ -69,17 +64,23 @@
 							{ name: 'Target', value: activeAddress }
 						]
 					});
+					
+					//查询是否已经注册：
+					let getPlayerMsg = await dryrun({
+						process: bjProcess,
+						tags: [{ name: 'Action', value: 'GetPlayer' }],
+						data: activeAddress
+					});
 					waiting = false;
 
 					console.log('余额数据:', queryBalance);
 					max = queryBalance.Messages[0].Data/100;
 
-					if (getPlayer.Messages.length > 0) {
-						let playerInfo = JSON.parse(getPlayer.Messages[0].Data);
+					if (getPlayerMsg.Messages.length > 0) {
+						let playerInfo = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = playerInfo.addr.substring(0, 6);
-						let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);
-
-						
+						let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);		
+						//playerInfo.quantity				
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -91,7 +92,7 @@
 							<dt class="col-3">钱包余额</dt>
 							<dd class="col-9">${max} EGC</dd>
 							<dt class="col-3">在桌筹码</dt>
-							<dd class="col-9">${playerInfo.balance/100} EGC</dd>
+							<dd class="col-9">${playerInfo.quantity/100} EGC</dd>
 						</dl>					
 						`;
 						if (playerInfo.balance < 5) {
@@ -105,7 +106,7 @@
 						nickname = activeAddress.substring(activeAddress.length - 8);
 						joinModal.show();
 					}
-					console.log('dryRunResult:', getPlayer);
+					console.log('dryRunResult:', getPlayerMsg);
 				} else {
 					walletConnected = false;
 				}
@@ -191,7 +192,7 @@
 		$Player.Balance+=amount;
 	}
 
-	async function join(name, addr) {
+	async function join(name:string, addr:string) {
 		//生成新进程
 		waiting = true;
 		waitingText = '新用户加入中，请稍候...';
@@ -223,7 +224,7 @@
 		waitingText = '加入成功...';
 		setTimeout(() => {
 			waiting = false;
-		}, 500);
+		}, 1000);
 
 		return userProcessId;
 	}
@@ -429,7 +430,7 @@
 		<div style="background-image: url(/img/{$t('table')}.svg);width:1024px;height:576px;">
 			<slot />
 			<!--防止div覆盖导致无法点击！-->
-			<div style="width:130px;height:200px;position:absolute;border:2px solid red">
+			<div style="width:138px;height:200px;position:absolute;">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
 					玩家:lzETTe0
 				</div>
