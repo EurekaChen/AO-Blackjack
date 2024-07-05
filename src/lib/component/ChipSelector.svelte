@@ -32,15 +32,15 @@
 	function betChip(amt:number) {
 		if ($Game.State == 1) return;		
 
-		if ($Player.Balance < amt) {
-			amt = $Player.Balance;
+		if ($Player.balance < amt) {
+			amt = $Player.balance;
 		}
 
 		if (amt < 5) {
 			//Game.UpdateButtons();
 			return;
 		}
-		$Player.Balance-=amt;
+		$Player.balance-=amt;
 		$Player.Wager[0]+=amt;		
 
 		$Action.doubleChip=true;

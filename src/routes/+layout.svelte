@@ -80,7 +80,7 @@
 						let playerInfo = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = playerInfo.addr.substring(0, 6);
 						let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);		
-						//playerInfo.quantity				
+						$Player.balance=playerInfo.quantity/100;				
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -189,7 +189,7 @@
 		console.log(depositResult);
 		waiting=false;
 
-		$Player.Balance+=amount;
+		$Player.balance+=amount;
 	}
 
 	async function join(name:string, addr:string) {

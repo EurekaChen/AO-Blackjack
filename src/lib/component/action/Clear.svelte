@@ -8,7 +8,7 @@
 		$Dealer.Hand = [];
 		$Player.Hand = [];
 		let amt = $Player.Wager[0];
-		$Player.Balance += amt;
+		$Player.balance += amt;
 		$Player.Wager[0] = 0;
 		$Action.clear = false;
 		$Action.deal = false;

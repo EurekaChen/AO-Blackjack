@@ -2,31 +2,23 @@ import { writable } from 'svelte/store';
 
 export const count = writable(0);
 
+//数据结构尽量跟OA Lua保持一致
 const initialPlayer = {
-    //从钱包提到游戏进程的EGC数量，变成数字，随着游戏变化。
-    Balance:100,
-    Wager:[0, 0, 0, 0],
-    Hands: 0,
-    CurrentHand: 0,
+	//从钱包提到游戏进程(bjProcess)的EGC数量(quantity)，变成数字，随着游戏变化。
+	balance: 0,
 
-    Hand:[],
-   
-    Insurance: null,
-    CardIndex: [[], [], [], []],
-    CardValue: [[], [], [], []],
-    Left: [443],
-    Top: [416],
-    OffsetLeft: 24,
-    OffsetTop: -4,
-    Total: [0, 0, 0, 0],
-    Aces: [0, 0, 0, 0],
-    Bankroll: null,
-    Busy: false,
-    LastBet: 0,
-    Surrendered: false,
-    IsAnalyzed: false,
-    AnalysisData: {},
-    LastPlay: ''
-	};
-  
-export const Player=writable(initialPlayer);
+    //尽量保持OA和JS的数据结构一致。
+	state: {		
+		hands: [
+			{ cards: ['Ks', 'Th'], quantity: 10000 },
+			{ cards: ['9s', '8d'], quantity: 10000 }
+		],
+		//由于序数的不同，在lua要加1
+		activeHandIndex: 0,
+		//原为null，我觉得也可以为0，用0更简单，0表示没下保险。
+		insurance: 0
+		//不考虑投降 Surrendered: false,
+	}
+};
+
+export const Player = writable(initialPlayer);
