@@ -10,7 +10,7 @@ const initialPlayer = {
     //尽量保持OA和JS的数据结构一致。
 	state: {		
 		hands: [
-			{ quantity: 0 }			
+			{ cards:[], quantity: 0 }			
 		],
 		//由于序数的不同，在lua要加1
 		activeHandIndex: 0,

@@ -4,12 +4,12 @@
 	import Hand from './Hand.svelte';
 </script>
 
-{#key $Dealer.Hand}
+{#key $Dealer.hand}
 	<div style="position:absolute;left:430px;top:62px;">
-		<Hand hand={$Dealer.Hand} />		
+		<Hand hand={$Dealer.hand} />		
 	</div>
 
 	<div style="position:absolute;left:430px;top:360px;">
-		<Hand hand={$Player.Hand} />
+		<Hand hand={$Player.state.hands[0].cards} />
 	</div>
 {/key}

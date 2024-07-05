@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';
-	import { Dealer } from '$lib/store/Dealer';
-	import { Action } from '$lib/store/Action';
-	import { message, spawn, result, dryrun, createDataItemSigner } from '@permaweb/aoconnect';
-	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
+	import { Player } from '$lib/store/Player';	
+	import { message, createDataItemSigner } from '@permaweb/aoconnect';
+	import { bjProcess } from '$lib/index';
 
 	async function deal() {		
 
