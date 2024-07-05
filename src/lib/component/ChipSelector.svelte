@@ -41,13 +41,11 @@
 			return;
 		}
 		$Player.balance-=amt;
-		$Player.Wager[0]+=amt;		
+		$Player.state.hands[0].quantity+=amt;		
 
 		$Action.doubleChip=true;
 		$Action.deal=true;
-		$Action.clear=true;
-
-		console.log($Player.Wager);
+		$Action.clear=true;	
 		
 	}
 </script>

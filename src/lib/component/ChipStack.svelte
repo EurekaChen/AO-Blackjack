@@ -9,7 +9,7 @@
 </div>
 
 <div style="position:absolute;left:477px;top:340px;">
-	<Stack amount={$Player.Wager[0]}/>
+	<Stack amount={$Player.state.hands[0].quantity}/>
 </div>
 {/key}
 
