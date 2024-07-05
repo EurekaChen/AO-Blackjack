@@ -7,6 +7,7 @@
 	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 	import { Player } from '$lib/store/Player';
+	import {Waiting } from '$lib/store/Waiting';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -16,10 +17,7 @@
 
 	$: modalTitle = '请先连接钱包';
 	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
-
-	$: waiting = false;
-	$: waitingAlert = 'info';
-	$: waitingText = '数据正在请求中，请稍候...';
+	
 
 	onMount(async () => {
 		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
@@ -29,10 +27,10 @@
 			//如果没有连接，则下面这代码会没有权限！
 			//let activeAddress;
 			try {
-				waiting = true;
-				waitingText = '请先连接钱包...';
+			   $Waiting.isWaiting = true;
+			   $Waiting.waitingText = '请先连接钱包...';
 				activeAddress = await window.arweaveWallet.getActiveAddress();
-				waiting = false;
+			   $Waiting.isWaiting = false;
 			} catch (error) {
 				modalTitle = '请先连接钱包';
 				modalContent = `<p>AO 21点游戏管理需要首先连接Arweave钱包！</p>
@@ -72,7 +70,7 @@
 				'SIGN_TRANSACTION'
 			]);
 			walletConnected = true;
-			waiting = false;
+		   $Waiting.isWaiting = false;
 		} catch (error) {
 			modalTitle = '连接钱包失败';
 			modalContent = `<p>
@@ -128,7 +126,7 @@
 
 				<!--标题-->
 				<div class="nav col-12 col-md-auto justify-content-center">
-					<h2><strong>{$t('top.title')}</strong></h2>
+					<h2><strong>21点管理界面</strong></h2>
 				</div>
 
 				<!--语言和连接钱包-->
@@ -163,9 +161,21 @@
 		<!--牌桌区域，使用固定宽度1024x756-->
 		<div style="width:1024px;height:576px;">
 			<!--防止div覆盖导致无法点击！-->
-			<div class="row">
-				<div class="col-3" style="height:300px; border:2px solid gray">
-					<div>菜单区</div>
+			<div class="row" style="height:576px">
+				<div class="col-3" style="height:576px; border:1px solid gray">
+					<nav class="mt-2" style="color:aliceblue">
+						<ul class="nav nav-pills nav-sidebar flex-column">
+							<li class="nav-item">
+								<a class="nav-link" href="/admin/players"> 玩家信息 </a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/Schedule?category=major"> 玩家状态 </a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/Practice"> 代码调试 </a>
+							</li>
+						</ul>
+					</nav>
 				</div>
 				<div class="col-9" style="border:1px solid green">
 					<slot />
@@ -173,16 +183,15 @@
 			</div>
 		</div>
 
-		{#if waiting}
+		{#if $Waiting.isWaiting}
 			<h2
-				class="text-center alert alert-{waitingAlert}"
+				class="text-center alert alert-{$Waiting.alertClass}"
 				style="position:absolute; width:1024px; margin-top:220px;padding:40px;"
 			>
-				{waitingText}
+				{$Waiting.waitingText}
 			</h2>
 		{/if}
-	</div>
-	<PromptDiv />
+	</div>	
 </div>
 
 <style>
