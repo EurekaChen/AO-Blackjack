@@ -5,7 +5,7 @@
 
 	async function deal() {		
 
-		//直接发送注册信息
+		//直接发送发牌信息
 		const dealMsgId = await message({
 			process: bjProcess,
 			tags: [

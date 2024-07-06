@@ -8,6 +8,7 @@
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 	import { Player } from '$lib/store/Player';
 	import {Waiting } from '$lib/store/Waiting';
+	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -166,6 +167,9 @@
 					<nav class="mt-2" style="color:aliceblue">
 						<ul class="nav nav-pills nav-sidebar flex-column">
 							<li class="nav-item">
+								<a class="nav-link" href="/admin/load"> 装载代码 </a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link" href="/admin/players"> 玩家信息 </a>
 							</li>
 							<li class="nav-item">
@@ -183,14 +187,7 @@
 			</div>
 		</div>
 
-		{#if $Waiting.isWaiting}
-			<h2
-				class="text-center alert alert-{$Waiting.alertClass}"
-				style="position:absolute; width:1024px; margin-top:220px;padding:40px;"
-			>
-				{$Waiting.waitingText}
-			</h2>
-		{/if}
+		<WaitingAlert />
 	</div>	
 </div>
 
