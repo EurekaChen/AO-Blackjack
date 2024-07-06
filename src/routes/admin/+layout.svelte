@@ -173,10 +173,10 @@
 								<a class="nav-link" href="/admin/players"> 玩家信息 </a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/Schedule?category=major"> 玩家状态 </a>
+								<a class="nav-link" href="/admin/player"> 玩家状态 </a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/Practice"> 代码调试 </a>
+								<a class="nav-link" href="/admin/debug"> 代码调试 </a>
 							</li>
 						</ul>
 					</nav>

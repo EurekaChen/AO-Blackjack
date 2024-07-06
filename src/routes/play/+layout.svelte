@@ -8,6 +8,7 @@
 	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 	import { Player } from '$lib/store/Player';
+	import { Dealer } from '$lib/store/Dealer';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -77,30 +78,41 @@
 					max = queryBalance.Messages[0].Data/100;
 
 					if (getPlayerMsg.Messages.length > 0) {
-						let playerInfo = JSON.parse(getPlayerMsg.Messages[0].Data);
-						let addrFirst6 = playerInfo.addr.substring(0, 6);
-						let addrLast6 = playerInfo.addr.substring(playerInfo.addr.length - 6);		
-						$Player.balance=playerInfo.quantity/100;				
+						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
+						let addrFirst6 = luaPlayer.addr.substring(0, 6);
+						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);		
+						$Player.balance=luaPlayer.quantity/100;				
 
 						modalTitle = '欢迎回来';
 						modalContent = `
 						<dl class="row">
 							<dt class="col-3">钱包地址</dt>
-							<dd class="col-9" title="${playerInfo.addr}"> ${addrFirst6}......${addrLast6}</dd>
+							<dd class="col-9" title="${luaPlayer.addr}"> ${addrFirst6}......${addrLast6}</dd>
 							<dt class="col-3">玩家名称</dt>
-							<dd class="col-9">${playerInfo.name}</dd>
+							<dd class="col-9">${luaPlayer.name}</dd>
 							<dt class="col-3">钱包余额</dt>
 							<dd class="col-9">${max} EGC</dd>
 							<dt class="col-3">在桌筹码</dt>
-							<dd class="col-9">${playerInfo.quantity/100} EGC</dd>
+							<dd class="col-9">${luaPlayer.quantity/100} EGC</dd>
 						</dl>					
 						`;
-						if (playerInfo.balance < 5) {
+						if (luaPlayer.balance < 5) {
 							modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
 						}
 
 						promptModal.show();
-						console.log('palyerInfo:', playerInfo);
+
+						if(luaPlayer.state){
+							modalTitle="上一局还未结束";
+							//还原上一局游戏：
+							$Player.state.activeHandIndex=luaPlayer.activeHandIndex-1;						
+							
+							$Player.state.hands=luaPlayer.state.hands;
+							console.log("hands:",$Player.state.hands);
+							//deck没必要显示 
+							$Dealer.hand=luaPlayer.state.dealerCards;
+						}
+						console.log('palyerInfo:', luaPlayer);
 					} else {
 						//需要加入
 						nickname = activeAddress.substring(activeAddress.length - 8);
