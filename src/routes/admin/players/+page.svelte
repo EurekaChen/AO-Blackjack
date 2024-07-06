@@ -45,7 +45,7 @@
                 <td>{player.name}</td>
                 <td>{player.process}</td>
                 <td>{player.addr}</td>
-				<td>{player.quantity/100}</td>
+				<td>{player.balance}</td>
 				<td>{player.state}</td>
             </tr>
         {/each}

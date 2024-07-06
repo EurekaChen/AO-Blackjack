@@ -82,7 +82,7 @@
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);		
-						$Player.balance=luaPlayer.quantity/100;				
+						$Player.balance=luaPlayer.amount;				
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -94,7 +94,7 @@
 							<dt class="col-3">钱包余额</dt>
 							<dd class="col-9">${max} EGC</dd>
 							<dt class="col-3">在桌筹码</dt>
-							<dd class="col-9">${luaPlayer.quantity/100} EGC</dd>
+							<dd class="col-9">${luaPlayer.amount} EGC</dd>
 						</dl>					
 						`;
 						if (luaPlayer.balance < 5) {

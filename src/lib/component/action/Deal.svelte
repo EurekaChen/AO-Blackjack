@@ -14,7 +14,7 @@
 			process: bjProcess,
 			tags: [
 				{ name: 'Action', value: 'Deal' },
-				{ name: 'Quantity', value: $Player.state.hands[0].quantity.toString() }
+				{ name: 'Amount', value: $Player.state.hands[0].amount.toString() }
 			],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});

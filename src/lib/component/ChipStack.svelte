@@ -9,12 +9,12 @@
 	</div>
 
 	<div style="position:absolute;left:477px;top:340px;">
-		<Stack amount={$Player.state.hands[0].quantity/100} />
+		<Stack amount={$Player.state.hands[0].amount/100} />
 	</div>
 
 	{#if $Player.state.hands.length > 1}
 		<div style="position:absolute;left:677px;top:280px;">
-			<Stack amount={$Player.state.hands[0].quantity/100} />
+			<Stack amount={$Player.state.hands[0].amount/100} />
 		</div>
 	{/if}
 {/key}
