@@ -4,10 +4,6 @@
 	import { bjProcess } from '$lib/index';
 	import {Spinner} from '$lib/store/Spinner'
 
-
-
-
-
 	async function deal() {		
 
 		$Spinner.isWaiting=true;

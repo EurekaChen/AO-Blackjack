@@ -6,7 +6,7 @@ export const count = writable(0);
 const initialPlayer = {
 	//从钱包提到游戏进程(bjProcess)的EGC数量(quantity)，变成数字，随着游戏变化。
 	balance: 0,
-
+	//state:null 通过判断确定state状态
     //尽量保持OA和JS的数据结构一致。
 	state: {		
 		hands: [
