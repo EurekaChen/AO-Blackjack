@@ -3,8 +3,8 @@
 
 	function doubleBet() {
 		let amt = $Player.Wager[0];
-		if ($Player.quantity >= amt) {
-			$Player.quantity -= amt;
+		if ($Player.balance >= amt) {
+			$Player.balance -= amt;
 			$Player.Wager[0] += amt;
 		}
 	}

@@ -82,7 +82,7 @@
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);		
-						$Player.quantity=luaPlayer.quantity/100;				
+						$Player.balance=luaPlayer.quantity/100;				
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -188,6 +188,7 @@
 		waiting=true;
 		waitingText="请用钱包转入筹码..."
 		waitingAlert="primary";
+		//！！需x100才显示正常情况
 		let quantity=amount*100;
 		let msgId = await message({
 			process: egcProcess,
@@ -206,7 +207,8 @@
 		console.log(depositResult);
 		waiting=false;
 
-		$Player.quantity+=amount;
+		//！！！！
+		$Player.balance+=amount;
 	}
 
 	async function join(name:string, addr:string) {

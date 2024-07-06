@@ -41,7 +41,7 @@
 	   }
 	   else{
 		 $Dealer.hand=info.delerCards;
-		 $Player.quantity=info.quantity;		 
+		 $Player.balance=info.quantity;		 
 	   }
 	   
 
