@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';	
-	import { message, createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result,createDataItemSigner } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib/index';
+	import {Spinner} from '$lib/store/Spinner'
+
+
+
+
 
 	async function deal() {		
+
+		$Spinner.isWaiting=true;
+		$Spinner.text="发牌中";
 
 		//直接发送发牌信息
 		const dealMsgId = await message({
@@ -15,7 +23,14 @@
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		console.log('发牌消息：', dealMsgId);
+		$Spinner.text="获取中"
+
+		console.log("MsgId:",dealMsgId);
+
+	    const readResult = await result({message:dealMsgId, process:bjProcess });
+
+		console.log('结果信息：', readResult);
+		$Spinner.text=$Spinner.defaultText;
         //更新状态
 		
 	}
