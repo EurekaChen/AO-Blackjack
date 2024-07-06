@@ -5,6 +5,15 @@
 	import { Action } from '$lib/store/Action';
 
 	let chipOffset = 0;
+	let disabled = false;
+
+	//发了两张牌，不能再去改变筹码
+	$: {
+		if ($Player.state.hands[0].cards.length > 1) {
+			disabled = true;
+		}
+		console.log('disabled:', disabled);
+	}
 
 	function downChip() {
 		let down = document.getElementById('down');
@@ -47,9 +56,18 @@
 		$Action.deal = true;
 		$Action.clear = true;
 	}
+
+	function handleClick(event) {
+		if (disabled) {
+			event.stopPropagation();
+			event.preventDefault();
+		}
+	}
 </script>
 
-<div id="chipSelector">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div id="chipSelector" class:disabled on:click|capture={handleClick}>
 	<a href="./#" on:click={downChip}>
 		<img
 			id="down"
