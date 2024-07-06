@@ -33,7 +33,11 @@
 			signer: createDataItemSigner(globalThis.arweaveWallet),
 			data
 		});
-		$Waiting.isWaiting = false;
+        $Waiting.alertClass="success"
+        $Waiting.confirm=true;
+        $Waiting.waitingText="加载成功，MsgId为 <br />"+result
+
+		//$Waiting.isWaiting = false;
 		console.log(result);
 	}
 </script>
