@@ -1,11 +1,12 @@
 import { writable } from 'svelte/store';
 
-export const count = writable(0);
-
 //数据结构尽量跟OA Lua保持一致
 const initialPlayer = {
 	//从钱包提到游戏进程(bjProcess)的EGC数量(quantity)，变成数字，随着游戏变化。
-	balance: 0,
+	quantity: 0,
+	get amount(){
+		return this.quantity/100;
+		},
 	//state:null 通过判断确定state状态
     //尽量保持OA和JS的数据结构一致。
 	state: {		

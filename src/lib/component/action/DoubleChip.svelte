@@ -3,8 +3,8 @@
 
 	function doubleChip() {
 		let amt = $Player.Wager[0];
-		if ($Player.balance >= amt) {
-			$Player.balance -= amt;
+		if ($Player.quantity >= amt) {
+			$Player.quantity -= amt;
 			$Player.Wager[0] += amt;
 		}
 	}

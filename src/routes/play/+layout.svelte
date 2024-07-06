@@ -9,6 +9,7 @@
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 	import { Player } from '$lib/store/Player';
 	import { Dealer } from '$lib/store/Dealer';
+	import { Action } from '$lib/store/Action';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -81,7 +82,7 @@
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);		
-						$Player.balance=luaPlayer.quantity/100;				
+						$Player.quantity=luaPlayer.quantity/100;				
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -111,6 +112,10 @@
 							console.log("hands:",$Player.state.hands);
 							//deck没必要显示 
 							$Dealer.hand=luaPlayer.state.dealerCards;
+
+							$Action.hit=true;
+							$Action.stand=true;
+							$Action.doubleBet=true;
 						}
 						console.log('palyerInfo:', luaPlayer);
 					} else {
@@ -201,7 +206,7 @@
 		console.log(depositResult);
 		waiting=false;
 
-		$Player.balance+=amount;
+		$Player.quantity+=amount;
 	}
 
 	async function join(name:string, addr:string) {
@@ -462,8 +467,7 @@
 				{waitingText}
 			</h2>
 		{/if}
-	</div>
-	<PromptDiv />
+	</div>	
 </div>
 
 <style>

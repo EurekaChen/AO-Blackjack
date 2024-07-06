@@ -39,18 +39,20 @@
 	}
 
 	function betChip(amt: number) {
+		console.log("下注",amt);
+		let amt100=amt*100;
 		if ($Game.State == 1) return;
 
-		if ($Player.balance < amt) {
-			amt = $Player.balance;
+		if ($Player.quantity < amt100) {
+			amt100 = $Player.quantity;
 		}
 
-		if (amt < 5) {
+		if (amt100 < 500) {
 			//Game.UpdateButtons();
 			return;
 		}
-		$Player.balance -= amt;
-		$Player.state.hands[0].quantity += amt;
+		$Player.quantity -= amt100;
+		$Player.state.hands[0].quantity += amt100;
 
 		$Action.doubleChip = true;
 		$Action.deal = true;
