@@ -27,7 +27,13 @@ function createAction() {
 			action.clear=false;
 			action.doubleBet=false;
 			return action;
-		 })
+		 }),
+		beforeDeal:()=>update((action)=>{
+			action.doubleChip=true;
+			action.deal=true;
+			action.clear=true;
+			return action;
+		})
 	};
 	
 }

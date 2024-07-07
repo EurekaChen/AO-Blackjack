@@ -8,6 +8,8 @@
 		$Dealer.cards=[]	
 		$Player.state.hands[0].amount=$Player.state.originalAmount;
 		$Player.balance-=$Player.state.originalAmount;	
+
+		//$Action.
 	}
 </script>
 

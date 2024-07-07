@@ -1,15 +1,16 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';	
-	import { message, result,createDataItemSigner } from '@permaweb/aoconnect';
+	import { Player } from '$lib/store/Player';
+	import { message, result, createDataItemSigner } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib/index';
-	import {Spinner} from '$lib/store/Spinner'
+	import { Spinner } from '$lib/store/Spinner';
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
+	import { Waiting } from '$lib/store/Waiting';
+	
 
-	async function deal() {		
-
-		$Spinner.isWaiting=true;
-		$Spinner.text="发牌中";
+	async function deal() {
+		$Spinner.isWaiting = true;
+		$Spinner.text = '发牌中';
 
 		//直接发送发牌信息
 		const dealMsgId = await message({
@@ -21,27 +22,37 @@
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		$Spinner.text="获取中"
+		$Spinner.text = '获取中';
 
-		console.log("MsgId:",dealMsgId);
+		console.log('MsgId:', dealMsgId);
 
-	    const readResult = await result({message:dealMsgId, process:bjProcess });
+		const readResult = await result({ message: dealMsgId, process: bjProcess });
 
 		console.log('结果信息：', readResult);
-		console.log(readResult.Messages[0].Data)
-		$Spinner.text=$Spinner.defaultText;
-       
-		$Spinner.isWaiting=false;
- 
-		//更新状态
-		let data=JSON.parse(readResult.Messages[0].Data);
-		$Dealer.cards=data.dealerCards;
-		$Player.state.hands[0].cards=data.playerCards;
+		console.log(readResult.Messages[0].Data);
+		$Spinner.text = $Spinner.defaultText;
 
-		Action.clearAll();	
-		$Action.hit=true;
-		$Action.stand=true;
-		$Action.doubleBet=true;
+		$Spinner.isWaiting = false;
+
+		//更新状态
+		let data = JSON.parse(readResult.Messages[0].Data);
+		if (data.balance) {
+			//返回余额，说明牌局结束（应该是玩家拿到了黑杰克）
+			Action.clearAll();
+			$Action.newHand = true;
+			$Player.balance = data.balance;
+			$Waiting.isWaiting=true;
+			$Waiting.alertClass="success";
+			$Waiting.confirm=true;
+			$Waiting.waitingText="黑杰克，你赢了！"
+		} else {
+			$Dealer.cards = data.dealerCards;
+			$Player.state.hands[0].cards = data.playerCards;
+			Action.clearAll();
+			$Action.hit = true;
+			$Action.stand = true;
+			$Action.doubleBet = true;
+		}
 	}
 </script>
 

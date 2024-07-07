@@ -21,4 +21,6 @@ const initialPlayer = {
 	}
 };
 
+
+
 export const Player = writable(initialPlayer);

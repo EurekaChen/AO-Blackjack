@@ -47,16 +47,15 @@
 		if ($Player.balance < amount) {
 			amount = $Player.balance;
 		}
-
+		
 		//限额
 		if(amount<5 || amount>5000) return
 		
 		$Player.balance -= amount;
 		$Player.state.hands[0].amount += amount;
 
-		$Action.doubleChip = true;
-		$Action.deal = true;
-		$Action.clear = true;
+		Action.clearAll();
+		Action.beforeDeal();	
 	}
 
 	function handleClick(event) {

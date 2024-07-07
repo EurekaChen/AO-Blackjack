@@ -1,12 +1,28 @@
 <script lang="ts">
+	import { Action } from '$lib/store/Action';
+	import { Dealer } from '$lib/store/Dealer';
 	import { Player } from '$lib/store/Player';
+	import { Waiting } from '$lib/store/Waiting';
 
 	function doubleRepeat() {
 		let handAmount = $Player.state.originalAmount;
+
+		$Player.state.hands[0].cards = [];
+		$Dealer.cards=[]		
+
 		if ($Player.balance >= 2*handAmount) {
 			$Player.balance -= 2*handAmount;
-			$Player.state.hands[0].amount += 2*handAmount;
+			$Player.state.hands[0].amount = 2*handAmount;
 		}
+		else{
+			$Waiting.alertClass="warning";
+			$Waiting.confirm=true;
+			$Waiting.isWaiting=true;
+			$Waiting.waitingText="加倍下注筹码不够"		
+		}
+		Action.clearAll();
+		Action.beforeDeal();
+		
 	}
 </script>
 

@@ -6,8 +6,7 @@
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
 	import { Waiting } from '$lib/store/Waiting';
-	import ChipSelector from '../ChipSelector.svelte';
-
+	
 	async function stand() {
 		$Spinner.isWaiting = true;
 		$Spinner.text = '停牌中';
@@ -45,9 +44,11 @@
 			$Player.state.hands[0].amount=0;
 			Action.clearAll();
 			$Action.newHand=true;		
-			$ChipSelector.disabled=false;	
+			//ChipSelector.disabled=false;	
 			//提示赢牌
 			$Waiting.alertClass="warning";
+			
+			//通知出去没有显示？！通知达不到Layout吗？
 			$Waiting.isWaiting=true;
 			$Waiting.confirm=true;
 			$Waiting.waitingText=winLose

@@ -2,8 +2,64 @@
 	import { Player } from '$lib/store/Player';
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
-	function hit() {
-		$Player.Hand.push('Ah');
+	import { Spinner } from '$lib/store/Spinner';
+	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
+	import { bjProcess } from '$lib';
+	import { Waiting } from '$lib/store/Waiting';
+
+ 	async	function hit() {
+		$Spinner.isWaiting = true;
+		$Spinner.text = '要牌中';
+
+		//直接发送发牌信息
+		const hitMsgId = await message({
+			process: bjProcess,
+			tags: [
+				{ name: 'Action', value: 'Hit' },			
+			],
+			signer: createDataItemSigner(window.arweaveWallet)
+		});
+
+		$Spinner.text = '解析中';	
+
+		const readResult = await result({ message: hitMsgId, process: bjProcess });
+
+		console.log('结果信息：', readResult);
+		console.log(readResult.Messages[0].Data);
+		
+		$Spinner.text = $Spinner.defaultText;
+		$Spinner.isWaiting = false;	
+
+		//更新状态
+		let data:string = readResult.Messages[0].Data;
+
+		let hitInfo=JSON.parse(data)
+		if(hitInfo.dealerCard)
+		{
+			//返回庄家的牌，说明已经爆了！
+			Action.clearAll();
+			$Action.newHand = true;			
+			$Waiting.isWaiting=true;
+			$Waiting.alertClass="danger";
+			$Waiting.confirm=true;
+			$Waiting.waitingText="暴牌了！"
+
+			$Player.state.hands[0].cards.push(hitInfo.playerCard);
+			$Dealer.cards.push(hitInfo.dealerCard);
+
+			//清掉筹码
+			$Player.state.hands[0].amount=0;
+			//更新
+			$Player=$Player
+			$Dealer=$Dealer
+			
+		}
+		else{					
+			$Player.state.hands[0].cards.push(hitInfo.playerCard);
+			console.log("发到牌："+hitInfo.playerCard);	
+			//更新牌界面
+			$Player=$Player;
+		}		
 	}
 </script>
 
