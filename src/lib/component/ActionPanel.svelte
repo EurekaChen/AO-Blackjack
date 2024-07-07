@@ -10,6 +10,7 @@
 	import NewHand from './action/NewHand.svelte';
 	import Repeat from './action/Repeat.svelte';
 	import DoubleRepeat from './action/DoubleRepeat.svelte';
+	import Insurance from './action/Insurance.svelte';
 
 	$: newHandDisplay = $Action.newHand ? 'block' : 'none';	
 	$: doubleChipDisplay = $Action.doubleChip ? 'block' : 'none';
@@ -18,6 +19,7 @@
 	$: hitDisplay = $Action.hit ? 'block' : 'none';
 	$: clearDisplay = $Action.clear ? 'block' : 'none';
 	$: doubleBetDisplay = $Action.doubleBet ? 'block' : 'none';
+	$: insuranceDisplay = $Action.insurance ? 'block' : 'none';
 </script>
 
 <div style="position:absolute;left:580px;top:480px;display:{newHandDisplay}">
@@ -54,4 +56,8 @@
 
 <div style="position:absolute;left:780px;top:426px;display:{doubleBetDisplay}">
 	<DoubleBet />
+</div>
+
+<div style="position:absolute;left:880px;top:384px;display:{insuranceDisplay}">
+	<Insurance />
 </div>

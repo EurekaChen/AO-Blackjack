@@ -9,7 +9,8 @@ const initialAction ={
 	deal: false,
 	hit: false,
 	clear: false,
-	doubleBet: false
+	doubleBet: false,
+	insurance:false,
 };
 
 function createAction() {
@@ -26,6 +27,7 @@ function createAction() {
 			action.hit=false;
 			action.clear=false;
 			action.doubleBet=false;
+			action.insurance=false;
 			return action;
 		 }),
 		beforeDeal:()=>update((action)=>{

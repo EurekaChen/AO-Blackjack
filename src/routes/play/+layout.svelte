@@ -10,6 +10,7 @@
 	import { Player } from '$lib/store/Player';
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
+	import Hand from '$lib/component/Hand.svelte';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -56,7 +57,6 @@
 					walletConnected = true;
 
 					waiting = true;
-					
 
 					//查询EGC余额：
 					let queryBalance = await dryrun({
@@ -68,7 +68,7 @@
 					});
 
 					console.log('余额数据:', queryBalance);
-					max = queryBalance.Messages[0].Data/100;
+					max = queryBalance.Messages[0].Data / 100;
 
 					//查询是否已经注册：
 					let getPlayerMsg = await dryrun({
@@ -78,13 +78,13 @@
 					});
 					waiting = false;
 
-					console.log("getPlayerMsg:",getPlayerMsg);
+					console.log('getPlayerMsg:', getPlayerMsg);
 					if (getPlayerMsg.Messages.length > 0) {
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
-						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);		
-						$Player.balance=luaPlayer.balance;		
-						console.log("PlayerBalance:",$Player.balance);		
+						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);
+						$Player.balance = luaPlayer.balance;
+						console.log('PlayerBalance:', $Player.balance);
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -105,19 +105,37 @@
 
 						promptModal.show();
 
-						if(luaPlayer.state){
-							modalTitle="上一局还未结束";
+						if (luaPlayer.state) {
+							modalTitle = '上一局还未结束';
 							//还原上一局游戏：
-							$Player.state.activeHandIndex=luaPlayer.activeHandIndex-1;						
-							
-							$Player.state.hands=luaPlayer.state.hands;
-							console.log("hands:",$Player.state.hands);
-							//deck没必要显示 
-							$Dealer.cards=luaPlayer.state.dealerCards;
+							$Player.state.activeHandIndex = luaPlayer.activeHandIndex - 1;
 
-							$Action.hit=true;
-							$Action.stand=true;
-							$Action.doubleBet=true;
+							console.log("LuaPlayerState:",luaPlayer.state);
+
+							for (let card of luaPlayer.state.hands[0].cards) {   
+								$Player.state.hands[0].cards.push(card);
+							}
+							$Player.state.hands[0].amount=luaPlayer.state.hands[0].amount;
+							
+							if (luaPlayer.state.hands.length > 1) {	
+								//有两手：
+								for (let card of luaPlayer.state.hands[1].cards) {   
+								$Player.state.hands[1].cards.push(card);
+								}
+								$Player.state.hands[1].amount=luaPlayer.state.hands[1].amount;
+							}	
+						
+							console.log('dealercards', luaPlayer.state.dealerCards);
+							
+							//$Dealer.cards = luaPlayer.state.dealerCards;
+							for (let card of luaPlayer.state.dealerCards) {   
+								$Dealer.cards.push(card);
+							}							
+							$Dealer = $Dealer;
+
+							$Action.hit = true;
+							$Action.stand = true;
+							$Action.doubleBet = true;
 						}
 						console.log('palyerInfo:', luaPlayer);
 					} else {
@@ -185,13 +203,13 @@
 		depositModal.show();
 	}
 
-	async function deposit(amount:number) {
+	async function deposit(amount: number) {
 		//直接发送转账信息
-		waiting=true;
-		waitingText="请用钱包转入筹码..."
-		waitingAlert="primary";
+		waiting = true;
+		waitingText = '请用钱包转入筹码...';
+		waitingAlert = 'primary';
 		//！！需x100才显示正常情况
-		let quantity=amount*100;
+		let quantity = amount * 100;
 		let msgId = await message({
 			process: egcProcess,
 			tags: [
@@ -205,15 +223,15 @@
 
 		console.log('msgId', msgId);
 
-	    let depositResult = result({ message: msgId, process: egcProcess });
+		let depositResult = result({ message: msgId, process: egcProcess });
 		console.log(depositResult);
-		waiting=false;
+		waiting = false;
 
 		//！！！！
-		$Player.balance+=amount;
+		$Player.balance += amount;
 	}
 
-	async function join(name:string, addr:string) {
+	async function join(name: string, addr: string) {
 		//生成新进程
 		waiting = true;
 		waitingText = '新用户加入中，请稍候...';
@@ -374,7 +392,12 @@
 				</div>
 			</div>
 			<div class="modal-footer text-center">
-				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal" on:click={()=>deposit(depositAmount)}>带入筹码</button>
+				<button
+					type="button"
+					class="btn btn-primary mx-5 w-100"
+					data-bs-dismiss="modal"
+					on:click={() => deposit(depositAmount)}>带入筹码</button
+				>
 			</div>
 		</div>
 	</div>
@@ -471,7 +494,7 @@
 				{waitingText}
 			</h2>
 		{/if}
-	</div>	
+	</div>
 </div>
 
 <style>

@@ -5,10 +5,8 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
-	import { Waiting } from '$lib/store/Waiting';
 	import { WinLose } from '$lib/store/WinLose';
 	
-
 	async function deal() {
 		$Spinner.isWaiting = true;
 		$Spinner.text = 'OA发牌中';
@@ -48,15 +46,23 @@
 			$WinLose.amount=data.balance-$Player.balance;
 			$WinLose.icon="🃏";
 
-			$Player.balance = data.balance;
-			// $Waiting.isWaiting=true;
-			// $Waiting.alertClass="success";
-			// $Waiting.confirm=true;
-			// $Waiting.waitingText="黑杰克，你赢了！"
-		} else {
-			$Dealer.cards = data.dealerCards;
-			$Player.state.hands[0].cards = data.playerCards;
-			//$Player.state.hands[0].cards.push()
+			$Player.balance = data.balance;		
+		} else if(data.dealerCards[0].includes('A')){
+			//提示保签
+			$Action.insurance
+
+		}
+		else
+
+		
+		{
+			//{playerCards = player.state.hands[player.state.activeHandIndex].cards, dealerCards = player.state.dealerCards}
+			//$Dealer.cards = data.dealerCards;
+			data.dealerCards.forEach(card => {$Dealer.cards.push(card)});
+			$Dealer=$Dealer;
+			//$Player.state.hands[0].cards = data.playerCards;
+			data.playerCards.forEach(card => $Player.state.hands[0].cards.push(card));
+			$Player=$Player;
 			Action.clearAll();
 			$Action.hit = true;
 			$Action.stand = true;

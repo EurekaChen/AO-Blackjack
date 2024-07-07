@@ -8,14 +8,10 @@
 		let clearAmount = $Player.state.hands[0].amount;
 		$Player.balance = $Player.balance + clearAmount;
 		$Player.state.hands[0].amount = 0;
-		Action.clearAll();
-		//$:console.log($Action)
-		// $Action.clear = false;
-		// $Action.deal = false;
-		// $Action.doubleChip = false;
-		//$Action.hit = false;
+		//$Player.state.hands[1].amount=0;
+		Action.clearAll();	
 	}
-	$:console.log($Action)
+	
 </script>
 
 <a href="./#" on:click={clear} style="text-decoration: none;">

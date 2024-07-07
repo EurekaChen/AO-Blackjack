@@ -12,9 +12,11 @@
 		<Stack amount={$Player.state.hands[0].amount} />
 	</div>
 
-	{#if $Player.state.hands.length > 1}
-		<div style="position:absolute;left:677px;top:280px;">
-			<Stack amount={$Player.state.hands[0].amount} />
-		</div>
-	{/if}
+	<div style="position:absolute;left:677px;top:280px;">
+		<Stack amount={$Player.state.hands[1].amount} />
+	</div>
+
+	<div style="position:absolute;left:310px;top:170px;">
+		<Stack amount={$Player.state.insurance} />
+	</div>
 {/key}

@@ -78,6 +78,7 @@
 			$Player.state.hands.forEach((hand) => {
 				hand.amount = 0;
 			});
+			$Player=$Player;
 
 			setTimeout(() => {
 				$WinLose.isShow = false;
