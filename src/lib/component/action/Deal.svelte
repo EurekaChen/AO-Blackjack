@@ -30,14 +30,18 @@
 		console.log('结果信息：', readResult);
 		console.log(readResult.Messages[0].Data)
 		$Spinner.text=$Spinner.defaultText;
-        //更新状态
+       
 		$Spinner.isWaiting=false;
-
+ 
+		//更新状态
 		let data=JSON.parse(readResult.Messages[0].Data);
 		$Dealer.cards=data.dealerCards;
 		$Player.state.hands[0].cards=data.playerCards;
 
 		Action.clearAll();	
+		$Action.hit=true;
+		$Action.stand=true;
+		$Action.doubleBet=true;
 	}
 </script>
 

@@ -3,15 +3,19 @@
 	import { Action } from '$lib/store/Action';
 	import { Dealer } from '$lib/store/Dealer';
 
+	
 	function clear() {
 		let clearAmount = $Player.state.hands[0].amount;
 		$Player.balance = $Player.balance + clearAmount;
 		$Player.state.hands[0].amount = 0;
-		$Action.clear = false;
-		$Action.deal = false;
-		$Action.doubleChip = false;
+		Action.clearAll();
+		//$:console.log($Action)
+		// $Action.clear = false;
+		// $Action.deal = false;
+		// $Action.doubleChip = false;
 		//$Action.hit = false;
 	}
+	$:console.log($Action)
 </script>
 
 <a href="./#" on:click={clear} style="text-decoration: none;">

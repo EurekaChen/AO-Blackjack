@@ -5,6 +5,7 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
+	import { Waiting } from '$lib/store/Waiting';
 
 	async function stand() {
 		$Spinner.isWaiting = true;
@@ -36,9 +37,19 @@
 			//下一手split
 		} else {
 			$Dealer.cards = info.dealerCards;
+		    //todo:
+			let winLose=info.balance>$Player.balance?"您赢了":"您输了";
+			console.log(winLose)
 			$Player.balance = info.balance;
 			$Player.state.hands[0].amount=0;
 			Action.clearAll();
+			$Action.newHand=true;
+			$Action.repeat=true;
+			//提示赢牌
+			$Waiting.alertClass="warning";
+			$Waiting.isWaiting=true;
+			$Waiting.confirm=true;
+			$Waiting.waitingText=winLose
 		}
 	}
 </script>
