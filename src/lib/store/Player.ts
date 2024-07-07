@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 const initialPlayer = {
 	//注意从钱包提到游戏进程(bjProcess)的EGC数量(quantity)不是balance(amount)！
 	balance: 0,
-	//state:null 通过判断确定state状态
+	//state在oa中可能为null（未产生牌局），而在js中，因为有下注amout，所以不能通过null判断state状态
     //尽量保持OA和JS的数据结构一致。
 	state: {		
 		hands: [

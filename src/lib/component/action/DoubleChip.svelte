@@ -2,10 +2,10 @@
 	import { Player } from '$lib/store/Player';
 
 	function doubleChip() {
-		let amt = $Player.Wager[0];
-		if ($Player.balance >= amt) {
-			$Player.balance -= amt;
-			$Player.Wager[0] += amt;
+		let handAmount = $Player.state.hands[0].amount;
+		if ($Player.balance >= handAmount) {
+			$Player.balance -= handAmount;
+			$Player.state.hands[0].amount += handAmount;
 		}
 	}
 </script>
