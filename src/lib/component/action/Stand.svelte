@@ -1,47 +1,45 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';	
-	import { message, result,createDataItemSigner } from '@permaweb/aoconnect';
+	import { Player } from '$lib/store/Player';
+	import { message, result, createDataItemSigner } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib/index';
-	import {Spinner} from '$lib/store/Spinner'
+	import { Spinner } from '$lib/store/Spinner';
 	import { Dealer } from '$lib/store/Dealer';
+	import { Action } from '$lib/store/Action';
 
-	async function stand() {		
-
-		$Spinner.isWaiting=true;
-		$Spinner.text="停牌中";
+	async function stand() {
+		$Spinner.isWaiting = true;
+		$Spinner.text = '停牌中';
 
 		//直接发送发牌信息
 		const standMsgId = await message({
 			process: bjProcess,
-			tags: [
-				{ name: 'Action', value: 'Stand' }				
-			],
+			tags: [{ name: 'Action', value: 'Stand' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		$Spinner.text="请稍候"
+		$Spinner.text = '请稍候';
 
-		console.log("MsgId:",standMsgId);
+		console.log('MsgId:', standMsgId);
 
-	    const readResult = await result({message:standMsgId, process:bjProcess });
+		const readResult = await result({ message: standMsgId, process: bjProcess });
 
 		console.log('结果信息：', readResult);
-		$Spinner.text=$Spinner.defaultText;
-        //更新状态
-		$Spinner.isWaiting=false;
+		$Spinner.text = $Spinner.defaultText;
+		//更新状态
+		$Spinner.isWaiting = false;
 
-	   const msgData=readResult.Messages[0].Data;
-	   const info=JSON.parse(msgData);
+		const msgData = readResult.Messages[0].Data;
+		const info = JSON.parse(msgData);
 
-	   //两种情况，一种是发下一手牌，一种是庄家发到牌
-	   if(info.activeHandIndex){
-		//下一手split
-
-	   }
-	   else{
-		 $Dealer.cards=info.delerCards;
-		 $Player.balance=info.balance;		 
-	   }		
+		//两种情况，一种是发下一手牌，一种是庄家发到牌
+		if (info.activeHandIndex) {
+			//下一手split
+		} else {
+			$Dealer.cards = info.dealerCards;
+			$Player.balance = info.balance;
+			$Player.state.hands[0].amount=0;
+			Action.clearAll();
+		}
 	}
 </script>
 

@@ -4,6 +4,7 @@
 	import { bjProcess } from '$lib/index';
 	import {Spinner} from '$lib/store/Spinner'
 	import { Dealer } from '$lib/store/Dealer';
+	import { Action } from '$lib/store/Action';
 
 	async function deal() {		
 
@@ -35,7 +36,8 @@
 		let data=JSON.parse(readResult.Messages[0].Data);
 		$Dealer.cards=data.dealerCards;
 		$Player.state.hands[0].cards=data.playerCards;
-		
+
+		Action.clearAll();	
 	}
 </script>
 

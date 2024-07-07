@@ -13,8 +13,11 @@ const initialPlayer = {
 		//由于序数的不同，在lua要加1
 		activeHandIndex: 0,
 		//原为null，我觉得也可以为0，用0更简单，0表示没下保险。
-		insurance: 0
+		insurance: 0,
 		//不考虑投降 Surrendered: false,
+
+		//供repeat使用
+		originalAmount:0
 	}
 };
 

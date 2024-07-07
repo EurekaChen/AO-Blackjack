@@ -1,12 +1,38 @@
 import { writable } from 'svelte/store';
 
 const initialAction = {
-	stand:false,
+	newHand:false,
+	repeat:false,
+	stand: false,
 	doubleChip: false,
 	deal: false,
 	hit: false,
-	clear:false,
-	doubleBet:false
+	clear: false,
+	doubleBet: false
 };
 
-export const Action = writable(initialAction);
+function createAction() {
+	const { subscribe, set, update } = writable(initialAction);
+
+	// return {
+	// 	subscribe,
+	// 	set,
+	// 	clearAll: () => update((action) =>{
+	// 		action.stand=false; 
+	// 		action.doubleChip=false;
+	// 		action.deal=false;
+	// 		action.hit=false;
+	// 		action.clear=false;
+	// 		action.doubleBet=false;			
+	// 		return action;
+	// 	 })		
+	// };
+
+	return {
+        subscribe,
+        set,
+        clearAll: () => set(initialAction)
+    };
+}
+
+export const Action = createAction();

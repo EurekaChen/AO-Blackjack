@@ -7,7 +7,12 @@
 	import Deal from './action/Deal.svelte';
 	import Hit from './action/Hit.svelte';
 	import DoubleBet from './action/DoubleBet.svelte';
+	import NewHand from './action/NewHand.svelte';
+	import Repeat from './action/Repeat.svelte';
+	import DoubleRepeat from './action/DoubleRepeat.svelte';
 
+	$: newHandDisplay = $Action.newHand ? 'block' : 'none';
+	$: repeatDisplay = $Action.repeat ? 'block' : 'none';
 	$: doubleChipDisplay = $Action.doubleChip ? 'block' : 'none';
 	$: standDisplay = $Action.stand ? 'block' : 'none';
 	$: dealDisplay = $Action.deal ? 'block' : 'none';
@@ -16,26 +21,39 @@
 	$: doubleBetDisplay = $Action.doubleBet ? 'block' : 'none';
 </script>
 
+<div style="position:absolute;left:580px;top:480px;display:{newHandDisplay}">
+	<NewHand />
+</div>
+
+<div style="position:absolute;left:680px;top:458px;display:{repeatDisplay}">
+	<Repeat />
+</div>
+
+<div style="position:absolute;left:780px;top:426px;display:{repeatDisplay}">
+	<DoubleRepeat />
+</div>
+
+
 <div style="position:absolute;left:580px;top:480px;display:{doubleChipDisplay}">
 	<DoubleChip />
 </div>
 
-<div style="position:absolute;left:580px;top:480px;cursor:pointer;display:{standDisplay}">
+<div style="position:absolute;left:580px;top:480px;display:{standDisplay}">
 	<Stand />
 </div>
 
-<div style="position:absolute;left:680px;top:458px;cursor:pointer;display:{dealDisplay}">
+<div style="position:absolute;left:680px;top:458px;display:{dealDisplay}">
 	<Deal />
 </div>
 
-<div style="position:absolute;left:680px;top:458px;cursor:pointer;display:{hitDisplay}">
+<div style="position:absolute;left:680px;top:458px;display:{hitDisplay}">
 	<Hit />
 </div>
 
-<div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{clearDisplay}">
+<div style="position:absolute;left:780px;top:426px;display:{clearDisplay}">
 	<Clear />
 </div>
 
-<div style="position:absolute;left:780px;top:426px;cursor:pointer;display:{doubleBetDisplay}">
+<div style="position:absolute;left:780px;top:426px;display:{doubleBetDisplay}">
 	<DoubleBet />
 </div>
