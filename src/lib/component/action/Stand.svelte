@@ -35,17 +35,13 @@
 
 	   //两种情况，一种是发下一手牌，一种是庄家发到牌
 	   if(info.activeHandIndex){
-
 		//下一手split
 
 	   }
 	   else{
 		 $Dealer.cards=info.delerCards;
-		 $Player.balance=info.amount;		 
-	   }
-	   
-
-		
+		 $Player.balance=info.balance;		 
+	   }		
 	}
 </script>
 
