@@ -39,17 +39,15 @@
 	}
 
 	function betChip(amount: number) {
-		console.log("下注",amount);		
-		if ($Game.State == 1) return;
+		console.log("下注",amount);				
 
 		if ($Player.balance < amount) {
 			amount = $Player.balance;
 		}
 
-		if (amount < 500) {
-			//Game.UpdateButtons();
-			return;
-		}
+		//限额
+		if(amount<5 || amount>5000) return
+		
 		$Player.balance -= amount;
 		$Player.state.hands[0].amount += amount;
 

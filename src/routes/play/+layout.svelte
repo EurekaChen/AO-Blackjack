@@ -66,7 +66,10 @@
 							{ name: 'Target', value: activeAddress }
 						]
 					});
-					
+
+					console.log('余额数据:', queryBalance);
+					max = queryBalance.Messages[0].Data/100;
+
 					//查询是否已经注册：
 					let getPlayerMsg = await dryrun({
 						process: bjProcess,
@@ -75,14 +78,13 @@
 					});
 					waiting = false;
 
-					console.log('余额数据:', queryBalance);
-					max = queryBalance.Messages[0].Data/100;
-
+					console.log("getPlayerMsg:",getPlayerMsg);
 					if (getPlayerMsg.Messages.length > 0) {
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);		
-						$Player.balance=luaPlayer.amount;				
+						$Player.balance=luaPlayer.balance;		
+						console.log("PlayerBalance:",$Player.balance);		
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -94,7 +96,7 @@
 							<dt class="col-3">钱包余额</dt>
 							<dd class="col-9">${max} EGC</dd>
 							<dt class="col-3">在桌筹码</dt>
-							<dd class="col-9">${luaPlayer.amount} EGC</dd>
+							<dd class="col-9">${luaPlayer.balance} EGC</dd>
 						</dl>					
 						`;
 						if (luaPlayer.balance < 5) {
