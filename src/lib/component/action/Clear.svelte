@@ -1,19 +1,16 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
-	import { Action } from '$lib/store/Action';	
+	import { Action } from '$lib/store/Action';
 	import { Dealer } from '$lib/store/Dealer';
 
 	function clear() {
-		//if ($Game.State == 1) return;
-		$Dealer.Hand = [];
-		$Player.Hand = [];
-		let amt = $Player.Wager[0];
-		$Player.balance += amt;
-		$Player.Wager[0] = 0;
+		let clearAmount = $Player.state.hands[0].amount;
+		$Player.balance = $Player.balance + clearAmount;
+		$Player.state.hands[0].amount = 0;
 		$Action.clear = false;
 		$Action.deal = false;
 		$Action.doubleChip = false;
-		$Action.hit = false;
+		//$Action.hit = false;
 	}
 </script>
 
