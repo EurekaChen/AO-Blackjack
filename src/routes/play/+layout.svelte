@@ -113,7 +113,7 @@
 							$Player.state.hands=luaPlayer.state.hands;
 							console.log("hands:",$Player.state.hands);
 							//deck没必要显示 
-							$Dealer.hand=luaPlayer.state.dealerCards;
+							$Dealer.cards=luaPlayer.state.dealerCards;
 
 							$Action.hit=true;
 							$Action.stand=true;

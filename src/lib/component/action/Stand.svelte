@@ -40,7 +40,7 @@
 
 	   }
 	   else{
-		 $Dealer.hand=info.delerCards;
+		 $Dealer.cards=info.delerCards;
 		 $Player.balance=info.amount;		 
 	   }
 	   

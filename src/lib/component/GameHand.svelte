@@ -4,9 +4,9 @@
 	import Hand from './Hand.svelte';
 </script>
 
-{#key $Dealer.hand}
+{#key $Dealer.cards}
 	<div style="position:absolute;left:430px;top:62px;">
-		<Hand hand={$Dealer.hand} />
+		<Hand hand={$Dealer.cards} />
 	</div>
 
 	<div style="position:absolute;left:430px;top:360px;">

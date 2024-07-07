@@ -3,6 +3,7 @@
 	import { message, result,createDataItemSigner } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib/index';
 	import {Spinner} from '$lib/store/Spinner'
+	import { Dealer } from '$lib/store/Dealer';
 
 	async function deal() {		
 
@@ -26,8 +27,14 @@
 	    const readResult = await result({message:dealMsgId, process:bjProcess });
 
 		console.log('结果信息：', readResult);
+		console.log(readResult.Messages[0].Data)
 		$Spinner.text=$Spinner.defaultText;
         //更新状态
+		$Spinner.isWaiting=false;
+
+		let data=JSON.parse(readResult.Messages[0].Data);
+		$Dealer.cards=data.dealerCards;
+		$Player.state.hands[0].cards=data.playerCards;
 		
 	}
 </script>
