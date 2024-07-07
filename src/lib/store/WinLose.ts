@@ -1,10 +1,11 @@
 import { writable } from 'svelte/store';
 
 const initialWinLose = {
-	isShow:true,
-    class:'lose',
+	isShow:false,
+    class:'tie',
     text:'',
-    amount:0  
+    amount:0,
+    icon:'🂠'  
    
 };
 

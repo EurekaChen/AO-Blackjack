@@ -8,9 +8,9 @@
 
 {#if $WinLose.isShow}
 	<div class="text-center {$WinLose.class}">
-		<div style="font-size:36px">🏆{$WinLose.text}</div>
+		<div style="font-size:36px">{$WinLose.icon}{$WinLose.text}</div>
 		<div style="font-size:28px">{$WinLose.amount} EGC</div>
-		<button on:click={ok} class="btn btn-outline-primary">OK(5)</button>
+		<button on:click={ok} class="btn btn-outline-primary">OK</button>
 	</div>
 {/if}
 

@@ -47,6 +47,7 @@
 			$Player.state.hands.forEach((hand) => {
 				betAmount += hand.amount;
 			});
+
 			let backBalance = aoBalance - $Player.balance;
 
 			if (backBalance > betAmount) {
@@ -54,27 +55,30 @@
 				$WinLose.isShow = true;
 				$WinLose.class = 'win';
 				$WinLose.text = '您赢了';
+				$WinLose.icon = '🏆';
 				$WinLose.amount = backBalance;
 			} else if (backBalance == betAmount) {
 				//平局
 				$WinLose.isShow = true;
 				$WinLose.class = 'tie';
 				$WinLose.text = '平手';
+				$WinLose.icon='🤝';
 				$WinLose.amount = backBalance;
 			} else {
 				//输钱了
 				$WinLose.isShow = true;
 				$WinLose.class = 'lose';
 				$WinLose.text = '您输了';
-				$WinLose.amount = 0;
-			}			
+				$WinLose.amount = betAmount-backBalance;
+				$WinLose.icon='😞';
+			}
 
 			//恢复筹码：
 			$Player.balance = info.balance;
 			$Player.state.hands.forEach((hand) => {
 				hand.amount = 0;
 			});
-			
+
 			setTimeout(() => {
 				$WinLose.isShow = false;
 			}, 5000);

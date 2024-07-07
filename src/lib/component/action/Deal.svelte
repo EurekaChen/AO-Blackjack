@@ -6,12 +6,14 @@
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
 	import { Waiting } from '$lib/store/Waiting';
+	import { WinLose } from '$lib/store/WinLose';
 	
 
 	async function deal() {
 		$Spinner.isWaiting = true;
-		$Spinner.text = '发牌中';
+		$Spinner.text = 'OA发牌中';
 
+		$Player.state.originalAmount=$Player.state.hands[0].amount;
 		//直接发送发牌信息
 		const dealMsgId = await message({
 			process: bjProcess,
@@ -21,17 +23,16 @@
 			],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
-
-		$Spinner.text = '获取中';
-
+		
 		console.log('MsgId:', dealMsgId);
+		$Spinner.text = '解析数据中';
 
+		
 		const readResult = await result({ message: dealMsgId, process: bjProcess });
-
 		console.log('结果信息：', readResult);
 		console.log(readResult.Messages[0].Data);
-		$Spinner.text = $Spinner.defaultText;
 
+		$Spinner.text = $Spinner.defaultText;
 		$Spinner.isWaiting = false;
 
 		//更新状态
@@ -39,15 +40,23 @@
 		if (data.balance) {
 			//返回余额，说明牌局结束（应该是玩家拿到了黑杰克）
 			Action.clearAll();
-			$Action.newHand = true;
+			$Action.newHand = true;			
+
+			$WinLose.isShow=true;
+			$WinLose.class="win";
+			$WinLose.text="黑杰克";
+			$WinLose.amount=data.balance-$Player.balance;
+			$WinLose.icon="🃏";
+
 			$Player.balance = data.balance;
-			$Waiting.isWaiting=true;
-			$Waiting.alertClass="success";
-			$Waiting.confirm=true;
-			$Waiting.waitingText="黑杰克，你赢了！"
+			// $Waiting.isWaiting=true;
+			// $Waiting.alertClass="success";
+			// $Waiting.confirm=true;
+			// $Waiting.waitingText="黑杰克，你赢了！"
 		} else {
 			$Dealer.cards = data.dealerCards;
 			$Player.state.hands[0].cards = data.playerCards;
+			//$Player.state.hands[0].cards.push()
 			Action.clearAll();
 			$Action.hit = true;
 			$Action.stand = true;

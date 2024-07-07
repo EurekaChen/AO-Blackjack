@@ -5,22 +5,19 @@ const initialPlayer = {
 	//注意从钱包提到游戏进程(bjProcess)的EGC数量(quantity)不是balance(amount)！
 	balance: 0,
 	//state在oa中可能为null（未产生牌局），而在js中，因为有下注amout，所以不能通过null判断state状态
-    //尽量保持OA和JS的数据结构一致。
-	state: {		
+	//尽量保持OA和JS的数据结构一致。
+	state: {
 		hands: [
-			{ cards:[], amount: 0 }			
+			{ cards: [], amount: 0 },
+			{ cards: [], amount: 0 }
 		],
 		//由于序数的不同，在lua要加1
 		activeHandIndex: 0,
 		//原为null，我觉得也可以为0，用0更简单，0表示没下保险。
 		insurance: 0,
 		//不考虑投降 Surrendered: false,
-
 		//供repeat使用
-		originalAmount:0
+		originalAmount: 0
 	}
 };
-
-
-
 export const Player = writable(initialPlayer);
