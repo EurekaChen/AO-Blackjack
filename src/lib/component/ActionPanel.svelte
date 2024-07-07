@@ -11,8 +11,7 @@
 	import Repeat from './action/Repeat.svelte';
 	import DoubleRepeat from './action/DoubleRepeat.svelte';
 
-	$: newHandDisplay = $Action.newHand ? 'block' : 'none';
-	$: repeatDisplay = $Action.repeat ? 'block' : 'none';
+	$: newHandDisplay = $Action.newHand ? 'block' : 'none';	
 	$: doubleChipDisplay = $Action.doubleChip ? 'block' : 'none';
 	$: standDisplay = $Action.stand ? 'block' : 'none';
 	$: dealDisplay = $Action.deal ? 'block' : 'none';
@@ -25,14 +24,13 @@
 	<NewHand />
 </div>
 
-<div style="position:absolute;left:680px;top:458px;display:{repeatDisplay}">
+<div style="position:absolute;left:680px;top:458px;display:{newHandDisplay}">
 	<Repeat />
 </div>
 
-<div style="position:absolute;left:780px;top:426px;display:{repeatDisplay}">
+<div style="position:absolute;left:780px;top:426px;display:{newHandDisplay}">
 	<DoubleRepeat />
 </div>
-
 
 <div style="position:absolute;left:580px;top:480px;display:{doubleChipDisplay}">
 	<DoubleChip />

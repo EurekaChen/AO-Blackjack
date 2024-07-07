@@ -12,6 +12,9 @@
 		if ($Player.state.hands[0].cards.length > 1) {
 			disabled = true;
 		}
+		else{
+			disabled=false;
+		}
 		console.log('disabled:', disabled);
 	}
 
