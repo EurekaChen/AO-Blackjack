@@ -5,8 +5,8 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
-	import { Waiting } from '$lib/store/Waiting';
-	
+	import { WinLose } from '$lib/store/WinLose';
+
 	async function stand() {
 		$Spinner.isWaiting = true;
 		$Spinner.text = '停牌中';
@@ -33,25 +33,61 @@
 		const info = JSON.parse(msgData);
 
 		//两种情况，一种是发下一手牌，一种是庄家发到牌
+		//
 		if (info.activeHandIndex) {
+			//返回数据 ：
+			//{ activeHandIndex = player.state.activeHandIndex,card= hand2Card2}
 			//下一手split
 		} else {
+			//返回数据:{dealerCards = player.state.dealerCards,balance=player.balance}
 			$Dealer.cards = info.dealerCards;
-		    //todo:
-			let winLose=info.balance>$Player.balance?"您赢了":"您输了";
-			console.log(winLose)
+			let aoBalance = info.balance;
+
+			let betAmount = 0;
+			$Player.state.hands.forEach((hand) => {
+				betAmount += hand.amount;
+			});
+			let backBalance = aoBalance - $Player.balance;
+
+			if (backBalance > betAmount) {
+				//您输了
+				$WinLose.isShow = true;
+				$WinLose.class = 'win';
+				$WinLose.text = '您赢了';
+				$WinLose.amount = backBalance;
+			} else if (backBalance == betAmount) {
+				//平局
+				$WinLose.isShow = true;
+				$WinLose.class = 'tie';
+				$WinLose.text = '平手';
+				$WinLose.amount = backBalance;
+			} else {
+				//输钱了
+				$WinLose.isShow = true;
+				$WinLose.class = 'lose';
+				$WinLose.text = '您输了';
+				$WinLose.amount = 0;
+			}			
+
+			//恢复筹码：
 			$Player.balance = info.balance;
-			$Player.state.hands[0].amount=0;
-			Action.clearAll();
-			$Action.newHand=true;		
-			//ChipSelector.disabled=false;	
-			//提示赢牌
-			$Waiting.alertClass="warning";
+			$Player.state.hands.forEach((hand) => {
+				hand.amount = 0;
+			});
 			
-			//通知出去没有显示？！通知达不到Layout吗？
-			$Waiting.isWaiting=true;
-			$Waiting.confirm=true;
-			$Waiting.waitingText=winLose
+			setTimeout(() => {
+				$WinLose.isShow = false;
+			}, 5000);
+
+			Action.clearAll();
+			$Action.newHand = true;
+			//ChipSelector.disabled=false;
+			//提示赢牌
+
+			//不知为什么通知出去没有显示？！通知达不到Layout吗？
+			//$Waiting.alertClass="warning";
+			//$Waiting.isWaiting=true;
+			//$Waiting.confirm=true;
 		}
 	}
 </script>
