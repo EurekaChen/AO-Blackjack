@@ -234,6 +234,8 @@
 		//生成新进程
 		waiting = true;
 		waitingText = '新用户加入中，请稍候...';
+
+		//注：好象我的游戏不需要创建进程！用钱包地址玩就可以！
 		const userProcessId = await spawn({
 			module,
 			scheduler,
@@ -256,6 +258,10 @@
 			signer: createDataItemSigner(window.arweaveWallet),
 			data: userJsonStr
 		});
+
+		//注册赠送100
+		//可以请求AO获得这个100，这里先直接加入
+		$Player.balance=100;
 
 		console.log('加入牌桌msgid：', regMsgId);
 		waitingAlert = 'primary';

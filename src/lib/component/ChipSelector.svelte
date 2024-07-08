@@ -4,18 +4,18 @@
 	import { Action } from '$lib/store/Action';
 
 	let chipOffset = 6;
-	let disabled = false;
+	$:disabled = $Player.inGame;
 
-	//发了两张牌，不能再去改变筹码
-	$: {
-		if ($Player.state.hands[0].cards.length > 1) {
-			disabled = true;
-		}
-		else{
-			disabled=false;
-		}
-		console.log('disabled:', disabled);
-	}
+	//发了两张牌，不能再去改变筹码(由于结束后牌没删去！)
+	// $: {
+	// 	if ($Player.state.hands[0].cards.length > 1) {
+	// 		disabled = true;
+	// 	}
+	// 	else{
+	// 		disabled=false;
+	// 	}
+	// 	console.log('disabled:', disabled);
+	// }
 
 	function downChip() {
 		let down = document.getElementById('down');
@@ -41,7 +41,12 @@
 	}
 
 	function betChip(amount: number) {
-		console.log("下注",amount);				
+		console.log("下注",amount);		
+		
+		//有牌才需要清一下
+		if(!$Player.inGame && $Player.state.dealerCards.length>0){
+			Player.clearState();
+		}
 
 		if ($Player.balance < amount) {
 			amount = $Player.balance;
@@ -51,14 +56,14 @@
 		if(amount<5 || amount>5000) return
 		
 		$Player.balance -= amount;
-		$Player.state.hands[0].amount += amount;
+		$Player.state.hands[0].amount += amount;		
 
 		Action.clearAll();
 		Action.beforeDeal();	
 	}
 
 	function handleClick(event) {
-		if (disabled) {
+		if ($Player.inGame) {
 			event.stopPropagation();
 			event.preventDefault();
 		}

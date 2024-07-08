@@ -15,6 +15,19 @@
 {/if}
 
 <style>
+
+	.tie {
+		position: absolute;
+		color: #ff9800;
+		left: 350px;
+		top: 180px;
+		background-color: #0d47a1;
+		width: 300px;
+		height: 150px;
+		border-radius: 30px;
+		border: 5px #ff9800 solid;	
+	}
+
 	.win {
 		position: absolute;
 		color: #ff9800;

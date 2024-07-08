@@ -3,7 +3,7 @@ flowchart TD
     A((开始)) 
     --> 游戏介绍页面
     --> 点击Play链接
-    --> 打开游戏初始页面
+    -->Start[[游戏初始页面 可任何时候刷新重入]]
     -->WalletInstalled{是否已经安装钱包}
     --否-->提示安装钱包
     -->UserInstall(用户安装钱包)

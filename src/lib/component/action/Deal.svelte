@@ -39,26 +39,34 @@
 			Action.clearAll();
 			$Action.newHand = true;		
 			Indicator.blackjack(data.balance-$Player.balance)
-			$Player.balance = data.balance;		
-		} else if(data.dealerCards[0].includes('A')){
+			$Player.balance = data.balance;	
+			$Player.inGame=false;	
+		} else 		
+		{		
+
+			data.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
+			data.playerCards.forEach(card => $Player.state.hands[0].cards.push(card));			
+			Action.clearAll();
+
+			let rank1=data.playerCards[0].charAt(0);
+			let rank2=data.playerCards[1].charAt(0);		
+
+			if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
+			if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
+
+			if(rank1==rank2){
+				//可拆牌
+				$Action.split=true;
+			}
+
+			Action.afterDeal()		
+			$Player.inGame=true;
+		}
+
+		//保险为另外加的赌注
+		if(data.dealerCards[0].includes('A')){
 			//提示保险
 			$Action.insurance=true;
-
-		}
-		else
-
-		
-		{
-			//{playerCards = player.state.hands[player.state.activeHandIndex].cards, dealerCards = player.state.dealerCards}
-			//$Dealer.cards = data.dealerCards;
-			data.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});			
-			//$Player.state.hands[0].cards = data.playerCards;
-			data.playerCards.forEach(card => $Player.state.hands[0].cards.push(card));
-			$Player=$Player;
-			Action.clearAll();
-			$Action.hit = true;
-			$Action.stand = true;
-			$Action.doubleBet = true;
 		}
 	}
 </script>

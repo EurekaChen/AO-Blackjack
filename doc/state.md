@@ -16,9 +16,17 @@ player.state =
     originalAmount,            
     insuranceBet = 0
 }
-
 player.balance
 ```
+状态变化情况：
+- state=nil 游戏未开始
+- #hands=1 已经发第一手牌  #dealerCards=1 庄家发了一张牌
+- insuranceBet>0 表示已经放保险
+- #hands=2 已经拆牌并发了两手牌
+	- activeHandIndex=1 表示拆分后第一手牌还没结束
+	- activeHandIndex=2 表示现在操作第二手牌
+	 
+
 
 ## Svelte游戏状态
 

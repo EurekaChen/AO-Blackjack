@@ -36,7 +36,13 @@ function createAction() {
 			action.deal=true;
 			action.clear=true;
 			return action;
-		})
+		}),
+		afterDeal:()=>update((action)=>{
+			action.doubleBet=true;
+			action.hit=true;
+			action.stand=true;
+			return action;
+		}),
 	};
 	
 }

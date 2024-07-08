@@ -61,7 +61,7 @@
 			$Player.state.hands[0].cards.push(hitInfo.playerCard);
 			console.log("发到牌："+hitInfo.playerCard);	
 			//更新牌界面
-			$Player=$Player;
+			//$Player=$Player;
 		}		
 	}
 </script>

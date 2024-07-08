@@ -19,6 +19,33 @@ const initialPlayer = {
 		//不考虑投降 Surrendered: false,
 		//供repeat使用
 		originalAmount: 0
-	}
+	},
+	//在OA中游戏结束后会删除state
+	//在Svelte中，不删除State，用inGame示牌局是否结束，可以重新开始。
+	//例如一局结束可以一直牌面显示
+	inGame:false
 };
-export const Player = writable(initialPlayer);
+
+function createPlayer() {
+	const { subscribe, set, update } = writable(initialPlayer);
+	return {
+		subscribe,
+		set,
+		clearState: () =>
+			update((player) => {			    
+				player.state.dealerCards.length=0;
+				player.state.hands[0].cards.length=0;
+				player.state.hands[1].cards.length=0;
+				//一般下面两个在动作中已经清0
+				player.state.hands[0].amount=0;
+				player.state.hands[1].amount=0;
+				player.state.insurance=0;
+				player.state.originalAmount=0;
+				player.state.activeHandIndex=0;
+				player.inGame=false;
+				return player;
+			}),		
+	};
+}
+
+export const Player =createPlayer();
