@@ -3,10 +3,12 @@
 	export let amount;
 
 	let reverseChipRank = $ChipRank.slice().reverse();//原数组不变
-	let reverseChipRankCount = [0, 0, 0, 0, 0, 0, 0];
+	let chipLength=reverseChipRank.length;
+	let reverseChipRankCount = new Array(chipLength).fill(0);
     let amt = amount;
+
 	console.log("amt,amount:",amt,amount)
-	for (let index = 0; index < reverseChipRank.length; index++) {
+	for (let index = 0; index < chipLength; index++) {
 		let chip:number = reverseChipRank[index];
 		//筹码个数		
 		reverseChipRankCount[index] = Math.floor(amt / chip);
@@ -15,7 +17,7 @@
 
 	let chipImgArr = [];
 	let position = 0;
-	for (let i = 0; i < 7; i++) {
+	for (let i = 0; i < chipLength; i++) {
 		for (let j = 1; j <= reverseChipRankCount[i]; j++) {
 			position += 1;
 			chipImgArr.push({ img: reverseChipRank[i].toString(), position: position });

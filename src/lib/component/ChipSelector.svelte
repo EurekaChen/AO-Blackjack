@@ -3,7 +3,7 @@
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 
-	let chipOffset = 0;
+	let chipOffset = 6;
 	let disabled = false;
 
 	//发了两张牌，不能再去改变筹码
@@ -23,8 +23,8 @@
 		up.style.display = 'block';
 
 		chipOffset--;
-		if (chipOffset < 0) {
-			chipOffset = 0;
+		if (chipOffset < 6) {
+			chipOffset = 6;
 			down.style.display = 'none';
 		}
 	}
@@ -34,8 +34,8 @@
 		let up = document.getElementById('up');
 		down.style.display = 'block';
 		chipOffset++;
-		if (chipOffset > 3) {
-			chipOffset = 3;
+		if (chipOffset > 9) {
+			chipOffset = 9;
 			up.style.display = 'none';
 		}
 	}
