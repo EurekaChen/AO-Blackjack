@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
-	import { Dealer } from '$lib/store/Dealer';
 
 	
 	function clear() {

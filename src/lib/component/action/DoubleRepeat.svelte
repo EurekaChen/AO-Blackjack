@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Action } from '$lib/store/Action';
-	import { Dealer } from '$lib/store/Dealer';
 	import { Player } from '$lib/store/Player';
 	import { Waiting } from '$lib/store/Waiting';
 
@@ -8,7 +7,7 @@
 		let handAmount = $Player.state.originalAmount;
 
 		$Player.state.hands[0].cards = [];
-		$Dealer.cards=[]		
+		$Player.state.dealerCards=[]		
 
 		if ($Player.balance >= 2*handAmount) {
 			$Player.balance -= 2*handAmount;

@@ -1,12 +1,11 @@
-<script lang="ts">
-	import { Dealer } from '$lib/store/Dealer';
+<script lang="ts">	
 	import { Player } from '$lib/store/Player';
 	import Hand from './Hand.svelte';
 </script>
 
-{#key $Dealer.cards}
+{#key $Player.state.dealerCards}
 	<div style="position:absolute;left:430px;top:62px;">
-		<Hand hand={$Dealer.cards} />
+		<Hand hand={$Player.state.dealerCards} />
 	</div>
 
 	<div style="position:absolute;left:430px;top:360px;">

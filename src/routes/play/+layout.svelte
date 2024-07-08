@@ -8,7 +8,6 @@
 	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
 	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 	import { Player } from '$lib/store/Player';
-	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
 	import Hand from '$lib/component/Hand.svelte';
 
@@ -129,9 +128,9 @@
 							
 							//$Dealer.cards = luaPlayer.state.dealerCards;
 							for (let card of luaPlayer.state.dealerCards) {   
-								$Dealer.cards.push(card);
+								$Player.state.dealerCards.push(card);
 							}							
-							$Dealer = $Dealer;
+						    //$Player=$Player;
 
 							$Action.hit = true;
 							$Action.stand = true;

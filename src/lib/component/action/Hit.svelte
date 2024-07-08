@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';
-	import { Dealer } from '$lib/store/Dealer';
+	import { Player } from '$lib/store/Player';	
 	import { Action } from '$lib/store/Action';
 	import { Spinner } from '$lib/store/Spinner';
 	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
@@ -45,13 +44,12 @@
 			$Waiting.waitingText="暴牌了！"
 
 			$Player.state.hands[0].cards.push(hitInfo.playerCard);
-			$Dealer.cards.push(hitInfo.dealerCard);
+			$Player.state.dealerCards.push(hitInfo.dealerCard);
 
 			//清掉筹码
 			$Player.state.hands[0].amount=0;
 			//更新
-			$Player=$Player
-			$Dealer=$Dealer
+			$Player=$Player			
 			
 		}
 		else{					

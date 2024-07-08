@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
-	import { Dealer } from '$lib/store/Dealer';
 
 	function repeat() {		
 		$Player.state.hands[0].cards = [];
-		$Dealer.cards=[]	
+		$Player.state.dealerCards=[]	
 		$Player.state.hands[0].amount=$Player.state.originalAmount;
 		$Player.balance-=$Player.state.originalAmount;	
 

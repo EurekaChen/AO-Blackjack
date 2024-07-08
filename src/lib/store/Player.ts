@@ -7,6 +7,7 @@ const initialPlayer = {
 	//state在oa中可能为null（未产生牌局），而在js中，因为有下注amout，所以不能通过null判断state状态
 	//尽量保持OA和JS的数据结构一致。
 	state: {
+		dealerCards:[],
 		hands: [
 			{ cards: [], amount: 0 },
 			{ cards: [], amount: 0 }

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
-	import { Dealer } from '$lib/store/Dealer';
 
 	function newHand() {		
 		$Player.state.hands[0].cards = [];
-		$Dealer.cards=[];
+	    $Player.state.dealerCards=[];
+		//其它也归零
 		Action.clearAll();		
 	}
 </script>

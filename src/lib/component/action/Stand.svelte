@@ -3,7 +3,6 @@
 	import { message, result, createDataItemSigner } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib/index';
 	import { Spinner } from '$lib/store/Spinner';
-	import { Dealer } from '$lib/store/Dealer';
 	import { Action } from '$lib/store/Action';
 	import { WinLose } from '$lib/store/WinLose';
 
@@ -40,7 +39,7 @@
 			//下一手split
 		} else {
 			//返回数据:{dealerCards = player.state.dealerCards,balance=player.balance}
-			$Dealer.cards = info.dealerCards;
+		    $Player.state.dealerCards = info.dealerCards;
 			let aoBalance = info.balance;
 
 			let betAmount = 0;

@@ -2,8 +2,7 @@
 	import { Player } from '$lib/store/Player';
 	import { message, result, createDataItemSigner } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib/index';
-	import { Spinner } from '$lib/store/Spinner';
-	import { Dealer } from '$lib/store/Dealer';
+	import { Spinner } from '$lib/store/Spinner';	
 	import { Action } from '$lib/store/Action';
 	import { WinLose } from '$lib/store/WinLose';
 	
@@ -48,8 +47,8 @@
 
 			$Player.balance = data.balance;		
 		} else if(data.dealerCards[0].includes('A')){
-			//提示保签
-			$Action.insurance
+			//提示保险
+			$Action.insurance=true;
 
 		}
 		else
@@ -58,8 +57,7 @@
 		{
 			//{playerCards = player.state.hands[player.state.activeHandIndex].cards, dealerCards = player.state.dealerCards}
 			//$Dealer.cards = data.dealerCards;
-			data.dealerCards.forEach(card => {$Dealer.cards.push(card)});
-			$Dealer=$Dealer;
+			data.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});			
 			//$Player.state.hands[0].cards = data.playerCards;
 			data.playerCards.forEach(card => $Player.state.hands[0].cards.push(card));
 			$Player=$Player;
