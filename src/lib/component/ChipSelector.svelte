@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { ChipRank } from '$lib/store/Setting';
-	import { Game } from '$lib/store/Game';
+	import { ChipRank } from '$lib/store/Setting';	
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 
