@@ -11,7 +11,7 @@ const initialAction ={
 	clear: false,
 	doubleBet: false,
 	insurance:false,
-	split:true,
+	split:false,
 };
 
 function createAction() {

@@ -2,8 +2,8 @@
 flowchart TD
     A((开始)) 
     --> 准备筹码
-    --> chipAction[[加倍 发牌 清除]]
-    --> clickDeal{{点击发牌}}
+    --> DoubleDealClear[[加倍 发牌 清除]]
+    --> PlayerclickDeal{{点击发牌}}
     --> ActionDeal>发牌信息到AO]
     --> AODeal[(AO处理发牌)]
     --> GetDeal[\获取发牌信息/]
@@ -17,10 +17,16 @@ flowchart TD
     -->DisIsu[/显示保险筹码\]
     -->HideIsu[/隐去保险按钮\]
 
-    -->IfPair{玩家有对子}--是-->Split[[拆牌]]   
+    -->IfPair{玩家有对子}--是
+    -->CanSplit[[拆牌 停牌 要牌 加倍]]   
+
+    CanSplit
     -->ConfirmSplit{{点击拆牌}}  
     -->SplitBalance{筹码是否够}
-    --是-->ActionSplit>拆牌成功信息发到AO]
+    --否-->CanNotSplit(提示筹码不够)
+    CanNotSplit-->CanSplit
+
+    SplitBalance--是-->ActionSplit>拆牌成功信息发到AO]
     -->AOSplit[(AO处理拆牌)]
     -->GetSplit[\拆牌信息/]
     -->DisplaySplit[/显示拆牌信息\]
@@ -54,6 +60,18 @@ flowchart TD
 
     IfEnd--否-->转到第二手
     
+    HitAction-->ClickHit{{点击要牌}}
+
+    HitAction-->ClickStand
+
+    HitAction-->ClickDouble{{点击加倍}}
+    -->DoubleToAO>加倍信息发到AO]
+    -->AODouble[(AO处理加倍信息)]
+    -->AODouble2[(加倍后要一张牌并停牌)]
+    -->AONext
+    -->GetDouble[/获取结果信息\]
+    -->DisDouble[\显示结果信息/]
+
 
 
 
