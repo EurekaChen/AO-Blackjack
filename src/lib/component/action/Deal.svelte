@@ -4,7 +4,7 @@
 	import { bjProcess } from '$lib/index';
 	import { Spinner } from '$lib/store/Spinner';	
 	import { Action } from '$lib/store/Action';
-	import { WinLose } from '$lib/store/WinLose';
+	import { Indicator } from '$lib/store/Indicator';
 	
 	async function deal() {
 		$Spinner.isWaiting = true;
@@ -37,14 +37,8 @@
 		if (data.balance) {
 			//返回余额，说明牌局结束（应该是玩家拿到了黑杰克）
 			Action.clearAll();
-			$Action.newHand = true;			
-
-			$WinLose.isShow=true;
-			$WinLose.class="win";
-			$WinLose.text="黑杰克";
-			$WinLose.amount=data.balance-$Player.balance;
-			$WinLose.icon="🃏";
-
+			$Action.newHand = true;		
+			Indicator.blackjack(data.balance-$Player.balance)
 			$Player.balance = data.balance;		
 		} else if(data.dealerCards[0].includes('A')){
 			//提示保险

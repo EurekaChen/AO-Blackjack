@@ -4,8 +4,7 @@
 
 	function newHand() {		
 		$Player.state.hands[0].cards = [];
-	    $Player.state.dealerCards=[];
-		//其它也归零
+	    $Player.state.dealerCards=[];		
 		Action.clearAll();		
 	}
 </script>

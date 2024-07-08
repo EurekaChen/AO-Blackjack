@@ -4,7 +4,7 @@
 	import { bjProcess } from '$lib/index';
 	import { Spinner } from '$lib/store/Spinner';
 	import { Action } from '$lib/store/Action';
-	import { WinLose } from '$lib/store/WinLose';
+	import { Indicator } from '$lib/store/Indicator';
 
 	async function stand() {
 		$Spinner.isWaiting = true;
@@ -50,26 +50,12 @@
 			let backBalance = aoBalance - $Player.balance;
 
 			if (backBalance > betAmount) {
-				//您输了
-				$WinLose.isShow = true;
-				$WinLose.class = 'win';
-				$WinLose.text = '您赢了';
-				$WinLose.icon = '🏆';
-				$WinLose.amount = backBalance;
-			} else if (backBalance == betAmount) {
-				//平局
-				$WinLose.isShow = true;
-				$WinLose.class = 'tie';
-				$WinLose.text = '平手';
-				$WinLose.icon='🤝';
-				$WinLose.amount = backBalance;
+				Indicator.win(backBalance)
+			
+			} else if (backBalance == betAmount) {				
+				Indicator.tie(backBalance)
 			} else {
-				//输钱了
-				$WinLose.isShow = true;
-				$WinLose.class = 'lose';
-				$WinLose.text = '您输了';
-				$WinLose.amount = betAmount-backBalance;
-				$WinLose.icon='😞';
+				Indicator.lose(backBalance-betAmount)
 			}
 
 			//恢复筹码：
@@ -80,18 +66,12 @@
 			$Player=$Player;
 
 			setTimeout(() => {
-				$WinLose.isShow = false;
+				$Indicator.isShow = false;
 			}, 5000);
 
 			Action.clearAll();
-			$Action.newHand = true;
-			//ChipSelector.disabled=false;
-			//提示赢牌
-
-			//不知为什么通知出去没有显示？！通知达不到Layout吗？
-			//$Waiting.alertClass="warning";
-			//$Waiting.isWaiting=true;
-			//$Waiting.confirm=true;
+			$Action.newHand = true;		
+			
 		}
 	}
 </script>

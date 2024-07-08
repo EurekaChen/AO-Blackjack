@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { WinLose } from '$lib/store/WinLose';
+	import { Indicator } from '$lib/store/Indicator';
 	function ok() {
-		$WinLose.isShow = false;
+		$Indicator.isShow = false;
 	}	
 
 </script>
 
-{#if $WinLose.isShow}
-	<div class="text-center {$WinLose.class}">
-		<div style="font-size:36px">{$WinLose.icon}{$WinLose.text}</div>
-		<div style="font-size:28px">{$WinLose.amount} EGC</div>
+{#if $Indicator.isShow}
+	<div class="text-center {$Indicator.class}">
+		<div style="font-size:36px">{$Indicator.icon}{$Indicator.text}</div>
+		<div style="font-size:28px">{$Indicator.amount} EGC</div>
 		<button on:click={ok} class="btn btn-outline-primary">OK</button>
 	</div>
 {/if}

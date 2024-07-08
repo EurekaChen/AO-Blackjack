@@ -5,10 +5,12 @@
 	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib';
 	import { Waiting } from '$lib/store/Waiting';
-
+	import { Indicator } from '$lib/store/Indicator';
+	
  	async	function hit() {
 		$Spinner.isWaiting = true;
 		$Spinner.text = '要牌中';
+		$Spinner.colorClass="info";
 
 		//直接发送发牌信息
 		const hitMsgId = await message({
@@ -20,6 +22,7 @@
 		});
 
 		$Spinner.text = '解析中';	
+		$Spinner.colorClass="success"
 
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
 
@@ -49,7 +52,9 @@
 			//清掉筹码
 			$Player.state.hands[0].amount=0;
 			//更新
-			$Player=$Player			
+			$Player=$Player;			
+
+			Indicator.win(-hitInfo.balance);		
 			
 		}
 		else{					
