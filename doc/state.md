@@ -45,3 +45,13 @@ const initialPlayer = {
 	}
 };
 ```
+## 牌局结束
+结束后oa的state为null
+以下情况牌局结束：
+庄家发玩牌，比较大小，划归筹码并结束。
+
+
+## 未结束牌局解析
+
+如果AO中player.state不为null的话，表示牌局未结束，传入除deck外的所有信息。
+
