@@ -14,11 +14,11 @@
 	let walletInstalled = false;
 	let walletConnected = false;
 	let promptModal: { show: () => void };
-	let depositModal;
+	let depositModal: { show: () => void; };
 	let joinModal;
 	let activeAddress: string;
 
-	let depositAmount = 1000;
+	let depositAmount = 10;
 	let max: number;
 
 	$: modalTitle = '请先连接钱包';
@@ -199,7 +199,7 @@
 	}
 
 	function openDeposit() {
-		depositModal.show();
+		depositModal.show();		
 	}
 
 	async function deposit(amount: number) {
@@ -477,12 +477,13 @@
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
 					玩家:lzETTe0
 				</div>
-				<a href="/#" on:click={openDeposit}>
+				<!--使用./#会导至页面刷新！！-->
+				<button on:click={openDeposit} style="background: none;border:none">
 					<div style="position:absolute;left:18px;top:120px;text-align:center">
 						<img id="addChip" src="/img/chip/addchip.png" alt="add chip" style="width:55px" />
 						<div style="color:#bbdefb;font-weight:bold">增加筹码</div>
 					</div>
-				</a>
+				</button>
 			</div>
 		</div>
 		{#if waiting}
