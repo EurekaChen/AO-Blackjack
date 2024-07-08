@@ -11,7 +11,9 @@
 	import Repeat from './action/Repeat.svelte';
 	import DoubleRepeat from './action/DoubleRepeat.svelte';
 	import Insurance from './action/Insurance.svelte';
+	import Split from './action/Split.svelte';
 
+	$: splitDisplay = $Action.split ? 'block' : 'none';	
 	$: newHandDisplay = $Action.newHand ? 'block' : 'none';	
 	$: doubleChipDisplay = $Action.doubleChip ? 'block' : 'none';
 	$: standDisplay = $Action.stand ? 'block' : 'none';
@@ -21,6 +23,10 @@
 	$: doubleBetDisplay = $Action.doubleBet ? 'block' : 'none';
 	$: insuranceDisplay = $Action.insurance ? 'block' : 'none';
 </script>
+
+<div style="position:absolute;left:480px;top:488px;display:{splitDisplay}">
+	<Split />
+</div>
 
 <div style="position:absolute;left:580px;top:480px;display:{newHandDisplay}">
 	<NewHand />
