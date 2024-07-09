@@ -72,6 +72,7 @@
 					$Waiting.isWaiting = false;
 
 					if (getPlayerMsg.Messages.length > 0) {
+						console.log(getPlayerMsg)
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);

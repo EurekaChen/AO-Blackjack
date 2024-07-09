@@ -5,9 +5,9 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import { createDataItemSigner, message, spawn } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
-	
+
 	export let activeAddress = '';
-    $:nickname = activeAddress.substring(activeAddress.length - 8);
+	$: nickname = activeAddress.substring(activeAddress.length - 8);
 
 	let modal: { show: () => void; hide: () => void };
 
@@ -25,43 +25,40 @@
 		$Waiting.waitingText = '新用户加入中，请稍候...';
 
 		//注：好象我的游戏不需要创建进程！用钱包地址玩就可以！
-		const userProcessId = await spawn({
-			module,
-			scheduler,
-			signer: createDataItemSigner(window.arweaveWallet),
-			tags: [{ name: 'Name', value: name }]
-		});
+		// const userProcessId = await spawn({
+		// 	module,
+		// 	scheduler,
+		// 	signer: createDataItemSigner(window.arweaveWallet),
+		// 	tags: [{ name: 'Name', value: name }]
+		// });
 
 		//用户信息
-		console.log('新生成进程:', userProcessId);
+		//console.log('新生成进程:', userProcessId);
 
-		const userInfo = { name, addr: addr, process: userProcessId };
+		const userInfo = { name, addr };
 		const userJsonStr = JSON.stringify(userInfo);
 
 		console.log('注册信息:', userJsonStr);
 
 		//直接发送注册信息
-        //不翻墙会出错
-		const regMsgId = await message({
+		//会连接到arweave.net不翻墙会出错
+		await message({
 			process: bjProcess,
-			tags: [{ name: 'Action', value: 'JoinBlackjack' }],
+			tags: [{ name: 'Action', value: 'Join' }],
 			signer: createDataItemSigner(window.arweaveWallet),
 			data: userJsonStr
 		});
-        
+
 		//注册赠送100
 		//可以请求AO获得这个100，这里先直接加入
 		$Player.balance = 100;
-        $Player.name=nickname;
+		$Player.name = nickname;
 
-		console.log('加入牌桌msgid：', regMsgId);
 		$Waiting.alertClass = 'primary';
 		$Waiting.waitingText = '加入成功...';
 		setTimeout(() => {
 			$Waiting.isWaiting = false;
 		}, 1000);
-
-		return userProcessId;
 	}
 </script>
 
@@ -92,8 +89,9 @@
 					type="button"
 					class="btn btn-primary mx-5 w-100"
 					data-bs-dismiss="modal"
-					on:click={() => join(nickname, activeAddress)}>加 入</button
-				>
+					on:click={() => join(nickname, activeAddress)}
+					>加 入
+				</button>
 			</div>
 		</div>
 	</div>
