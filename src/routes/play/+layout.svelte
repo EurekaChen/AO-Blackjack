@@ -22,14 +22,75 @@
 	let rule: Rule;
 
 	let activeAddress: string;
-
-	let walletEgcBalance: number;
+	let walletEgc: number;
 
 	let modalTitle = '请先连接钱包';
 	let modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
+	async function queryWalletEgc(addr: string) {
+		$Waiting.isWaiting = true;
+		$Waiting.alertClass = 'info';
+		$Waiting.waitingText = '正在查询您钱包里的的EGC余额';
+		let queryBalance = await dryrun({
+			process: egcProcess,
+			tags: [
+				{ name: 'Action', value: 'Balance' },
+				{ name: 'Target', value: addr }
+			]
+		});
+		return queryBalance.Messages[0].Data / 100;
+	}
+
+	async function GetPlayer(addr: string) {
+		$Waiting.waitingText = '正在查询玩家信息';
+		let getPlayerMsg = await dryrun({
+			process: bjProcess,
+			tags: [{ name: 'Action', value: 'GetPlayer' }],
+			data: addr
+		});
+		$Waiting.isWaiting = false;
+
+		//是否查询到玩家信息
+		if (getPlayerMsg.Messages.length > 0) {
+			return JSON.parse(getPlayerMsg.Messages[0].Data);
+		} else {
+			return null;
+		}
+	}
+
+	function welcomeBack(luaPlayer: { addr: string; balance: number; name: string; state: any }) {
+		let addrFirst6 = luaPlayer.addr.substring(0, 6);
+		let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);
+		let shortAddr = addrFirst6 + '......' + addrLast6;
+
+		modalTitle = '欢迎回来';
+		modalContent = `
+		<dl class="row">
+			<dt class="col-3">钱包地址</dt>
+			<dd class="col-9" title="${luaPlayer.addr}"> ${shortAddr}</dd>
+			<dt class="col-3">玩家名称</dt>
+			<dd class="col-9">${luaPlayer.name}</dd>
+			<dt class="col-3">钱包余额</dt>
+			<dd class="col-9">${walletEgc} EGC</dd>
+			<dt class="col-3">在桌筹码</dt>
+			<dd class="col-9">${luaPlayer.balance} EGC</dd>
+		</dl>					
+		`;
+		if (luaPlayer.balance < 5) {
+			modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
+		}
+
+		$Player.balance = luaPlayer.balance;
+		$Player.name = luaPlayer.name;
+
+		if (luaPlayer.state) {
+			modalTitle = '上一局还未结束';
+			restore(luaPlayer.state);
+		}
+		info.openModal();
+	}
+
 	function restore(state) {
-		modalTitle = '上一局还未结束';
 		//还原上一局游戏：
 		$Player.state.activeHandIndex = state.activeHandIndex - 1;
 
@@ -90,61 +151,14 @@
 			try {
 				if (activeAddress) {
 					walletConnected = true;
-					$Waiting.isWaiting = true;
-					$Waiting.alertClass = 'info';
-					$Waiting.waitingText = '正在查询您钱包里的的EGC余额';
-					let queryBalance = await dryrun({
-						process: egcProcess,
-						tags: [
-							{ name: 'Action', value: 'Balance' },
-							{ name: 'Target', value: activeAddress }
-						]
-					});
-					walletEgcBalance = queryBalance.Messages[0].Data / 100;
+					walletEgc = await queryWalletEgc(activeAddress);
 
-					$Waiting.waitingText = '正在查询是否已经加入游戏';
-					let getPlayerMsg = await dryrun({
-						process: bjProcess,
-						tags: [{ name: 'Action', value: 'GetPlayer' }],
-						data: activeAddress
-					});
-					$Waiting.isWaiting = false;
-
-					if (getPlayerMsg.Messages.length > 0) {
-						console.log(getPlayerMsg);
-						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
-						let addrFirst6 = luaPlayer.addr.substring(0, 6);
-						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);
-						$Player.balance = luaPlayer.balance;
-						$Player.name = luaPlayer.name;
-
-						modalTitle = '欢迎回来';
-						modalContent = `
-						<dl class="row">
-							<dt class="col-3">钱包地址</dt>
-							<dd class="col-9" title="${luaPlayer.addr}"> ${addrFirst6}......${addrLast6}</dd>
-							<dt class="col-3">玩家名称</dt>
-							<dd class="col-9">${luaPlayer.name}</dd>
-							<dt class="col-3">钱包余额</dt>
-							<dd class="col-9">${walletEgcBalance} EGC</dd>
-							<dt class="col-3">在桌筹码</dt>
-							<dd class="col-9">${luaPlayer.balance} EGC</dd>
-						</dl>					
-						`;
-						if (luaPlayer.balance < 5) {
-							modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
-						}
-
-						info.openModal();
-
-						if (luaPlayer.state) {
-							restore(luaPlayer.state);
-						}
-						console.log('palyerInfo:', luaPlayer);
+					let luaPlayer = await GetPlayer(activeAddress);
+					if (luaPlayer != null) {
+						welcomeBack(luaPlayer);
 					} else {
 						openJoin();
 					}
-					console.log('dryRunResult:', getPlayerMsg);
 				} else {
 					walletConnected = false;
 				}
@@ -153,11 +167,9 @@
 				$Waiting.waitingText = '数据请求失败，请刷新重试';
 				console.log(error);
 			}
-			//尝试连接：
-			//await connectWallet();
 		} else {
 			walletInstalled = false;
-			//未安装钱包，跳出提示框，提示安装钱包：
+
 			modalTitle = '请先安装钱包';
 			modalContent = `<p>
 					AO 21点游戏基于Arweave AO,需要首先安装Arweave钱包！
@@ -210,7 +222,7 @@
 	}
 </script>
 
-<Deposit bind:this={deposit} max={walletEgcBalance} />
+<Deposit bind:this={deposit} max={walletEgc} />
 <Join bind:this={join} {activeAddress} />
 <Rule bind:this={rule} />
 <Info bind:this={info} {modalContent} {modalTitle} />
