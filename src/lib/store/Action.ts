@@ -29,6 +29,7 @@ function createAction() {
 			action.clear=false;
 			action.doubleBet=false;
 			action.insurance=false;
+			action.split=false;
 			return action;
 		 }),
 		beforeDeal:()=>update((action)=>{
@@ -42,7 +43,8 @@ function createAction() {
 			action.hit=true;
 			action.stand=true;
 			return action;
-		}),
+		})
+		
 	};
 	
 }

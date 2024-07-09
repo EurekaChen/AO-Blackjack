@@ -122,7 +122,17 @@
 								$Player.state.hands[1].cards.push(card);
 								}
 								$Player.state.hands[1].amount=luaPlayer.state.hands[1].amount;
-							}	
+							}							
+							else{
+								//一手时判断是否可拆牌
+								let rank1=luaPlayer.state.hands[0].cards[0].charAt(0);
+								let rank2=luaPlayer.state.hands[0].cards[1].charAt(0);
+								if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
+								if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
+								if(rank1==rank2){
+									$Action.split=true;
+								}
+							}
 						
 							console.log('dealercards', luaPlayer.state.dealerCards);
 							
@@ -131,10 +141,7 @@
 								$Player.state.dealerCards.push(card);
 							}							
 						    //$Player=$Player;
-
-							$Action.hit = true;
-							$Action.stand = true;
-							$Action.doubleBet = true;
+							Action.afterDeal()						
 						}
 						console.log('palyerInfo:', luaPlayer);
 					} else {
@@ -146,9 +153,10 @@
 				} else {
 					walletConnected = false;
 				}
-			} catch {
+			} catch(error) {
 				waitingAlert = 'danger';
 				waitingText = '数据请求失败，请刷新重试';
+				console.log(error);
 			}
 			//尝试连接：
 			//await connectWallet();
