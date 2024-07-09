@@ -1,41 +1,44 @@
 <script lang="ts">
 	import { t, locales, locale } from '$lib/i18n';
-	import { message, spawn, result, dryrun, createDataItemSigner } from '@permaweb/aoconnect';
+	import { dryrun } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
-	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
+	import { bjProcess, egcProcess } from '$lib/index';
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import Deposit from '$lib/component/modal/Deposit.svelte';
 	import Join from '$lib/component/modal/Join.svelte';
+	import Info from '$lib/component/modal/Info.svelte';
+	import Rule from '$lib/component/modal/Rule.svelte';
+	import { Waiting } from '$lib/store/Waiting';
+	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 
 	let walletInstalled = false;
 	let walletConnected = false;
-	let promptModal: { show: () => void };
-		
+
 	let deposit: Deposit;
-	let join:Join
+	let join: Join;
+	let info: Info;
+	let rule: Rule;
 
 	let activeAddress: string;
 
-
 	let max: number;
 
-	$: modalTitle = '请先连接钱包';
-	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
+	let modalTitle = '请先连接钱包';
+	let modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
-	$: waiting = false;
-	$: waitingAlert = 'info';
-	$: waitingText = '数据正在请求中，请稍候...';
-
-	onMount(async () => {		
-		promptModal = new bootstrap.Modal(document.getElementById('prompt'));			
-		if (window.arweaveWallet) {
+	onMount(async () => {
+		if (window.arweaveWallet) {			
 			walletInstalled = true;
+			console.log("钱包已经安装")
+
 			//如果没有连接，则下面这代码会没有权限！
 			//let activeAddress;
 			try {
 				activeAddress = await window.arweaveWallet.getActiveAddress();
+				console.log("钱包已经连接，地址："+activeAddress)
+
 			} catch (error) {
 				modalTitle = '请先连接钱包';
 				modalContent = `<p>
@@ -43,14 +46,14 @@
 				 </p>
 				 <div class="alert-warning alert">提示信息：${error}
 				 `;
-				promptModal.show();
+				info.openModal();
 			}
 
 			try {
 				if (activeAddress) {
 					walletConnected = true;
 
-					waiting = true;
+					$Waiting.isWaiting = true;
 
 					//查询EGC余额：
 					let queryBalance = await dryrun({
@@ -70,7 +73,7 @@
 						tags: [{ name: 'Action', value: 'GetPlayer' }],
 						data: activeAddress
 					});
-					waiting = false;
+					$Waiting.isWaiting = false;
 
 					console.log('getPlayerMsg:', getPlayerMsg);
 					if (getPlayerMsg.Messages.length > 0) {
@@ -97,46 +100,45 @@
 							modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
 						}
 
-						promptModal.show();
+						info.show();
 
 						if (luaPlayer.state) {
 							modalTitle = '上一局还未结束';
 							//还原上一局游戏：
 							$Player.state.activeHandIndex = luaPlayer.activeHandIndex - 1;
 
-							console.log("LuaPlayerState:",luaPlayer.state);
+							console.log('LuaPlayerState:', luaPlayer.state);
 
-							for (let card of luaPlayer.state.hands[0].cards) {   
+							for (let card of luaPlayer.state.hands[0].cards) {
 								$Player.state.hands[0].cards.push(card);
 							}
-							$Player.state.hands[0].amount=luaPlayer.state.hands[0].amount;
-							
-							if (luaPlayer.state.hands.length > 1) {	
+							$Player.state.hands[0].amount = luaPlayer.state.hands[0].amount;
+
+							if (luaPlayer.state.hands.length > 1) {
 								//有两手：
-								for (let card of luaPlayer.state.hands[1].cards) {   
-								$Player.state.hands[1].cards.push(card);
+								for (let card of luaPlayer.state.hands[1].cards) {
+									$Player.state.hands[1].cards.push(card);
 								}
-								$Player.state.hands[1].amount=luaPlayer.state.hands[1].amount;
-							}							
-							else{
+								$Player.state.hands[1].amount = luaPlayer.state.hands[1].amount;
+							} else {
 								//一手时判断是否可拆牌
-								let rank1=luaPlayer.state.hands[0].cards[0].charAt(0);
-								let rank2=luaPlayer.state.hands[0].cards[1].charAt(0);
-								if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
-								if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
-								if(rank1==rank2){
-									$Action.split=true;
+								let rank1 = luaPlayer.state.hands[0].cards[0].charAt(0);
+								let rank2 = luaPlayer.state.hands[0].cards[1].charAt(0);
+								if (rank1 == 'T' || rank1 == 'J' || rank1 == 'Q' || rank1 == 'K') rank1 = '10';
+								if (rank2 == 'T' || rank2 == 'J' || rank2 == 'Q' || rank2 == 'K') rank2 = '10';
+								if (rank1 == rank2) {
+									$Action.split = true;
 								}
 							}
-						
+
 							console.log('dealercards', luaPlayer.state.dealerCards);
-							
+
 							//$Dealer.cards = luaPlayer.state.dealerCards;
-							for (let card of luaPlayer.state.dealerCards) {   
+							for (let card of luaPlayer.state.dealerCards) {
 								$Player.state.dealerCards.push(card);
-							}							
-						    //$Player=$Player;
-							Action.afterDeal()						
+							}
+							//$Player=$Player;
+							Action.afterDeal();
 						}
 						console.log('palyerInfo:', luaPlayer);
 					} else {
@@ -149,9 +151,9 @@
 				} else {
 					walletConnected = false;
 				}
-			} catch(error) {
-				waitingAlert = 'danger';
-				waitingText = '数据请求失败，请刷新重试';
+			} catch (error) {
+				$Waiting.alertClass = 'danger';
+				$Waiting.waitingText = '数据请求失败，请刷新重试';
 				console.log(error);
 			}
 			//尝试连接：
@@ -167,7 +169,7 @@
 					<a class="btn btn-primary " href="https://www.arconnect.io/download">钱包下载地址</a>
 				 </p>`;
 
-			promptModal.show();
+			info.show();
 		}
 	});
 
@@ -202,61 +204,19 @@
 		}
 	}
 
-	function openDeposit() {		
+	function openDeposit() {
 		deposit.openModal();
-	}	
+	}
 
-	function openJoin() {		
+	function openJoin() {
 		join.openModal();
-	}	
-
-	
+	}
 </script>
 
-<Deposit bind:this={deposit} max={max} />
+<Deposit bind:this={deposit} {max} />
 <Join bind:this={join} />
-
-<!-- #region 规则弹出窗口-->
-<div class="modal fade" id="rule" tabindex="-1" aria-labelledby="ruleTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="ruleTitle">
-					{$t('top.rule.title')}
-				</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				{@html $t('top.rule.content')}
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- #endregion -->
-
-<!--提示信息-->
-<div class="modal fade" id="prompt" tabindex="-1" aria-labelledby="promptTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
-			<div class="modal-header p-4 pb-4 border-bottom-0">
-				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">{modalTitle}</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body p-4 pt-0">
-				<div class="form-floating mb-3">
-					{@html modalContent}
-				</div>
-			</div>
-			<div class="modal-footer text-center">
-				<button type="button" class="btn btn-primary mx-5 w-100" data-bs-dismiss="modal">OK</button>
-			</div>
-		</div>
-	</div>
-</div>
-
+<Rule bind:this={rule} />
+<Info bind:this={info} {modalContent} {modalTitle} />
 
 <!--垂直居中容器-->
 <div class="container m-auto main shadow-lg">
@@ -342,14 +302,7 @@
 				</button>
 			</div>
 		</div>
-		{#if waiting}
-			<h2
-				class="text-center alert alert-{waitingAlert}"
-				style="position:absolute; width:1024px; margin-top:220px;padding:40px;"
-			>
-				{waitingText}
-			</h2>
-		{/if}
+		<WaitingAlert />
 	</div>
 </div>
 

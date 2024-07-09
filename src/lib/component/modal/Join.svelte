@@ -13,7 +13,7 @@
     let modal: { show: () => void; hide: () => void; };
 
     onMount(async () => {				
-    modal= new bootstrap.Modal(document.getElementById('join'));
+        modal= new bootstrap.Modal(document.getElementById('join'));
     }); 
 
     export function openModal(){
