@@ -7,7 +7,7 @@
    
     
     let depositAmount= 10;
-    let max:number;
+    export let max:number;
  
     let modal: { show: () => void; hide: () => void; };
 
