@@ -52,7 +52,8 @@
 				if (activeAddress) {
 					walletConnected = true;
 					$Waiting.isWaiting = true;
-					$Waiting.waitingText = '正在查询您的EGC余额';
+					$Waiting.alertClass="info";
+					$Waiting.waitingText = '正在查询您钱包里的的EGC余额';
 					let queryBalance = await dryrun({
 						process: egcProcess,
 						tags: [
@@ -62,7 +63,7 @@
 					});
 					walletEgcBalance = queryBalance.Messages[0].Data / 100;
 
-					$Waiting.waitingText = '正在查询是否已经加注入';
+					$Waiting.waitingText = '正在查询是否已经加入游戏';
 					let getPlayerMsg = await dryrun({
 						process: bjProcess,
 						tags: [{ name: 'Action', value: 'GetPlayer' }],
@@ -75,7 +76,7 @@
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);
 						$Player.balance = luaPlayer.balance;
-						console.log('PlayerBalance:', $Player.balance);
+						$Player.name=luaPlayer.name;						
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -92,9 +93,9 @@
 						`;
 						if (luaPlayer.balance < 5) {
 							modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
-						}
+						}						
 
-						info.show();
+						info.openModal();
 
 						if (luaPlayer.state) {
 							modalTitle = '上一局还未结束';
@@ -137,7 +138,6 @@
 						console.log('palyerInfo:', luaPlayer);
 					} else {
 						openJoin();
-						
 					}
 					console.log('dryRunResult:', getPlayerMsg);
 				} else {
@@ -283,8 +283,8 @@
 			<!--防止div覆盖导致无法点击！-->
 			<div style="width:138px;height:200px;position:absolute;">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
-					{#if $Player.name!=""}
-					玩家:{$Player.name}
+					{#if $Player.name != ''}
+						玩家:{$Player.name}
 					{/if}
 				</div>
 				<!--使用./#会导至页面刷新！！-->
