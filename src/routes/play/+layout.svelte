@@ -28,6 +28,45 @@
 	let modalTitle = '请先连接钱包';
 	let modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
+	function restore(state) {
+		modalTitle = '上一局还未结束';
+		//还原上一局游戏：
+		$Player.state.activeHandIndex = state.activeHandIndex - 1;
+
+		console.log('LuaPlayerState:', state);
+
+		for (let card of state.hands[0].cards) {
+			$Player.state.hands[0].cards.push(card);
+		}
+		$Player.state.hands[0].amount = state.hands[0].amount;
+
+		if (state.hands.length > 1) {
+			//有两手：
+			for (let card of state.hands[1].cards) {
+				$Player.state.hands[1].cards.push(card);
+			}
+			$Player.state.hands[1].amount = state.hands[1].amount;
+		} else {
+			//一手时判断是否可拆牌
+			let rank1 = state.hands[0].cards[0].charAt(0);
+			let rank2 = state.hands[0].cards[1].charAt(0);
+			if (rank1 == 'T' || rank1 == 'J' || rank1 == 'Q' || rank1 == 'K') rank1 = '10';
+			if (rank2 == 'T' || rank2 == 'J' || rank2 == 'Q' || rank2 == 'K') rank2 = '10';
+			if (rank1 == rank2) {
+				$Action.split = true;
+			}
+		}
+
+		console.log('dealercards', state.dealerCards);
+
+		//$Dealer.cards = luaPlayer.state.dealerCards;
+		for (let card of state.dealerCards) {
+			$Player.state.dealerCards.push(card);
+		}
+		//$Player=$Player;
+		Action.afterDeal();
+	}
+
 	onMount(async () => {
 		if (window.arweaveWallet) {
 			walletInstalled = true;
@@ -52,7 +91,7 @@
 				if (activeAddress) {
 					walletConnected = true;
 					$Waiting.isWaiting = true;
-					$Waiting.alertClass="info";
+					$Waiting.alertClass = 'info';
 					$Waiting.waitingText = '正在查询您钱包里的的EGC余额';
 					let queryBalance = await dryrun({
 						process: egcProcess,
@@ -72,12 +111,12 @@
 					$Waiting.isWaiting = false;
 
 					if (getPlayerMsg.Messages.length > 0) {
-						console.log(getPlayerMsg)
+						console.log(getPlayerMsg);
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
 						let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);
 						$Player.balance = luaPlayer.balance;
-						$Player.name=luaPlayer.name;						
+						$Player.name = luaPlayer.name;
 
 						modalTitle = '欢迎回来';
 						modalContent = `
@@ -94,47 +133,12 @@
 						`;
 						if (luaPlayer.balance < 5) {
 							modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
-						}						
+						}
 
 						info.openModal();
 
 						if (luaPlayer.state) {
-							modalTitle = '上一局还未结束';
-							//还原上一局游戏：
-							$Player.state.activeHandIndex = luaPlayer.activeHandIndex - 1;
-
-							console.log('LuaPlayerState:', luaPlayer.state);
-
-							for (let card of luaPlayer.state.hands[0].cards) {
-								$Player.state.hands[0].cards.push(card);
-							}
-							$Player.state.hands[0].amount = luaPlayer.state.hands[0].amount;
-
-							if (luaPlayer.state.hands.length > 1) {
-								//有两手：
-								for (let card of luaPlayer.state.hands[1].cards) {
-									$Player.state.hands[1].cards.push(card);
-								}
-								$Player.state.hands[1].amount = luaPlayer.state.hands[1].amount;
-							} else {
-								//一手时判断是否可拆牌
-								let rank1 = luaPlayer.state.hands[0].cards[0].charAt(0);
-								let rank2 = luaPlayer.state.hands[0].cards[1].charAt(0);
-								if (rank1 == 'T' || rank1 == 'J' || rank1 == 'Q' || rank1 == 'K') rank1 = '10';
-								if (rank2 == 'T' || rank2 == 'J' || rank2 == 'Q' || rank2 == 'K') rank2 = '10';
-								if (rank1 == rank2) {
-									$Action.split = true;
-								}
-							}
-
-							console.log('dealercards', luaPlayer.state.dealerCards);
-
-							//$Dealer.cards = luaPlayer.state.dealerCards;
-							for (let card of luaPlayer.state.dealerCards) {
-								$Player.state.dealerCards.push(card);
-							}
-							//$Player=$Player;
-							Action.afterDeal();
+							restore(luaPlayer.state);
 						}
 						console.log('palyerInfo:', luaPlayer);
 					} else {
