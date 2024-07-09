@@ -3,22 +3,16 @@
 	import { message, spawn, result, dryrun, createDataItemSigner } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
-	import PromptDiv from '$lib/component/Prompt.svelte';
-	import Stack from '$lib/component/Stack.svelte';
 	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
-	import { Prompt, AddPrompt } from '$lib/store/Prompt';
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
-	import Hand from '$lib/component/Hand.svelte';
 	import Deposit from '$lib/component/modal/Deposit.svelte';
 
 	let walletInstalled = false;
 	let walletConnected = false;
 	let promptModal: { show: () => void };
-	//let depositModal: { show: () => void; };
-	//$:showDeposit=false;
-	let showDeposit=false;
-	let deposit;
+		
+	let deposit: Deposit;
 	let joinModal;
 	let activeAddress: string;
 
@@ -209,13 +203,9 @@
 		}
 	}
 
-	function openDeposit() {	
-		console.log("openDeposit");	
-	    //showDeposit=true;		
+	function openDeposit() {		
 		deposit.openModal();
-	}
-
-	
+	}	
 
 	async function join(name: string, addr: string) {
 		//生成新进程

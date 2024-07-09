@@ -1,28 +1,19 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from "svelte";
+	import { onMount } from "svelte";
 	import Stack from "../Stack.svelte";
 	import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 	import { egcProcess } from "$lib";
 	import { Player } from "$lib/store/Player";
    
     
-    export let show = false;
-     
     let depositAmount= 10;
     let max:number;
  
-    let modal;
+    let modal: { show: () => void; hide: () => void; };
 
     onMount(async () => {				
        modal= new bootstrap.Modal(document.getElementById('deposit'));
-    });
-
-    //$:if(show) modal.show();  else modal.hide();  
-    $:if(show){
-        console.log("打开modal");
-        if(show)  modal.show();
-        else modal.hide();
-    }
+    }); 
 
     export function openModal(){
         modal.show();
