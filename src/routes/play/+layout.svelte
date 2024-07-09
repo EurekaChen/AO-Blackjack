@@ -23,22 +23,21 @@
 
 	let activeAddress: string;
 
-	let max: number;
+	let walletEgcBalance: number;
 
 	let modalTitle = '请先连接钱包';
 	let modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
 
 	onMount(async () => {
-		if (window.arweaveWallet) {			
+		if (window.arweaveWallet) {
 			walletInstalled = true;
-			console.log("钱包已经安装")
+			console.log('钱包已经安装');
 
 			//如果没有连接，则下面这代码会没有权限！
 			//let activeAddress;
 			try {
 				activeAddress = await window.arweaveWallet.getActiveAddress();
-				console.log("钱包已经连接，地址："+activeAddress)
-
+				console.log('钱包已经连接，地址：' + activeAddress);
 			} catch (error) {
 				modalTitle = '请先连接钱包';
 				modalContent = `<p>
@@ -52,10 +51,8 @@
 			try {
 				if (activeAddress) {
 					walletConnected = true;
-
 					$Waiting.isWaiting = true;
-
-					//查询EGC余额：
+					$Waiting.waitingText = '正在查询您的EGC余额';
 					let queryBalance = await dryrun({
 						process: egcProcess,
 						tags: [
@@ -63,11 +60,9 @@
 							{ name: 'Target', value: activeAddress }
 						]
 					});
+					walletEgcBalance = queryBalance.Messages[0].Data / 100;
 
-					console.log('余额数据:', queryBalance);
-					max = queryBalance.Messages[0].Data / 100;
-
-					//查询是否已经注册：
+					$Waiting.waitingText = '正在查询是否已经加注入';
 					let getPlayerMsg = await dryrun({
 						process: bjProcess,
 						tags: [{ name: 'Action', value: 'GetPlayer' }],
@@ -75,7 +70,6 @@
 					});
 					$Waiting.isWaiting = false;
 
-					console.log('getPlayerMsg:', getPlayerMsg);
 					if (getPlayerMsg.Messages.length > 0) {
 						let luaPlayer = JSON.parse(getPlayerMsg.Messages[0].Data);
 						let addrFirst6 = luaPlayer.addr.substring(0, 6);
@@ -91,7 +85,7 @@
 							<dt class="col-3">玩家名称</dt>
 							<dd class="col-9">${luaPlayer.name}</dd>
 							<dt class="col-3">钱包余额</dt>
-							<dd class="col-9">${max} EGC</dd>
+							<dd class="col-9">${walletEgcBalance} EGC</dd>
 							<dt class="col-3">在桌筹码</dt>
 							<dd class="col-9">${luaPlayer.balance} EGC</dd>
 						</dl>					
@@ -142,10 +136,8 @@
 						}
 						console.log('palyerInfo:', luaPlayer);
 					} else {
-						//需要加入
-						//nickname = activeAddress.substring(activeAddress.length - 8);
-						//joinModal.show();
 						openJoin();
+						
 					}
 					console.log('dryRunResult:', getPlayerMsg);
 				} else {
@@ -213,8 +205,8 @@
 	}
 </script>
 
-<Deposit bind:this={deposit} {max} />
-<Join bind:this={join} />
+<Deposit bind:this={deposit} max={walletEgcBalance} />
+<Join bind:this={join} {activeAddress} />
 <Rule bind:this={rule} />
 <Info bind:this={info} {modalContent} {modalTitle} />
 
@@ -291,7 +283,9 @@
 			<!--防止div覆盖导致无法点击！-->
 			<div style="width:138px;height:200px;position:absolute;">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
+					{#if $Player.name!=""}
 					玩家:{$Player.name}
+					{/if}
 				</div>
 				<!--使用./#会导至页面刷新！！-->
 				<button on:click={openDeposit} style="background: none;border:none">

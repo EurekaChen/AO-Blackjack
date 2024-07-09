@@ -2,28 +2,27 @@
 	import { bjProcess, module, scheduler } from '$lib';
 	import { Player } from '$lib/store/Player';
 
-
-    import { Waiting } from '$lib/store/Waiting';
+	import { Waiting } from '$lib/store/Waiting';
 	import { createDataItemSigner, message, spawn } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
+	
+	export let activeAddress = '';
+    $:nickname = activeAddress.substring(activeAddress.length - 8);
 
-    let nickname = 'player';
-    export let activeAddress="";
+	let modal: { show: () => void; hide: () => void };
 
-    let modal: { show: () => void; hide: () => void; };
+	onMount(async () => {
+		modal = new bootstrap.Modal(document.getElementById('join'));
+	});
 
-    onMount(async () => {				
-        modal= new bootstrap.Modal(document.getElementById('join'));
-    }); 
+	export function openModal() {
+		modal.show();
+	}
 
-    export function openModal(){
-        modal.show();
-    }
-    
-    async function join(name: string, addr: string) {
+	async function join(name: string, addr: string) {
 		//生成新进程
-	   $Waiting.isWaiting = true;
-	   $Waiting.waitingText = '新用户加入中，请稍候...';
+		$Waiting.isWaiting = true;
+		$Waiting.waitingText = '新用户加入中，请稍候...';
 
 		//注：好象我的游戏不需要创建进程！用钱包地址玩就可以！
 		const userProcessId = await spawn({
@@ -42,27 +41,28 @@
 		console.log('注册信息:', userJsonStr);
 
 		//直接发送注册信息
+        //不翻墙会出错
 		const regMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'JoinBlackjack' }],
 			signer: createDataItemSigner(window.arweaveWallet),
 			data: userJsonStr
 		});
-
+        
 		//注册赠送100
 		//可以请求AO获得这个100，这里先直接加入
-		$Player.balance=100;
+		$Player.balance = 100;
+        $Player.name=nickname;
 
 		console.log('加入牌桌msgid：', regMsgId);
-	   $Waiting.alertClass = 'primary';
-	   $Waiting.waitingText = '加入成功...';
+		$Waiting.alertClass = 'primary';
+		$Waiting.waitingText = '加入成功...';
 		setTimeout(() => {
-		   $Waiting.isWaiting = false;
+			$Waiting.isWaiting = false;
 		}, 1000);
 
 		return userProcessId;
 	}
-
 </script>
 
 <!--加入游戏-->
