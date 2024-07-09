@@ -16,11 +16,13 @@
 	let walletConnected = false;
 	let promptModal: { show: () => void };
 	//let depositModal: { show: () => void; };
+	//$:showDeposit=false;
 	let showDeposit=false;
+	let deposit;
 	let joinModal;
 	let activeAddress: string;
 
-	let depositAmount = 10;
+
 	let max: number;
 
 	$: modalTitle = '请先连接钱包';
@@ -33,8 +35,7 @@
 	$: nickname = 'player';
 
 	onMount(async () => {		
-		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
-		//depositModal = new bootstrap.Modal(document.getElementById('deposit'));
+		promptModal = new bootstrap.Modal(document.getElementById('prompt'));		
 		joinModal = new bootstrap.Modal(document.getElementById('join'));
 
 		if (window.arweaveWallet) {
@@ -208,39 +209,13 @@
 		}
 	}
 
-	function openDeposit() {
-		//depositModal.show();	
-		showDeposit=true;	
-		
+	function openDeposit() {	
+		console.log("openDeposit");	
+	    //showDeposit=true;		
+		deposit.openModal();
 	}
 
-	async function deposit(amount: number) {
-		//直接发送转账信息
-		waiting = true;
-		waitingText = '请用钱包转入筹码...';
-		waitingAlert = 'primary';
-		//！！需x100才显示正常情况
-		let quantity = amount * 100;
-		let msgId = await message({
-			process: egcProcess,
-			tags: [
-				{ name: 'Action', value: 'Transfer' },
-				{ name: 'Target', value: 'JsroQVXlDCD9Ansr-n45SrTTB2LwqX_X6jDeaGiIHMo' },
-				{ name: 'Quantity', value: quantity.toString() },
-				{ name: 'Recipient', value: 'lKZ6SpyB_V8YwewgPmctsRDWaKQaLY3fP_3s-AnjzAs' }
-			],
-			signer: createDataItemSigner(window.arweaveWallet)
-		});
-
-		console.log('msgId', msgId);
-
-		let depositResult = result({ message: msgId, process: egcProcess });
-		console.log(depositResult);
-		waiting = false;
-
-		//！！！！
-		$Player.balance += amount;
-	}
+	
 
 	async function join(name: string, addr: string) {
 		//生成新进程
@@ -286,7 +261,8 @@
 	}
 </script>
 
-<Deposit bind:show={showDeposit} />
+<Deposit bind:this={deposit} />
+<!--Deposit bind:show={showDeposit} /-->
 
 <!-- #region 规则弹出窗口-->
 <div class="modal fade" id="rule" tabindex="-1" aria-labelledby="ruleTitle" aria-hidden="true">
@@ -438,7 +414,7 @@
 			<!--防止div覆盖导致无法点击！-->
 			<div style="width:138px;height:200px;position:absolute;">
 				<div style="position:absolute;left:8px;top:90px;color:#2196f3;font-weight:bold">
-					玩家:lzETTe0
+					玩家:{$Player.name}
 				</div>
 				<!--使用./#会导至页面刷新！！-->
 				<button on:click={openDeposit} style="background: none;border:none">

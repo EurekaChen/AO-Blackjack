@@ -1,31 +1,56 @@
 <script lang="ts">
-	import { onMount } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
 	import Stack from "../Stack.svelte";
+	import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
+	import { egcProcess } from "$lib";
+	import { Player } from "$lib/store/Player";
    
     
     export let show = false;
-    export let title = '';
-    
-    let depositAmount:number;
+     
+    let depositAmount= 10;
     let max:number;
+ 
     let modal;
 
     onMount(async () => {				
        modal= new bootstrap.Modal(document.getElementById('deposit'));
     });
 
-    $:if(modal) {
-      if (show) modal.show();
-      else modal.hide();
-    }
-  
-    function handleClose() {
-      show = false;
+    //$:if(show) modal.show();  else modal.hide();  
+    $:if(show){
+        console.log("打开modal");
+        if(show)  modal.show();
+        else modal.hide();
     }
 
-    async function deposit(){
-        
+    export function openModal(){
+        modal.show();
     }
+   
+    async function deposit(amount: number) {
+	
+		//需x100才能显示正常（有两位小数）
+		let quantity = amount * 100;
+		let msgId = await message({
+			process: egcProcess,
+			tags: [
+				{ name: 'Action', value: 'Transfer' },
+				{ name: 'Target', value: 'JsroQVXlDCD9Ansr-n45SrTTB2LwqX_X6jDeaGiIHMo' },
+				{ name: 'Quantity', value: quantity.toString() },
+				{ name: 'Recipient', value: 'lKZ6SpyB_V8YwewgPmctsRDWaKQaLY3fP_3s-AnjzAs' }
+			],
+			signer: createDataItemSigner(window.arweaveWallet)
+		});
+
+		console.log('msgId', msgId);
+
+		let depositResult = result({ message: msgId, process: egcProcess });
+		console.log(depositResult);
+	
+		//！！！！
+		$Player.balance += amount;
+	}
   </script>
 <div
 	class="modal fade"
