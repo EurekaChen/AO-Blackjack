@@ -10,11 +10,13 @@
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import Hand from '$lib/component/Hand.svelte';
+	import Deposit from '$lib/component/modal/Deposit.svelte';
 
 	let walletInstalled = false;
 	let walletConnected = false;
 	let promptModal: { show: () => void };
-	let depositModal: { show: () => void; };
+	//let depositModal: { show: () => void; };
+	let showDeposit=false;
 	let joinModal;
 	let activeAddress: string;
 
@@ -30,9 +32,9 @@
 
 	$: nickname = 'player';
 
-	onMount(async () => {
+	onMount(async () => {		
 		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
-		depositModal = new bootstrap.Modal(document.getElementById('deposit'));
+		//depositModal = new bootstrap.Modal(document.getElementById('deposit'));
 		joinModal = new bootstrap.Modal(document.getElementById('join'));
 
 		if (window.arweaveWallet) {
@@ -207,7 +209,9 @@
 	}
 
 	function openDeposit() {
-		depositModal.show();		
+		//depositModal.show();	
+		showDeposit=true;	
+		
 	}
 
 	async function deposit(amount: number) {
@@ -281,6 +285,8 @@
 		return userProcessId;
 	}
 </script>
+
+<Deposit bind:show={showDeposit} />
 
 <!-- #region 规则弹出窗口-->
 <div class="modal fade" id="rule" tabindex="-1" aria-labelledby="ruleTitle" aria-hidden="true">
@@ -357,64 +363,7 @@
 	</div>
 </div>
 
-<!--添加筹码-->
-<div
-	class="modal fade"
-	id="deposit"
-	tabindex="-1"
-	aria-labelledby="depositTitle"
-	aria-hidden="true"
->
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
-			<div class="modal-header p-5 pb-4 border-bottom-0">
-				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">带入更多筹码</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body p-5 pt-0">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-8">
-							<label for="floatingInput"
-								>请输入数量
-								{#if max}
-									(共有{max})
-								{/if}
-							</label>
-							<br />
-							<br />
-							<input
-								type="number"
-								step="5"
-								class="form-control rounded-3 w-50"
-								id="floatingInput"
-								bind:value={depositAmount}
-								placeholder="请输入数量"
-							/>
-							<br />
-							<input class="w-75" type="range" bind:value={depositAmount} min="5" step="5" {max} />
-						</div>
-						<div class="col-4">
-							{#key depositAmount}
-								<div style="position:absolute;left:320px; top:130px">
-									<Stack amount={depositAmount} />
-								</div>
-							{/key}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer text-center">
-				<button
-					type="button"
-					class="btn btn-primary mx-5 w-100"
-					data-bs-dismiss="modal"
-					on:click={() => deposit(depositAmount)}>带入筹码</button
-				>
-			</div>
-		</div>
-	</div>
-</div>
+
 
 <!--垂直居中容器-->
 <div class="container m-auto main shadow-lg">
