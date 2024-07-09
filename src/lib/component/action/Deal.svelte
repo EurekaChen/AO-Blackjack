@@ -22,6 +22,7 @@
 		});
 		
 		console.log('MsgId:', dealMsgId);
+		$Spinner.colorClass="success";
 		$Spinner.text = '解析数据中';
 
 		
@@ -34,22 +35,23 @@
 
 		//更新状态
 		let data = JSON.parse(readResult.Messages[0].Data);
-		if (data.balance) {
-			//返回余额，说明牌局结束（应该是玩家拿到了黑杰克）
+		if (data.balance>$Player.balance) {
+			//返回余额有多，说明牌局结束（应该是玩家拿到了黑杰克）
 			Action.clearAll();
 			$Action.newHand = true;		
 			Indicator.blackjack(data.balance-$Player.balance)
 			$Player.balance = data.balance;	
 			$Player.inGame=false;	
+			Action.clearAll();
+			$Action.newHand=true;
 		} else 		
-		{		
-
+		{
 			data.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
-			data.playerCards.forEach(card => $Player.state.hands[0].cards.push(card));			
+			data.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
 			Action.clearAll();
 
-			let rank1=data.playerCards[0].charAt(0);
-			let rank2=data.playerCards[1].charAt(0);		
+			let rank1=data.hands[0].cards[0].charAt(0);
+			let rank2=data.hands[0].cards[1].charAt(0);		
 
 			if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
 			if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
