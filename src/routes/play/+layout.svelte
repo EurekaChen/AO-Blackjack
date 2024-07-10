@@ -85,6 +85,7 @@
 
 		if (luaPlayer.state) {
 			modalTitle = '上一局还未结束';
+			$Player.inGame=true;
 			restore(luaPlayer.state);
 		}
 		info.openModal();
@@ -140,12 +141,10 @@
 			}
 		}
 
-		console.log('dealercards', state.dealerCards);
-
-		//$Dealer.cards = luaPlayer.state.dealerCards;
-		for (let card of state.dealerCards) {
-			$Player.state.dealerCards.push(card);
-		}
+		$Player.state.dealerCards = state.dealerCards;
+		// for (let card of state.dealerCards) {
+		// 	$Player.state.dealerCards.push(card);
+		// }
 		//$Player=$Player;
 		Action.afterDeal();
 	}
