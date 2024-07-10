@@ -30,7 +30,7 @@ function createSpinner() {
 			update((spinner) => {
 				spinner.isWaiting = true;
 				spinner.text = "获取结果中";
-				spinner.colorClass = 'sucess';								
+				spinner.colorClass = 'success';								
 				return spinner;
 			})		
 	};

@@ -8,23 +8,15 @@
 	
 
 	async function hit() {
-		$Spinner.isWaiting = true;
-		$Spinner.text = '要牌中';
-		$Spinner.colorClass = 'info';
-
-		//直接发送发牌信息
+		Spinner.info('AO要牌中');
 		const hitMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Hit' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		$Spinner.text = '解析中';
-		$Spinner.colorClass = 'success';
-
-		const readResult = await result({ message: hitMsgId, process: bjProcess });
-
-		console.log('结果信息：', readResult);
+		Spinner.result();
+		const readResult = await result({ message: hitMsgId, process: bjProcess });		
 		const stateJson = readResult.Messages[0].Data;
 		const state = JSON.parse(stateJson);
 
@@ -33,12 +25,15 @@
 		if (state.hands[0].amount == 0 && state.dealerCards.length == 2) {
 			//玩家筹码被收走，庄家发两张牌，说明爆牌输了
 			const loseAmount = $Player.state.hands[0].amount;
-		    Player.getState(state);
+		    Player.getState(state); //怎么没清掉筹码？
 			Indicator.lose(loseAmount);
 
 			Action.clearAll();
 			$Action.newHand = true;
+			//??没起效？！还有amount不归零？
+			//$Player.state.
 			$Player.inGame=false;
+			$Player=$Player;
 			
 		} else if (state.balance > $Player.balance) {
 			//赢钱了
