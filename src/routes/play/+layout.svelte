@@ -103,10 +103,25 @@
 
 		if (state.hands.length > 1) {
 			//有两手：
+			//恢复第二手
 			for (let card of state.hands[1].cards) {
 				$Player.state.hands[1].cards.push(card);
 			}
 			$Player.state.hands[1].amount = state.hands[1].amount;
+
+			
+			if(state.activeHandIndex==0){
+				//两手21，牌局结束：
+				$Player.inGame=false;
+				$Player.state.originalAmount=state.originalAmount;
+				$Action.newHand=true;
+			}
+			else if(state.activeHandIndex==1){
+				//第一手活动：
+				
+
+				
+			}
 		} else {
 			//一手时判断是否可拆牌
 			let rank1 = state.hands[0].cards[0].charAt(0);
@@ -115,6 +130,16 @@
 			if (rank2 == 'T' || rank2 == 'J' || rank2 == 'Q' || rank2 == 'K') rank2 = '10';
 			if (rank1 == rank2) {
 				$Action.split = true;
+			}
+
+			if (state.dealerCards[0].charAt(0) == 'A') {
+				//一手时可下保险
+				if (state.insurance > 0) {
+					//已经下保险
+					$Player.state.insurance = state.insurance;
+				} else {
+					$Action.insurance = true;
+				}
 			}
 		}
 

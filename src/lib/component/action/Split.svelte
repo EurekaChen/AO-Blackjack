@@ -33,7 +33,7 @@
 			$Spinner.text = $Spinner.defaultText;
 			$Spinner.isWaiting = false;
 
-			//如果
+			//拆牌后
 			const state=JSON.parse(readResult.Messages[0].Data)
 			$Player.balance=state.balance;
 			$Player.state.dealerCards=state.dealerCards;
@@ -44,10 +44,17 @@
 			$Player.state.hands[1].amount=state.hands[1].amount;
 
 			if(state.activeHandIndex==0){
+				//两手都是21点，牌局结束
 				$Player.inGame=false;
 				Action.clearAll();
 				$Action.newHand=true;
 			}
+			else if(state.activeHandIndex==1){
+				//常规，进入第一手牌
+				//另一手不亮：
+				
+			}
+
 		}		
 	}
 </script>

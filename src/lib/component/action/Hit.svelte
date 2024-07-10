@@ -1,68 +1,69 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';	
+	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import { Spinner } from '$lib/store/Spinner';
 	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib';
 	import { Waiting } from '$lib/store/Waiting';
 	import { Indicator } from '$lib/store/Indicator';
-	
- 	async	function hit() {
+
+	function GetState(state) {
+		$Player.balance = state.balance;
+		$Player.state.activeHandIndex = state.activeHandIndex - 1;
+		$Player.state.dealerCards = state.dealerCards;
+		$Player.state.insurance = state.insurance;
+
+		$Player.state.hands[0].cards = state.hands[0].cards;
+		$Player.state.hands[0].amount = state.hands[0].amount;
+		if (state.hands.length > 1) {
+			$Player.state.hands[1].cards = state.hands[1].cards;
+			$Player.state.hands[1].amount = state.hands[1].amount;
+		}
+	}
+
+	async function hit() {
 		$Spinner.isWaiting = true;
 		$Spinner.text = '要牌中';
-		$Spinner.colorClass="info";
+		$Spinner.colorClass = 'info';
 
 		//直接发送发牌信息
 		const hitMsgId = await message({
 			process: bjProcess,
-			tags: [
-				{ name: 'Action', value: 'Hit' },			
-			],
+			tags: [{ name: 'Action', value: 'Hit' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		$Spinner.text = '解析中';	
-		$Spinner.colorClass="success"
+		$Spinner.text = '解析中';
+		$Spinner.colorClass = 'success';
 
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
 
 		console.log('结果信息：', readResult);
-		console.log(readResult.Messages[0].Data);
-		
+		const stateJson = readResult.Messages[0].Data;
+		const state = JSON.parse(stateJson);
+
 		$Spinner.text = $Spinner.defaultText;
-		$Spinner.isWaiting = false;	
+		$Spinner.isWaiting = false;
 
-		//更新状态
-		let data:string = readResult.Messages[0].Data;
-
-		let hitInfo=JSON.parse(data)
-		if(hitInfo.dealerCard)
-		{
-			//返回庄家的牌，说明已经爆了！
+		if (state.hands[0].amount == 0 && state.dealerCards.length == 2) {
+			//玩家筹码被收走，庄家发两张牌，说明爆牌输了
+			const loseAmount=$Player.state.hands[0].amount;
+			GetState(state);
+			Indicator.lose(loseAmount)
 			Action.clearAll();
-			$Action.newHand = true;			
-			$Waiting.isWaiting=true;
-			$Waiting.alertClass="danger";
-			$Waiting.confirm=true;
-			$Waiting.waitingText="暴牌了！"
-
-			$Player.state.hands[0].cards.push(hitInfo.playerCard);
-			$Player.state.dealerCards.push(hitInfo.dealerCard);
-
-			//清掉筹码
-			$Player.state.hands[0].amount=0;
-			//更新
-			$Player=$Player;			
-
-			Indicator.win(-hitInfo.balance);		
+			$Action.newHand=true;
 			
 		}
-		else{					
-			$Player.state.hands[0].cards.push(hitInfo.playerCard);
-			console.log("发到牌："+hitInfo.playerCard);	
-			//更新牌界面
-			//$Player=$Player;
-		}		
+		else if(state.balance>$Player.balance)
+		{	
+			const winAmount=state.balance-$Player.balance;
+			Action.clearAll();
+			$Action.newHand = true;
+			GetState(state)
+			Indicator.win(winAmount);
+		} else {
+			GetState(state);
+		}
 	}
 </script>
 

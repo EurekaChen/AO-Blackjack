@@ -6,8 +6,7 @@
 	let chipLength=reverseChipRank.length;
 	let reverseChipRankCount = new Array(chipLength).fill(0);
     let amt = amount;
-
-	console.log("amt,amount:",amt,amount)
+	
 	for (let index = 0; index < chipLength; index++) {
 		let chip:number = reverseChipRank[index];
 		//筹码个数		
