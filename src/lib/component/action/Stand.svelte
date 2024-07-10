@@ -49,12 +49,16 @@
 				Indicator.lose(backBalance-betAmount)
 			}
 
+			//显示牌面：
+			Player.getState(aoState);
+
 			//恢复筹码：
-			$Player.balance = aoState.balance;
-			$Player.state.hands.forEach((hand) => {
-				hand.amount = 0;
-			});
-			$Player=$Player;
+			//$Player.balance = aoState.balance;
+			// $Player.state.hands.forEach((hand) => {
+			// 	hand.amount = 0;
+			// });
+			
+			// $Player=$Player;
 
 			setTimeout(() => {
 				$Indicator.isShow = false;

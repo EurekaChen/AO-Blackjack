@@ -8,7 +8,8 @@
 		$Player.state.hands[0].amount=$Player.state.originalAmount;
 		$Player.balance-=$Player.state.originalAmount;	
 
-		//$Action.
+		Action.clearAll();
+		Action.beforeDeal();
 	}
 </script>
 
