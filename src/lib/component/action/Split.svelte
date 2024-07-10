@@ -8,10 +8,9 @@
 
 	async function split() {
 		let amount = $Player.state.hands[0].amount;
-		if ($Player.balance >= amount) {	
-
-			Spinner.info('AO拆牌中');
+		if ($Player.balance >= amount) {				
 			Action.clearAll();
+			Spinner.info('AO拆牌中');
 			const splitMsgId = await message({
 				process: bjProcess,
 				tags: [{ name: 'Action', value: 'Split' }],
@@ -41,11 +40,17 @@
 				Action.clearAll();
 				$Action.newHand=true;
 			}
-			else if(aoState.activeHandIndex==1){
-				//常规，进入第一手牌
-				//另一手不亮：
-				Action.afterDeal();	
+			else{
+				Action.afterDeal(true);	
 			}
+			// else if(aoState.activeHandIndex==1){
+			// 	//常规，进入第一手牌
+			// 	//另一手不亮：
+			// 	Action.afterDeal(true);	
+			// }else if(aoState.activeHandIndex==2){
+			// 	//进入了第二手
+			// 	Action.afterDeal(true);
+			// }
 
 		}		
 	}

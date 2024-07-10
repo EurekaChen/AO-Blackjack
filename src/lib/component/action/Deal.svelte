@@ -9,7 +9,7 @@
 	async function deal() {
 		//按钮后不能再动筹码
 		$Player.inGame=true;
-
+		Action.clearAll();
 		Spinner.info("AO发牌中");
 		$Player.state.originalAmount=$Player.state.hands[0].amount;	
 		const dealMsgId = await message({
@@ -23,27 +23,30 @@
 	
 		Spinner.result();		
 		const readResult = await result({ message: dealMsgId, process: bjProcess });		
-	    Spinner.stop();		
+	    Spinner.stop();			
 
-		//更新状态
-		let data = JSON.parse(readResult.Messages[0].Data);
-		if (data.balance>$Player.balance) {
+		let oaStateJson= readResult.Messages[0].Data
+		let oaState = JSON.parse(oaStateJson);
+		if (oaState.balance>$Player.balance) {
 			//返回余额有多，说明牌局结束（应该是玩家拿到了黑杰克）
-			Action.clearAll();
-			$Action.newHand = true;		
-			Indicator.blackjack(data.balance-$Player.balance)
-			$Player.balance = data.balance;	
-			$Player.inGame=false;	
-			Action.clearAll();
-			$Action.newHand=true;			
+			Player.getState(oaState);	
+			Action.clearAll();		
+			Indicator.blackjack(oaState.balance-$Player.balance)			
+			$Player.inGame=false;			
+			$Action.newHand=true;	
+
+			setTimeout(() => {
+			    $Indicator.isShow=false;	
+			}, 5000);
+				
 		} else 		
 		{
-			data.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
-			data.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
+			oaState.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
+			oaState.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
 			Action.clearAll();
 
-			let rank1=data.hands[0].cards[0].charAt(0);
-			let rank2=data.hands[0].cards[1].charAt(0);		
+			let rank1=oaState.hands[0].cards[0].charAt(0);
+			let rank2=oaState.hands[0].cards[1].charAt(0);		
 
 			if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
 			if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
@@ -53,12 +56,12 @@
 				$Action.split=true;
 			}
 
-			Action.afterDeal()		
+			Action.afterDeal(true)		
 			$Player.inGame=true;
 		}
 
 		//保险为另外加的赌注
-		if(data.dealerCards[0].includes('A')){
+		if(oaState.dealerCards[0].includes('A')){
 			//提示保险
 			$Action.insurance=true;
 		}

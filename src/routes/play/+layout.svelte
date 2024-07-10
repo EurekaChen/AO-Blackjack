@@ -58,95 +58,105 @@
 		}
 	}
 
-	function welcomeBack(luaPlayer: { addr: string; balance: number; name: string; state: any }) {
-		let addrFirst6 = luaPlayer.addr.substring(0, 6);
-		let addrLast6 = luaPlayer.addr.substring(luaPlayer.addr.length - 6);
+	function welcomeBack(aoPlayer: { addr: string; balance: number; name: string; state: any }) {
+		let addrFirst6 = aoPlayer.addr.substring(0, 6);
+		let addrLast6 = aoPlayer.addr.substring(aoPlayer.addr.length - 6);
 		let shortAddr = addrFirst6 + '......' + addrLast6;
 
 		modalTitle = '欢迎回来';
 		modalContent = `
 		<dl class="row">
 			<dt class="col-3">钱包地址</dt>
-			<dd class="col-9" title="${luaPlayer.addr}"> ${shortAddr}</dd>
+			<dd class="col-9" title="${aoPlayer.addr}"> ${shortAddr}</dd>
 			<dt class="col-3">玩家名称</dt>
-			<dd class="col-9">${luaPlayer.name}</dd>
+			<dd class="col-9">${aoPlayer.name}</dd>
 			<dt class="col-3">钱包余额</dt>
 			<dd class="col-9">${walletEgc} EGC</dd>
 			<dt class="col-3">在桌筹码</dt>
-			<dd class="col-9">${luaPlayer.balance} EGC</dd>
+			<dd class="col-9">${aoPlayer.balance} EGC</dd>
 		</dl>					
 		`;
-		if (luaPlayer.balance < 5) {
+		if (aoPlayer.balance < 5) {
 			modalContent += `<div class="alert alert-warning text-center">筹码不够最低限额，请增加筹码</div>`;
 		}
 
-		$Player.balance = luaPlayer.balance;
-		$Player.name = luaPlayer.name;
+		$Player.balance = aoPlayer.balance;
+		$Player.name = aoPlayer.name;
 
-		if (luaPlayer.state) {
+		if (aoPlayer.state) {
 			modalTitle = '上一局还未结束';
 			$Player.inGame=true;
-			restore(luaPlayer.state);
+
+			//考虑是不是传回balance和不要deck，其实拿到deck也不影响。
+			//里面少的牌就是玩家看到的牌，所以无所谓呀！
+			restore(aoPlayer.state);
 		}
 		info.openModal();
 	}
 
-	function restore(state) {
-		//还原上一局游戏：
-		$Player.state.activeHandIndex = state.activeHandIndex - 1;
+	//还原游戏
+	function restore(oaState) {
+		console.log('oaState:', oaState);	
+		$Player.state.activeHandIndex = oaState.activeHandIndex - 1;	
 
-		console.log('LuaPlayerState:', state);
-
-		for (let card of state.hands[0].cards) {
+		for (let card of oaState.hands[0].cards) {
 			$Player.state.hands[0].cards.push(card);
 		}
-		$Player.state.hands[0].amount = state.hands[0].amount;
+		$Player.state.hands[0].amount = oaState.hands[0].amount;
 
-		if (state.hands.length > 1) {
+		if (oaState.hands.length > 1) {
 			//有两手：
 			//恢复第二手
-			for (let card of state.hands[1].cards) {
+			for (let card of oaState.hands[1].cards) {
 				$Player.state.hands[1].cards.push(card);
 			}
-			$Player.state.hands[1].amount = state.hands[1].amount;
+			$Player.state.hands[1].amount = oaState.hands[1].amount;
 
 			
-			if(state.activeHandIndex==0){
+			if(oaState.activeHandIndex==0){
 				//两手21，牌局结束：
 				$Player.inGame=false;
-				$Player.state.originalAmount=state.originalAmount;
+				$Player.state.originalAmount=oaState.originalAmount;
 				$Action.newHand=true;
 			}
-			else if(state.activeHandIndex==1){
+			else if(oaState.activeHandIndex==1){
 				//第一手活动：			
 			}
 		} else {
 			//一手时判断是否可拆牌
-			let rank1 = state.hands[0].cards[0].charAt(0);
-			let rank2 = state.hands[0].cards[1].charAt(0);
+			let rank1 = oaState.hands[0].cards[0].charAt(0);
+			let rank2 = oaState.hands[0].cards[1].charAt(0);
 			if (rank1 == 'T' || rank1 == 'J' || rank1 == 'Q' || rank1 == 'K') rank1 = '10';
 			if (rank2 == 'T' || rank2 == 'J' || rank2 == 'Q' || rank2 == 'K') rank2 = '10';
 			if (rank1 == rank2) {
 				$Action.split = true;
 			}
 
-			if (state.dealerCards[0].charAt(0) == 'A') {
+			if (oaState.dealerCards[0].charAt(0) == 'A') {
 				//一手时可下保险
-				if (state.insurance > 0) {
+				if (oaState.insurance > 0) {
 					//已经下保险
-					$Player.state.insurance = state.insurance;
+					$Player.state.insurance = oaState.insurance;
 				} else {
 					$Action.insurance = true;
 				}
 			}
 		}
 
-		$Player.state.dealerCards = state.dealerCards;
+		$Player.state.dealerCards = oaState.dealerCards;
 		// for (let card of state.dealerCards) {
 		// 	$Player.state.dealerCards.push(card);
 		// }
 		//$Player=$Player;
-		Action.afterDeal();
+		const hand1CanDouble=oaState.activeAddress==1 && oaState.hands[0].cards.length==2;
+		const hand2CanDouble=oaState.activeAddress==2 && oaState.hands[1].cards.length==2;
+		
+		if(hand1CanDouble || hand2CanDouble){
+			Action.afterDeal(true);
+		}
+		else{
+			Action.afterDeal(false);
+		}			
 	}
 
 	onMount(async () => {
@@ -174,9 +184,9 @@
 					walletConnected = true;
 					walletEgc = await queryWalletEgc(activeAddress);
 
-					let luaPlayer = await GetPlayer(activeAddress);
-					if (luaPlayer != null) {
-						welcomeBack(luaPlayer);
+					let oaPlayer = await GetPlayer(activeAddress);
+					if (oaPlayer != null) {
+						welcomeBack(oaPlayer);
 					} else {
 						openJoin();
 					}

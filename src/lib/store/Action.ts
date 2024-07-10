@@ -38,8 +38,8 @@ function createAction() {
 			action.clear=true;
 			return action;
 		}),
-		afterDeal:()=>update((action)=>{
-			action.doubleBet=true;
+		afterDeal:(canDouble:boolean)=>update((action)=>{			
+			action.doubleBet=canDouble;
 			action.hit=true;
 			action.stand=true;
 			return action;
