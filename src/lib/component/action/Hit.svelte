@@ -42,28 +42,35 @@
 		const stateJson = readResult.Messages[0].Data;
 		const state = JSON.parse(stateJson);
 
-		$Spinner.text = $Spinner.defaultText;
 		$Spinner.isWaiting = false;
 
 		if (state.hands[0].amount == 0 && state.dealerCards.length == 2) {
 			//玩家筹码被收走，庄家发两张牌，说明爆牌输了
-			const loseAmount=$Player.state.hands[0].amount;
+			const loseAmount = $Player.state.hands[0].amount;
 			GetState(state);
-			Indicator.lose(loseAmount)
-			Action.clearAll();
-			$Action.newHand=true;
-			
-		}
-		else if(state.balance>$Player.balance)
-		{	
-			const winAmount=state.balance-$Player.balance;
+			Indicator.lose(loseAmount);
+
 			Action.clearAll();
 			$Action.newHand = true;
-			GetState(state)
+			$Player.inGame=false;
+			
+		} else if (state.balance > $Player.balance) {
+			//赢钱了
+			const winAmount = state.balance - $Player.balance;
+			Action.clearAll();
+			$Action.newHand = true;
+			GetState(state);
 			Indicator.win(winAmount);
+			$Player.inGame=false;
 		} else {
 			GetState(state);
 		}
+
+		setTimeout(() => {
+			$Indicator.isShow = false;
+		}, 5000);
+
+		
 	}
 </script>
 

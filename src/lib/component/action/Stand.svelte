@@ -6,41 +6,36 @@
 	import { Action } from '$lib/store/Action';
 	import { Indicator } from '$lib/store/Indicator';
 
-	async function stand() {
-		$Spinner.isWaiting = true;
-		$Spinner.text = '停牌中';
 
-		//直接发送发牌信息
+	async function stand() {
+
+		Spinner.info("停牌中")
+		//直接发送停牌信息
 		const standMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Stand' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		$Spinner.text = '请稍候';
-
-		console.log('MsgId:', standMsgId);
-
+		Spinner.success('解析中');	
 		const readResult = await result({ message: standMsgId, process: bjProcess });
-
 		console.log('结果信息：', readResult);
-		$Spinner.text = $Spinner.defaultText;
-		//更新状态
-		$Spinner.isWaiting = false;
 
-		const msgData = readResult.Messages[0].Data;
-		const info = JSON.parse(msgData);
+		Spinner.stop();
 
-		//两种情况，一种是发下一手牌，一种是庄家发到牌
-		//
-		if (info.activeHandIndex) {
+		const aoStateJson = readResult.Messages[0].Data;
+		const aoState = JSON.parse(aoStateJson);
+
+		//两种情况，一种是发下一手牌，一种是庄家发到牌	
+		let activeHandIndex=aoState.activeHandIndex-1;	
+		if (activeHandIndex>1) {
 			//返回数据 ：
 			//{ activeHandIndex = player.state.activeHandIndex,card= hand2Card2}
 			//下一手split
 		} else {
 			//返回数据:{dealerCards = player.state.dealerCards,balance=player.balance}
-		    $Player.state.dealerCards = info.dealerCards;
-			let aoBalance = info.balance;
+		    $Player.state.dealerCards = aoState.dealerCards;
+			let aoBalance = aoState.balance;
 
 			let betAmount = 0;
 			$Player.state.hands.forEach((hand) => {
@@ -59,7 +54,7 @@
 			}
 
 			//恢复筹码：
-			$Player.balance = info.balance;
+			$Player.balance = aoState.balance;
 			$Player.state.hands.forEach((hand) => {
 				hand.amount = 0;
 			});

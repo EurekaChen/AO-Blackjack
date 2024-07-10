@@ -7,8 +7,9 @@
 	import { Indicator } from '$lib/store/Indicator';
 	
 	async function deal() {
-		$Spinner.isWaiting = true;
-		$Spinner.text = 'OA发牌中';
+		//按钮后不能再动筹码
+		$Player.inGame=true;
+		Spinner.info("AO发牌中");
 
 		$Player.state.originalAmount=$Player.state.hands[0].amount;
 		//直接发送发牌信息
@@ -22,16 +23,13 @@
 		});
 		
 		console.log('MsgId:', dealMsgId);
-		$Spinner.colorClass="success";
-		$Spinner.text = '解析数据中';
-
+		Spinner.success('数据解析中');
 		
 		const readResult = await result({ message: dealMsgId, process: bjProcess });
 		console.log('结果信息：', readResult);
 		console.log(readResult.Messages[0].Data);
 
-		$Spinner.text = $Spinner.defaultText;
-		$Spinner.isWaiting = false;
+	    Spinner.stop();		
 
 		//更新状态
 		let data = JSON.parse(readResult.Messages[0].Data);
@@ -43,7 +41,7 @@
 			$Player.balance = data.balance;	
 			$Player.inGame=false;	
 			Action.clearAll();
-			$Action.newHand=true;
+			$Action.newHand=true;			
 		} else 		
 		{
 			data.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						

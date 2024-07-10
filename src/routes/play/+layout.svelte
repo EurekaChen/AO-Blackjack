@@ -117,10 +117,7 @@
 				$Action.newHand=true;
 			}
 			else if(state.activeHandIndex==1){
-				//第一手活动：
-				
-
-				
+				//第一手活动：			
 			}
 		} else {
 			//一手时判断是否可拆牌
