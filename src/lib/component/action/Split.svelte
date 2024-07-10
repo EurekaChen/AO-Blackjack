@@ -20,29 +20,31 @@
 			Spinner.result();		
 
 			const readResult = await result({ message: splitMsgId, process: bjProcess });
-			const stateJson=readResult.Messages[0].Data;
-			const state=JSON.parse(stateJson);
-			console.log(stateJson)
+			const aoStateJson=readResult.Messages[0].Data;
+			const aoState=JSON.parse(aoStateJson);
+			console.log(aoStateJson)
 			Spinner.stop();
 
-			$Player.balance=state.balance;
-			$Player.state.dealerCards=state.dealerCards;
-			$Player.state.hands[0].cards=state.hands[0].cards;
-			$Player.state.hands[0].amount=state.hands[0].amount;
+			Player.getState(aoState);
 
-			$Player.state.hands[1].cards=state.hands[1].cards;
-			$Player.state.hands[1].amount=state.hands[1].amount;
+			// $Player.balance=state.balance;
+			// $Player.state.dealerCards=state.dealerCards;
+			// $Player.state.hands[0].cards=state.hands[0].cards;
+			// $Player.state.hands[0].amount=state.hands[0].amount;
 
-			if(state.activeHandIndex==0){
+			// $Player.state.hands[1].cards=state.hands[1].cards;
+			// $Player.state.hands[1].amount=state.hands[1].amount;
+
+			if(aoState.activeHandIndex==0){
 				//两手都是21点，牌局结束
 				$Player.inGame=false;
 				Action.clearAll();
 				$Action.newHand=true;
 			}
-			else if(state.activeHandIndex==1){
+			else if(aoState.activeHandIndex==1){
 				//常规，进入第一手牌
 				//另一手不亮：
-				
+				Action.afterDeal();	
 			}
 
 		}		

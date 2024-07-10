@@ -9,32 +9,28 @@
 
 	async function stand() {
 
-		Spinner.info("停牌中")
-		//直接发送停牌信息
+		Spinner.info("停牌中")		
 		const standMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Stand' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		Spinner.result('解析中');	
-		const readResult = await result({ message: standMsgId, process: bjProcess });
-		console.log('结果信息：', readResult);
+		Spinner.result();	
+		const readResult = await result({ message: standMsgId, process: bjProcess });	
 
 		Spinner.stop();
 
 		const aoStateJson = readResult.Messages[0].Data;
 		const aoState = JSON.parse(aoStateJson);
+		console.log("aoState",aoState);
 
 		//两种情况，一种是发下一手牌，一种是庄家发到牌	
 		let activeHandIndex=aoState.activeHandIndex-1;	
 		if (activeHandIndex>1) {
-			//返回数据 ：
-			//{ activeHandIndex = player.state.activeHandIndex,card= hand2Card2}
-			//下一手split
+			Player.getState(aoState);
 		} else {
-			//返回数据:{dealerCards = player.state.dealerCards,balance=player.balance}
-		    $Player.state.dealerCards = aoState.dealerCards;
+			//牌局结束
 			let aoBalance = aoState.balance;
 
 			let betAmount = 0;
@@ -66,7 +62,7 @@
 
 			Action.clearAll();
 			$Action.newHand = true;		
-			
+			$Player.inGame=false;			
 		}
 	}
 </script>

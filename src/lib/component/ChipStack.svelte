@@ -3,7 +3,7 @@
 	import { Player } from '$lib/store/Player';
 </script>
 
-{#key $Player.state.hands[0].amount}
+{#key $Player.state}
 	<div style="position:absolute;left:120px;top:360px;">
 		<Stack amount={$Player.balance} />
 	</div>
