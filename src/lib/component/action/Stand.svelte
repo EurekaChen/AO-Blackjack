@@ -17,7 +17,7 @@
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		Spinner.success('解析中');	
+		Spinner.result('解析中');	
 		const readResult = await result({ message: standMsgId, process: bjProcess });
 		console.log('结果信息：', readResult);
 

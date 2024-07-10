@@ -9,10 +9,9 @@
 	async function deal() {
 		//按钮后不能再动筹码
 		$Player.inGame=true;
-		Spinner.info("AO发牌中");
 
-		$Player.state.originalAmount=$Player.state.hands[0].amount;
-		//直接发送发牌信息
+		Spinner.info("AO发牌中");
+		$Player.state.originalAmount=$Player.state.hands[0].amount;	
 		const dealMsgId = await message({
 			process: bjProcess,
 			tags: [
@@ -20,15 +19,10 @@
 				{ name: 'Amount', value: $Player.state.hands[0].amount.toString() }
 			],
 			signer: createDataItemSigner(window.arweaveWallet)
-		});
-		
-		console.log('MsgId:', dealMsgId);
-		Spinner.success('数据解析中');
-		
-		const readResult = await result({ message: dealMsgId, process: bjProcess });
-		console.log('结果信息：', readResult);
-		console.log(readResult.Messages[0].Data);
-
+		});		
+	
+		Spinner.result();		
+		const readResult = await result({ message: dealMsgId, process: bjProcess });		
 	    Spinner.stop();		
 
 		//更新状态

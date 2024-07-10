@@ -26,10 +26,10 @@ function createSpinner() {
 				spinner.colorClass="info";				
 				return spinner;
 			}),
-		success: (text: string) =>
+		result: () =>
 			update((spinner) => {
 				spinner.isWaiting = true;
-				spinner.text = text;
+				spinner.text = "获取结果中";
 				spinner.colorClass = 'sucess';								
 				return spinner;
 			})		
