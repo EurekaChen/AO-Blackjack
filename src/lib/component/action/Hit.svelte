@@ -4,22 +4,8 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib';
-	import { Waiting } from '$lib/store/Waiting';
 	import { Indicator } from '$lib/store/Indicator';
-
-	function GetState(state) {
-		$Player.balance = state.balance;
-		$Player.state.activeHandIndex = state.activeHandIndex - 1;
-		$Player.state.dealerCards = state.dealerCards;
-		$Player.state.insurance = state.insurance;
-
-		$Player.state.hands[0].cards = state.hands[0].cards;
-		$Player.state.hands[0].amount = state.hands[0].amount;
-		if (state.hands.length > 1) {
-			$Player.state.hands[1].cards = state.hands[1].cards;
-			$Player.state.hands[1].amount = state.hands[1].amount;
-		}
-	}
+	
 
 	async function hit() {
 		$Spinner.isWaiting = true;
@@ -47,7 +33,7 @@
 		if (state.hands[0].amount == 0 && state.dealerCards.length == 2) {
 			//玩家筹码被收走，庄家发两张牌，说明爆牌输了
 			const loseAmount = $Player.state.hands[0].amount;
-			GetState(state);
+		    Player.getState(state);
 			Indicator.lose(loseAmount);
 
 			Action.clearAll();
@@ -59,11 +45,11 @@
 			const winAmount = state.balance - $Player.balance;
 			Action.clearAll();
 			$Action.newHand = true;
-			GetState(state);
+			Player.getState(state);
 			Indicator.win(winAmount);
 			$Player.inGame=false;
 		} else {
-			GetState(state);
+			Player.getState(state);
 		}
 
 		setTimeout(() => {

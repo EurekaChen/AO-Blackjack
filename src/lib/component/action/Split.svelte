@@ -8,27 +8,23 @@
 
 	async function split() {
 		let amount = $Player.state.hands[0].amount;
-		if ($Player.balance >= amount) {			
+		if ($Player.balance >= amount) {	
+
 			Spinner.info('AO拆牌中');
 			Action.clearAll();
-
 			const splitMsgId = await message({
 				process: bjProcess,
 				tags: [{ name: 'Action', value: 'Split' }],
 				signer: createDataItemSigner(window.arweaveWallet)
 			});
-
 			Spinner.result();		
 
 			const readResult = await result({ message: splitMsgId, process: bjProcess });
-
-			console.log('结果信息：', readResult);
-			console.log(readResult.Messages[0].Data);
-
+			const stateJson=readResult.Messages[0].Data;
+			const state=JSON.parse(stateJson);
+			console.log(stateJson)
 			Spinner.stop();
 
-			//拆牌后
-			const state=JSON.parse(readResult.Messages[0].Data)
 			$Player.balance=state.balance;
 			$Player.state.dealerCards=state.dealerCards;
 			$Player.state.hands[0].cards=state.hands[0].cards;
