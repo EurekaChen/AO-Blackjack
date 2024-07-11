@@ -17,8 +17,8 @@
 
 		Spinner.result();
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
-		const stateJson = readResult.Messages[0].Data;
-		const state = JSON.parse(stateJson);
+		const playerJson = readResult.Messages[0].Data;
+		const state = JSON.parse(playerJson);
 
 		$Spinner.isWaiting = false;
 

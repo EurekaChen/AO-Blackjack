@@ -8,15 +8,24 @@
 
 	let data = 'Players = Players or {}';
 
+	let files;
+
 	function handleFileChange(event) {
-		const file = event.target.files[0];
-		console.log(file)
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = () => {
-				data = reader.result;
-			};
-			reader.readAsText(file);
+		//const files = event.target.files;
+		console.log("文件个数:",files.length)
+		console.log("files:",files)
+		let data;
+		if (files) {
+			for(let file in files){ 
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					console.log(e.target.result);
+					//data += reader.result;
+					//data+=event.target.result
+				};
+				console.log(file);
+				reader.readAsText(file);
+			}
 		}
 
 
@@ -64,7 +73,7 @@
 					<textarea class="form-control" rows="6" placeholder="data" id="data" bind:value={data}
 					></textarea>
 					<div class="input-group">
-						<input type="file" class="form-control" id="uploadFile" on:change={handleFileChange} />
+						<input type="file"  multiple bind:files class="form-control" id="uploadFile" on:change={handleFileChange} />
 						<label class="input-group-text" for="uploadFile">从文件加载</label>
 					</div>
 				</div>
