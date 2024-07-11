@@ -19,7 +19,7 @@
 		$Player.balance-=$Player.state.originalAmount;	
 
 		Action.clearAll();
-		$Action.newHand=true;
+		Action.beforeDeal();
 	}
 </script>
 

@@ -37,7 +37,7 @@
 			Indicator.blackjack(aoPlayer.balance-$Player.balance)		
 			setTimeout(() => {
 			    $Indicator.isShow=false;	
-			}, 5000);
+			}, 3000);
 			
 			//可以开始新游戏
 			$Player.inGame=false;			

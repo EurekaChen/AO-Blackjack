@@ -52,7 +52,7 @@
 
 			setTimeout(() => {
 				$Indicator.isShow = false;
-			}, 5000);
+			}, 3000);
 
 			
 			$Action.newHand = true;		

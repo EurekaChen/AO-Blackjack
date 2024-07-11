@@ -7,8 +7,7 @@
 	import { Indicator } from '$lib/store/Indicator';
 	import { Waiting } from '$lib/store/Waiting';
 
-	async function doubleBet() {
-		//如果有分牌，金额是一至的
+	async function doubleBet() {		
 		if ($Player.balance < $Player.state.hands[0].amount) {
 			$Waiting.alertClass = 'warning';
 			$Waiting.waitingText = '余额不够加倍';
@@ -71,8 +70,10 @@
 						//const loseAmount=$Player.state.hands[0].amount+$Player.state.
 						Indicator.lose(0);
 					}
-					$Action.newHand = true;
-					$Action.newHand = true;
+					setTimeout(() => {
+				    $Indicator.isShow = false;
+					}, 1000);
+					$Action.newHand = true;					
 				}
 			}
 			Player.getState(aoPlayer);

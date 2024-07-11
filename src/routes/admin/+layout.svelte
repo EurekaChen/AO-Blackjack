@@ -174,6 +174,9 @@
 								<a class="nav-link" href="/admin/clearState"> 清理玩家状态 </a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link" href="/admin/addBalance"> 添加玩家余额 </a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link" href="/admin/clearAll"> 清理所有玩家 </a>
 							</li>
 							<li class="nav-item">

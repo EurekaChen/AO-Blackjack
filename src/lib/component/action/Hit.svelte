@@ -36,7 +36,7 @@
 
 			setTimeout(() => {
 				$Indicator.isShow = false;
-			}, 5000);
+			}, 3000);
 		} else if (aoPlayer.balance > $Player.balance) {
 			//赢钱了
 			const winAmount = aoPlayer.balance - $Player.balance;
@@ -47,7 +47,7 @@
 			$Player.inGame = false;
 			setTimeout(() => {
 				$Indicator.isShow = false;
-			}, 5000);
+			}, 3000);
 		} else {
 			Player.getState(aoPlayer);
 			Action.afterDeal(false);
