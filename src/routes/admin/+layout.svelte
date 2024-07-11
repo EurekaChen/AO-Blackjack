@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { t, locales, locale } from '$lib/i18n';
-	import { message, spawn, result, dryrun, createDataItemSigner } from '@permaweb/aoconnect';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
-	import PromptDiv from '$lib/component/Prompt.svelte';
-	import { bjProcess, egcProcess, module, scheduler } from '$lib/index';
-	import { Prompt, AddPrompt } from '$lib/store/Prompt';
-	import { Player } from '$lib/store/Player';
-	import {Waiting } from '$lib/store/Waiting';
+
+	import { Waiting } from '$lib/store/Waiting';
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 
 	let walletInstalled = false;
@@ -18,7 +14,6 @@
 
 	$: modalTitle = '请先连接钱包';
 	$: modalContent = 'AO 21点游戏基于 Arweave AO，需先连接钱包';
-	
 
 	onMount(async () => {
 		promptModal = new bootstrap.Modal(document.getElementById('prompt'));
@@ -28,10 +23,10 @@
 			//如果没有连接，则下面这代码会没有权限！
 			//let activeAddress;
 			try {
-			   $Waiting.isWaiting = true;
-			   $Waiting.waitingText = '请先连接钱包...';
+				$Waiting.isWaiting = true;
+				$Waiting.waitingText = '请先连接钱包...';
 				activeAddress = await window.arweaveWallet.getActiveAddress();
-			   $Waiting.isWaiting = false;
+				$Waiting.isWaiting = false;
 			} catch (error) {
 				modalTitle = '请先连接钱包';
 				modalContent = `<p>AO 21点游戏管理需要首先连接Arweave钱包！</p>
@@ -71,7 +66,7 @@
 				'SIGN_TRANSACTION'
 			]);
 			walletConnected = true;
-		   $Waiting.isWaiting = false;
+			$Waiting.isWaiting = false;
 		} catch (error) {
 			modalTitle = '连接钱包失败';
 			modalContent = `<p>
@@ -161,19 +156,25 @@
 
 		<!--牌桌区域，使用固定宽度1024x756-->
 		<div style="width:1024px;height:576px;">
-			<!--防止div覆盖导致无法点击！-->
-			<div class="row" style="height:576px">
-				<div class="col-3" style="height:576px; border:1px solid gray">
+			<div class="row" style="height:576px;background-color:white">
+				<!--左边菜单区-->
+				<div class="col-2" style="height:576px; border:1px solid gray">
 					<nav class="mt-2" style="color:aliceblue">
 						<ul class="nav nav-pills nav-sidebar flex-column">
 							<li class="nav-item">
 								<a class="nav-link" href="/admin/load"> 装载代码 </a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/admin/players"> 玩家信息 </a>
+								<a class="nav-link" href="/admin/players"> 所有玩家 </a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="/admin/player"> 玩家状态 </a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/admin/clearState"> 清理玩家状态 </a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/admin/clearAll"> 清理所有玩家 </a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="/admin/debug"> 代码调试 </a>
@@ -181,14 +182,15 @@
 						</ul>
 					</nav>
 				</div>
-				<div class="col-9" style="border:1px solid green">
+				<!--右边内容区-->
+				<div class="col-10" style="height:576px; border:1px solid gray;padding:10px;">
 					<slot />
 				</div>
 			</div>
 		</div>
 
 		<WaitingAlert />
-	</div>	
+	</div>
 </div>
 
 <style>

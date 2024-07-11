@@ -8,12 +8,12 @@
 	let player="";
 	let data=""
 	
-	async function GetPlayerByAddr() {
+	async function clearState() {
 		$Waiting.isWaiting = true;
 		$Waiting.waitingText = '获取玩家信息';
 		let msgId = await message({
 			process: bjProcess,
-			tags: [{ name: 'Action', value: 'GetPlayer' }],
+			tags: [{ name: 'Action', value: 'ClearState' }],
 			signer: createDataItemSigner(window.arweaveWallet),
 			data:addr
 		});
@@ -41,7 +41,7 @@
 	placeholder="请输入钱包地址"
 />
 <hr />
-<button class="btn btn-outline-primary form-control" on:click={GetPlayerByAddr}>获取玩家信息</button>
+<button class="btn btn-outline-primary form-control" on:click={clearState}>清理玩家状态</button>
 <pre>
 	{player}	
 </pre>

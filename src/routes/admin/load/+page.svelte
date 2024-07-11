@@ -42,9 +42,7 @@
 	}
 </script>
 
-<div class="row">
-	<!-- 开始列 -->
-	<div class="col-12">
+
 		<!-- 可关闭面板 -->
 		<div class="card mb-4">
 			<div class="card-header">
@@ -75,5 +73,3 @@
 				<!--底部预留内容-->
 			</div>
 		</div>		
-	</div>
-</div>
