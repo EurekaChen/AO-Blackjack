@@ -148,8 +148,8 @@
 		// 	$Player.state.dealerCards.push(card);
 		// }
 		//$Player=$Player;
-		const hand1CanDouble=oaState.activeAddress==1 && oaState.hands[0].cards.length==2;
-		const hand2CanDouble=oaState.activeAddress==2 && oaState.hands[1].cards.length==2;
+		const hand1CanDouble=oaState.activeHandIndex==1 && oaState.hands[0].cards.length==2;
+		const hand2CanDouble=oaState.activeHandIndex==2 && oaState.hands[1].cards.length==2;
 		
 		if(hand1CanDouble || hand2CanDouble){
 			Action.afterDeal(true);

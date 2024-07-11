@@ -1,17 +1,21 @@
 # 游戏动作
 
 # 客户端动作
-不发送到AO
+不发送到AO,简单在Action组件中实现
 ## 清除筹码
 ## DoubleChip加倍筹码
 ## NewHand重新开始
 ## DoubleRepeat加倍下注
 ## Repeat重复
+---
 
 # AO动作
 发送到AO
 ## Deal发牌
-返回：
+点击后AO进行发牌，返回发牌MsgID
+根据MsgId获取到发牌后状态信息aOState
+根据aoState显示UI
+
 玩家牌，庄家牌
 黑杰克（结算）
 
