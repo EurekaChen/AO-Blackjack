@@ -10,6 +10,7 @@
 		//按钮后不能再动筹码
 		$Player.inGame=true;
 		Action.clearAll();
+
 		Spinner.info("AO发牌中");
 		$Player.state.originalAmount=$Player.state.hands[0].amount;	
 		const dealMsgId = await message({
@@ -22,31 +23,35 @@
 		});		
 	
 		Spinner.result();		
-		const readResult = await result({ message: dealMsgId, process: bjProcess });		
+		const readResult = await result({ message: dealMsgId, process: bjProcess });	
+		console.log("oa返回信息：",readResult)	
 	    Spinner.stop();			
 
-		let oaPlayerJson= readResult.Messages[0].Data
-		let oaPlayer = JSON.parse(oaPlayerJson);
-		if (oaPlayer.balance>$Player.balance) {
-			//返回余额有多，说明牌局结束（应该是玩家拿到了黑杰克）
-			Player.getState(oaPlayer);	
-			Action.clearAll();		
-			Indicator.blackjack(oaPlayer.balance-$Player.balance)			
-			$Player.inGame=false;			
-			$Action.newHand=true;	
-
+		//返回数据处理
+		let aoPlayerJson= readResult.Messages[0].Data
+		let aoPlayer = JSON.parse(aoPlayerJson);
+		console.log("玩家状态：",aoPlayer);
+		if (aoPlayer.balance>$Player.balance) {
+			//发牌动作返回余额有多，说明牌局已经结束，玩家拿到了黑杰克。
+			Player.getState(aoPlayer);					
+			Indicator.blackjack(aoPlayer.balance-$Player.balance)		
 			setTimeout(() => {
 			    $Indicator.isShow=false;	
 			}, 5000);
-				
+			
+			//可以开始新游戏
+			$Player.inGame=false;			
+			$Action.newHand=true;				
 		} else 		
 		{
-			oaPlayer.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
-			oaPlayer.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
-			Action.clearAll();
+			//发到两张牌
+			Player.getState(aoPlayer)
+			//oaPlayer.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
+			//oaPlayer.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
+			//Action.clearAll();
 
-			let rank1=oaPlayer.hands[0].cards[0].charAt(0);
-			let rank2=oaPlayer.hands[0].cards[1].charAt(0);		
+			let rank1=aoPlayer.state.hands[0].cards[0].charAt(0);
+			let rank2=aoPlayer.state.hands[0].cards[1].charAt(0);		
 
 			if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
 			if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
@@ -61,7 +66,7 @@
 		}
 
 		//保险为另外加的赌注
-		if(oaPlayer.dealerCards[0].includes('A')){
+		if(aoPlayer.state.dealerCards[0].includes('A')){
 			//提示保险
 			$Action.insurance=true;
 		}

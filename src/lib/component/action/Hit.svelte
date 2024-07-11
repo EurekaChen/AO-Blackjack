@@ -17,39 +17,39 @@
 
 		Spinner.result();
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
-		const playerJson = readResult.Messages[0].Data;
-		const state = JSON.parse(playerJson);
-
+		const aoPlayerJson = readResult.Messages[0].Data;
+		const aoPlayer = JSON.parse(aoPlayerJson);
+		console.log("aoPlayer:",aoPlayer);
 		$Spinner.isWaiting = false;
 
-		if (state.hands[0].amount == 0 && state.dealerCards.length == 2) {
+		if (aoPlayer.state.hands[0].amount == 0 && aoPlayer.state.dealerCards.length == 2) {
 			//玩家筹码被收走，庄家发两张牌，说明爆牌输了
 			const loseAmount = $Player.state.hands[0].amount;
-			Player.getState(state); //怎么没清掉筹码？
+			Player.getState(aoPlayer); //怎么没清掉筹码？
 			Indicator.lose(loseAmount);
 
 			$Action.newHand = true;
 			//??没起效？！还有amount不归零？
 			//$Player.state.
 			$Player.inGame = false;
-			$Player = $Player;
+			//$Player = $Player;
 
 			setTimeout(() => {
 				$Indicator.isShow = false;
 			}, 5000);
-		} else if (state.balance > $Player.balance) {
+		} else if (aoPlayer.balance > $Player.balance) {
 			//赢钱了
-			const winAmount = state.balance - $Player.balance;
+			const winAmount = aoPlayer.balance - $Player.balance;
 			Action.clearAll();
 			$Action.newHand = true;
-			Player.getState(state);
+			Player.getState(aoPlayer);
 			Indicator.win(winAmount);
 			$Player.inGame = false;
 			setTimeout(() => {
 				$Indicator.isShow = false;
 			}, 5000);
 		} else {
-			Player.getState(state);
+			Player.getState(aoPlayer);
 			Action.afterDeal(false);
 		}
 	}

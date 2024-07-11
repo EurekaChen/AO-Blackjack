@@ -9,6 +9,7 @@
 
 	async function stand() {
 
+		Action.clearAll();
 		Spinner.info("停牌中")		
 		const standMsgId = await message({
 			process: bjProcess,
@@ -18,53 +19,41 @@
 
 		Spinner.result();	
 		const readResult = await result({ message: standMsgId, process: bjProcess });	
-
 		Spinner.stop();
 
-		const aoStateJson = readResult.Messages[0].Data;
-		const aoState = JSON.parse(aoStateJson);
-		console.log("aoState",aoState);
+		const aoPlayerJson = readResult.Messages[0].Data;
+		const aoPlayer = JSON.parse(aoPlayerJson);
+		console.log("停牌状态：",aoPlayer);
 
-		//两种情况，一种是发下一手牌，一种是庄家发到牌	
-		let activeHandIndex=aoState.activeHandIndex-1;	
-		if (activeHandIndex>1) {
-			Player.getState(aoState);
+		//两种情况，一种是发下一手牌，一种是庄家发到牌		
+		if (aoPlayer.activeHandIndex>1) {
+			//开始下一手牌
+			Player.getState(aoPlayer);
 		} else {
 			//牌局结束
-			let aoBalance = aoState.balance;
-
-			let betAmount = 0;
+			let totalBetAmount = 0;
 			$Player.state.hands.forEach((hand) => {
-				betAmount += hand.amount;
+				totalBetAmount += hand.amount;
 			});
 
-			let backBalance = aoBalance - $Player.balance;
+			let backBalance =aoPlayer.balance - $Player.balance;
 
-			if (backBalance > betAmount) {
-				Indicator.win(backBalance)
-			
-			} else if (backBalance == betAmount) {				
+			if (backBalance > totalBetAmount) {
+				Indicator.win(backBalance)			
+			} else if (backBalance == totalBetAmount) {				
 				Indicator.tie(backBalance)
 			} else {
-				Indicator.lose(backBalance-betAmount)
+				Indicator.lose(backBalance-totalBetAmount)
 			}
 
-			//显示牌面：
-			Player.getState(aoState);
-
-			//恢复筹码：
-			//$Player.balance = aoState.balance;
-			// $Player.state.hands.forEach((hand) => {
-			// 	hand.amount = 0;
-			// });
-			
-			// $Player=$Player;
+			//获取状态
+			Player.getState(aoPlayer);
 
 			setTimeout(() => {
 				$Indicator.isShow = false;
 			}, 5000);
 
-			Action.clearAll();
+			
 			$Action.newHand = true;		
 			$Player.inGame=false;			
 		}

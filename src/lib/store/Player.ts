@@ -48,19 +48,20 @@ function createPlayer() {
 			}),
 		getState: (oaPlayer) =>
 			update((player) => {
-				// player.balance = oaPlayer.balance;
-				// player.state.activeHandIndex = oaPlayer.state.activeHandIndex - 1;
-				// player.state.dealerCards = oaPlayer.state.dealerCards;
-				// player.state.insurance = oaPlayer.state.insurance;
+				player.balance = oaPlayer.balance;		
+				//lua索引和js索引相差1		
+				player.state.activeHandIndex = oaPlayer.state.activeHandIndex - 1;			
+				player.state.insurance = oaPlayer.state.insurance;
 
-				// player.state.hands[0].cards = oaPlayer.state.hands[0].cards;
-				// player.state.hands[0].amount = oaPlayer.state.hands[0].amount;
-				// if (oaPlayer.hands.length > 1) {
-				// 	player.state.hands[1].cards = oaPlayer.state.hands[1].cards;
-				// 	player.state.hands[1].amount = oaPlayer.state.hands[1].amount;
-				// }
-				player.balance=oaPlayer.balance;
-				player.state=oaPlayer.state;
+				//引用类型不能使用player.state=oaPlayer.state会导致绑的hands无效！
+				player.state.dealerCards = oaPlayer.state.dealerCards;
+
+				player.state.hands[0].cards = oaPlayer.state.hands[0].cards;
+				player.state.hands[0].amount = oaPlayer.state.hands[0].amount;
+				if (oaPlayer.state.hands.length > 1) {
+					player.state.hands[1].cards = oaPlayer.state.hands[1].cards;
+					player.state.hands[1].amount = oaPlayer.state.hands[1].amount;
+				}				
 				return player;
 			})
 	};
