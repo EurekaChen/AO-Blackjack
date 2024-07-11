@@ -15,7 +15,7 @@
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
-			}, 5000);
+			}, 1000);
 			return;
 		}
 

@@ -19,6 +19,7 @@
 
 		Spinner.result();	
 		const readResult = await result({ message: standMsgId, process: bjProcess });	
+		console.log("停牌Msg:",readResult);
 		Spinner.stop();
 
 		const aoPlayerJson = readResult.Messages[0].Data;

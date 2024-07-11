@@ -19,12 +19,12 @@
 			Spinner.result();		
 
 			const readResult = await result({ message: splitMsgId, process: bjProcess });
-			const aoStateJson=readResult.Messages[0].Data;
-			const aoState=JSON.parse(aoStateJson);
-			console.log(aoStateJson)
+			const aoPlayerJson=readResult.Messages[0].Data;
+			const aoPlayer=JSON.parse(aoPlayerJson);
+			console.log("分牌后:",aoPlayer)
 			Spinner.stop();
 
-			Player.getState(aoState);
+			Player.getState(aoPlayer);
 
 			// $Player.balance=state.balance;
 			// $Player.state.dealerCards=state.dealerCards;
@@ -34,7 +34,7 @@
 			// $Player.state.hands[1].cards=state.hands[1].cards;
 			// $Player.state.hands[1].amount=state.hands[1].amount;
 
-			if(aoState.activeHandIndex==0){
+			if(aoPlayer.state.activeHandIndex==0){
 				//两手都是21点，牌局结束
 				$Player.inGame=false;
 				Action.clearAll();

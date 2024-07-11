@@ -1,15 +1,25 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
+	import { Waiting } from '$lib/store/Waiting';
 
 	function repeat() {		
+		if($Player.balance<$Player.state.originalAmount){
+			$Waiting.alertClass = 'warning';
+			$Waiting.waitingText = '余额不够下注';
+			$Waiting.isWaiting = true;
+			setTimeout(() => {
+				$Waiting.isWaiting = false;
+			}, 1000);
+			return;
+		}
 		$Player.state.hands[0].cards = [];
 		$Player.state.dealerCards=[]	
 		$Player.state.hands[0].amount=$Player.state.originalAmount;
 		$Player.balance-=$Player.state.originalAmount;	
 
 		Action.clearAll();
-		Action.beforeDeal();
+		$Action.newHand=true;
 	}
 </script>
 

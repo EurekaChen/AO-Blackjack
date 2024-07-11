@@ -4,6 +4,7 @@
 
 	function newHand() {		
 		$Player.state.hands[0].cards = [];
+		$Player.state.hands[1].cards= [];
 	    $Player.state.dealerCards=[];		
 		Action.clearAll();		
 	}
