@@ -25,13 +25,13 @@
 		const readResult = await result({ message: dealMsgId, process: bjProcess });		
 	    Spinner.stop();			
 
-		let oaStateJson= readResult.Messages[0].Data
-		let oaState = JSON.parse(oaStateJson);
-		if (oaState.balance>$Player.balance) {
+		let oaPlayerJson= readResult.Messages[0].Data
+		let oaPlayer = JSON.parse(oaPlayerJson);
+		if (oaPlayer.balance>$Player.balance) {
 			//返回余额有多，说明牌局结束（应该是玩家拿到了黑杰克）
-			Player.getState(oaState);	
+			Player.getState(oaPlayer);	
 			Action.clearAll();		
-			Indicator.blackjack(oaState.balance-$Player.balance)			
+			Indicator.blackjack(oaPlayer.balance-$Player.balance)			
 			$Player.inGame=false;			
 			$Action.newHand=true;	
 
@@ -41,12 +41,12 @@
 				
 		} else 		
 		{
-			oaState.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
-			oaState.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
+			oaPlayer.dealerCards.forEach(card => {$Player.state.dealerCards.push(card)});						
+			oaPlayer.hands[0].cards.forEach(card => $Player.state.hands[0].cards.push(card));			
 			Action.clearAll();
 
-			let rank1=oaState.hands[0].cards[0].charAt(0);
-			let rank2=oaState.hands[0].cards[1].charAt(0);		
+			let rank1=oaPlayer.hands[0].cards[0].charAt(0);
+			let rank2=oaPlayer.hands[0].cards[1].charAt(0);		
 
 			if(rank1=="T" || rank1=="J" || rank1=="Q" || rank1=="K") rank1="10";
 			if(rank2=="T" || rank2=="J" || rank2=="Q" || rank2=="K") rank2="10";
@@ -61,7 +61,7 @@
 		}
 
 		//保险为另外加的赌注
-		if(oaState.dealerCards[0].includes('A')){
+		if(oaPlayer.dealerCards[0].includes('A')){
 			//提示保险
 			$Action.insurance=true;
 		}

@@ -46,19 +46,21 @@ function createPlayer() {
 				player.inGame = false;
 				return player;
 			}),
-		getState: (state) =>
+		getState: (oaPlayer) =>
 			update((player) => {
-				player.balance = state.balance;
-				player.state.activeHandIndex = state.activeHandIndex - 1;
-				player.state.dealerCards = state.dealerCards;
-				player.state.insurance = state.insurance;
+				// player.balance = oaPlayer.balance;
+				// player.state.activeHandIndex = oaPlayer.state.activeHandIndex - 1;
+				// player.state.dealerCards = oaPlayer.state.dealerCards;
+				// player.state.insurance = oaPlayer.state.insurance;
 
-				player.state.hands[0].cards = state.hands[0].cards;
-				player.state.hands[0].amount = state.hands[0].amount;
-				if (state.hands.length > 1) {
-					player.state.hands[1].cards = state.hands[1].cards;
-					player.state.hands[1].amount = state.hands[1].amount;
-				}
+				// player.state.hands[0].cards = oaPlayer.state.hands[0].cards;
+				// player.state.hands[0].amount = oaPlayer.state.hands[0].amount;
+				// if (oaPlayer.hands.length > 1) {
+				// 	player.state.hands[1].cards = oaPlayer.state.hands[1].cards;
+				// 	player.state.hands[1].amount = oaPlayer.state.hands[1].amount;
+				// }
+				player.balance=oaPlayer.balance;
+				player.state=oaPlayer.state;
 				return player;
 			})
 	};
