@@ -19,6 +19,7 @@
 			return;
 		}
 
+		Action.clearAll();
 		Spinner.info('AO加倍中');
 		const doubleBetMsgId = await message({
 			process: bjProcess,
@@ -28,18 +29,18 @@
 
 		Spinner.result();
 		const readResult = await result({ message: doubleBetMsgId, process: bjProcess });
-		const stateJson = readResult.Messages[0].Data;
-		const state = JSON.parse(stateJson);
-		console.log("加倍后:",state);
+		const aoPlayerJson = readResult.Messages[0].Data;
+		const aoPlayer = JSON.parse(aoPlayerJson);
+		console.log('加倍后:', aoPlayer);
 
 		$Spinner.isWaiting = false;
 
-		if (state.activeAddress == 2) {
+		if (aoPlayer.activeAddress == 2) {
 			//到第二手牌了
-			if (state.hands[1].amount == 0) {
+			if (aoPlayer.hands[1].amount == 0) {
 				//第二手结算，说明结束了，玩家会发牌。
 				//总共：
-				const backBalance = state.balance - $Player.balance;
+				const backBalance = aoPlayer.balance - $Player.balance;
 				if (backBalance > 0) {
 					Indicator.win(backBalance);
 				} else if (backBalance == 0) {
@@ -48,19 +49,33 @@
 					//const loseAmount=$Player.state.hands[0].amount+$Player.state.
 					Indicator.lose(0);
 				}
+				$Action.newHand = true;
 			} else {
-				//
+				//不会到这里
+				throw '第二手加倍后应该停牌重新开始';
 			}
 		} else {
-			//第一手牌加倍，没结束，可继续			
-			if(state.dealerCards.length>1){
-				//庄家发牌了，说明结束了
-				Action.clearAll();
-				$Action.newHand=true;
-
+			//第一手牌加倍，加倍后停牌
+			if (aoPlayer.state.hands.length > 1) {
+				//转到第二手：
+				Action.afterDeal(true);
+			} else {
+				if (aoPlayer.state.dealerCards.length > 1) {
+					//庄家发牌了，说明结束了
+					const backBalance = aoPlayer.balance - $Player.balance;
+					if (backBalance > 0) {
+						Indicator.win(backBalance);
+					} else if (backBalance == 0) {
+						Indicator.tie(backBalance);
+					} else {
+						//const loseAmount=$Player.state.hands[0].amount+$Player.state.
+						Indicator.lose(0);
+					}
+					$Action.newHand = true;
+					$Action.newHand = true;
+				}
 			}
-			Player.getState(state); 	
-
+			Player.getState(aoPlayer);
 		}
 	}
 </script>
