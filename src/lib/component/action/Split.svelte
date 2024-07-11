@@ -4,55 +4,53 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { bjProcess } from '$lib';
 	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
-
+	import { Waiting } from '$lib/store/Waiting';
 
 	async function split() {
 		let amount = $Player.state.hands[0].amount;
-		if ($Player.balance >= amount) {				
+		if ($Player.balance < amount) {
+			$Waiting.alertClass = 'warning';
+			$Waiting.waitingText = '余额不够拆牌';
+			$Waiting.isWaiting = true;
+			setTimeout(() => {
+				$Waiting.isWaiting = false;
+			}, 1000);
+			return;
+		}
+
+		Action.clearAll();
+		Spinner.info('AO拆牌中');
+		const splitMsgId = await message({
+			process: bjProcess,
+			tags: [{ name: 'Action', value: 'Split' }],
+			signer: createDataItemSigner(window.arweaveWallet)
+		});
+		Spinner.result();
+
+		const readResult = await result({ message: splitMsgId, process: bjProcess });
+		const aoPlayerJson = readResult.Messages[0].Data;
+		const aoPlayer = JSON.parse(aoPlayerJson);
+		console.log('分牌后:', aoPlayer);
+		Spinner.stop();
+
+		Player.getState(aoPlayer);
+
+		if (aoPlayer.state.activeHandIndex == 0) {
+			//两手都是21点，牌局结束
+			$Player.inGame = false;
 			Action.clearAll();
-			Spinner.info('AO拆牌中');
-			const splitMsgId = await message({
-				process: bjProcess,
-				tags: [{ name: 'Action', value: 'Split' }],
-				signer: createDataItemSigner(window.arweaveWallet)
-			});
-			Spinner.result();		
-
-			const readResult = await result({ message: splitMsgId, process: bjProcess });
-			const aoPlayerJson=readResult.Messages[0].Data;
-			const aoPlayer=JSON.parse(aoPlayerJson);
-			console.log("分牌后:",aoPlayer)
-			Spinner.stop();
-
-			Player.getState(aoPlayer);
-
-			// $Player.balance=state.balance;
-			// $Player.state.dealerCards=state.dealerCards;
-			// $Player.state.hands[0].cards=state.hands[0].cards;
-			// $Player.state.hands[0].amount=state.hands[0].amount;
-
-			// $Player.state.hands[1].cards=state.hands[1].cards;
-			// $Player.state.hands[1].amount=state.hands[1].amount;
-
-			if(aoPlayer.state.activeHandIndex==0){
-				//两手都是21点，牌局结束
-				$Player.inGame=false;
-				Action.clearAll();
-				$Action.newHand=true;
-			}
-			else{
-				Action.afterDeal(true);	
-			}
-			// else if(aoState.activeHandIndex==1){
-			// 	//常规，进入第一手牌
-			// 	//另一手不亮：
-			// 	Action.afterDeal(true);	
-			// }else if(aoState.activeHandIndex==2){
-			// 	//进入了第二手
-			// 	Action.afterDeal(true);
-			// }
-
-		}		
+			$Action.newHand = true;
+		} else {
+			Action.afterDeal(true);
+		}
+		// else if(aoState.activeHandIndex==1){
+		// 	//常规，进入第一手牌
+		// 	//另一手不亮：
+		// 	Action.afterDeal(true);
+		// }else if(aoState.activeHandIndex==2){
+		// 	//进入了第二手
+		// 	Action.afterDeal(true);
+		// }
 	}
 </script>
 

@@ -6,22 +6,26 @@
 	function doubleRepeat() {
 		let handAmount = $Player.state.originalAmount;
 
-		$Player.state.hands[0].cards = [];
-		$Player.state.dealerCards=[]		
+		if ($Player.balance < 2 * handAmount) {
+			$Waiting.alertClass = 'warning';
+			$Waiting.confirm = true;
+			$Waiting.isWaiting = true;
+			$Waiting.waitingText = '加倍下注筹码不够';
+			setTimeout(() => {
+				$Waiting.isWaiting = false;
+			}, 1000);
+			return;
+		}
 
-		if ($Player.balance >= 2*handAmount) {
-			$Player.balance -= 2*handAmount;
-			$Player.state.hands[0].amount = 2*handAmount;
-		}
-		else{
-			$Waiting.alertClass="warning";
-			$Waiting.confirm=true;
-			$Waiting.isWaiting=true;
-			$Waiting.waitingText="加倍下注筹码不够"		
-		}
+		$Player.balance -= 2 * handAmount;
+		$Player.state.hands[0].amount = 2 * handAmount;
+
+		$Player.state.hands[0].cards = [];
+		$Player.state.hands[1].cards = [];
+		$Player.state.dealerCards = [];
+
 		Action.clearAll();
 		Action.beforeDeal();
-		
 	}
 </script>
 

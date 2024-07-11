@@ -2,21 +2,11 @@
 	import { ChipRank } from '$lib/store/Setting';
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
+	import { Waiting } from '$lib/store/Waiting';
 
 	let chipOffset = 6;
 	$: disabled = $Player.inGame;
 	$: cursor = $Player.inGame ? 'cursor: not-allowed' : 'cursor: pointer';
-
-	//发了两张牌，不能再去改变筹码(由于结束后牌没删去！)
-	// $: {
-	// 	if ($Player.state.hands[0].cards.length > 1) {
-	// 		disabled = true;
-	// 	}
-	// 	else{
-	// 		disabled=false;
-	// 	}
-	// 	console.log('disabled:', disabled);
-	// }
 
 	function downChip() {
 		let down = document.getElementById('down');
@@ -42,19 +32,36 @@
 	}
 
 	function betChip(amount: number) {
-		console.log('下注', amount);
+		//限额
+		if (amount < 5 || amount > 5000){
+			
+			$Waiting.alertClass = 'warning';
+			$Waiting.waitingText = '下注额不在区间内';
+			$Waiting.isWaiting = true;
+			setTimeout(() => {
+				$Waiting.isWaiting = false;
+			}, 1000);
+			return;
+		}	
+		//余额不够	
+		if ($Player.balance < amount) {
+			$Waiting.alertClass = 'warning';
+			$Waiting.waitingText = '余额已经不到 '+amount+" EGC";
+			$Waiting.isWaiting = true;
+			setTimeout(() => {
+				$Waiting.isWaiting = false;
+			}, 1000);
+			return;
+		}
 
 		//有牌才需要清一下
 		if (!$Player.inGame && $Player.state.dealerCards.length > 0) {
 			Player.clearState();
 		}
 
-		if ($Player.balance < amount) {
-			amount = $Player.balance;
-		}
+		
 
-		//限额
-		if (amount < 5 || amount > 5000) return;
+			
 
 		$Player.balance -= amount;
 		$Player.state.hands[0].amount += amount;
