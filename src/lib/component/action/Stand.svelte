@@ -5,9 +5,9 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Action } from '$lib/store/Action';
 	import { Indicator } from '$lib/store/Indicator';
-	import type { AOPlayer } from '$lib/type';
+	import type { AoPlayer } from '$lib/type';
 
-	function showResult(aoPlayer: AOPlayer) {
+	function showResult(aoPlayer: AoPlayer) {
 		let totalBetAmount = 0;
 		$Player.state.hands.forEach((hand) => {
 			totalBetAmount += hand.amount;

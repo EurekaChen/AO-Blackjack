@@ -6,12 +6,10 @@
 	import { bjProcess } from '$lib';
 	import { Indicator } from '$lib/store/Indicator';
 	import { isBlackjack, isBust } from '$lib/state/evaluate';
-	import type { AOPlayer } from '$lib/type';
+	import type { AoPlayer } from '$lib/type';
 
-	function showResult(aoPlayer: AOPlayer) {
-		const backBalance = aoPlayer.balance - $Player.balance;
-		console.log('第一手牌为：', aoPlayer.state.hands[0].cards);
-		console.log('bust', isBust(aoPlayer.state.hands[0].cards));
+	function showResult(aoPlayer: AoPlayer) {
+		const backBalance = aoPlayer.balance - $Player.balance;		
 
 		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
 			Indicator.blackjack(backBalance);

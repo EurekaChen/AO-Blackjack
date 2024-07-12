@@ -9,7 +9,9 @@
 {#if $Indicator.isShow}
 	<div class="text-center {$Indicator.class}">
 		<div style="font-size:36px">{$Indicator.icon}{$Indicator.text}</div>
+		{#if $Indicator.amount!=0}
 		<div style="font-size:28px">{$Indicator.amount} EGC</div>
+		{/if}
 		<button on:click={ok} class="btn btn-outline-primary">OK</button>
 	</div>
 {/if}
@@ -26,6 +28,7 @@
 		height: 150px;
 		border-radius: 30px;
 		border: 5px #ff9800 solid;	
+		animation: winGlow 1s ease-in-out infinite alternate;
 	}
 
 	.win {

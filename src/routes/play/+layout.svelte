@@ -12,7 +12,7 @@
 	import Rule from '$lib/component/modal/Rule.svelte';
 	import { Waiting } from '$lib/store/Waiting';
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
-	import type { AOPlayer } from '$lib/type';
+	import type { AoPlayer } from '$lib/type';
 	import { getPoint, isSamePoint } from '$lib/state/evaluate';
 
 	let walletInstalled = false;
@@ -98,7 +98,7 @@
 	}
 
 	//还原游戏
-	function restore(aoPlayer:AOPlayer ) {
+	function restore(aoPlayer:AoPlayer ) {
 		//console.log('aoPlayer.state:', aoPlayer.state);	
 		//$Player.state.activeHandIndex = aoPlayer.state.activeHandIndex - 1;	
 

@@ -1,8 +1,8 @@
-import type { BJPlayer, AOPlayer } from '$lib/type';
+import type { BjPlayer, AoPlayer } from '$lib/type';
 import { writable } from 'svelte/store';
 
 //数据结构尽量跟OA Lua保持一致
-const initialPlayer: BJPlayer = {
+const initialPlayer: BjPlayer = {
 	//注意从钱包提到游戏进程(bjProcess)的EGC数量(quantity)不是balance(amount)！
 	name: '',
 	balance: 0,
@@ -48,7 +48,7 @@ function createPlayer() {
 				player.inGame = false;
 				return player;
 			}),
-		getState: (aoPlayer: AOPlayer) =>
+		getState: (aoPlayer: AoPlayer) =>
 			update((player) => {
 				player.balance = aoPlayer.balance;
 				player.name = aoPlayer.name;

@@ -6,6 +6,32 @@
 	import { bjProcess } from '$lib';
 	import { Indicator } from '$lib/store/Indicator';
 	import { Waiting } from '$lib/store/Waiting';
+	import { isBlackjack, isBust } from '$lib/state/evaluate';
+	import type { AOPlayer } from '$lib/type';
+
+
+	function showResult(aoPlayer: AOPlayer) {
+		const backBalance = aoPlayer.balance - $Player.balance;		
+
+		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
+			Indicator.blackjack(backBalance);
+		} else if (isBust(aoPlayer.state.hands[0].cards)) {
+			Indicator.bust(backBalance);
+		} else {
+			const totalBet =
+				$Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
+			if (backBalance > totalBet) {
+				Indicator.win(backBalance);
+			} else if (backBalance == totalBet) {
+				Indicator.tie(backBalance);
+			} else {
+				Indicator.lose(backBalance - totalBet);
+			}
+		}
+		setTimeout(() => {
+			$Indicator.isShow = false;
+		}, 3000);
+	}
 
 	async function doubleBet() {		
 		if ($Player.balance < $Player.state.hands[0].amount) {
@@ -39,15 +65,16 @@
 			if (aoPlayer.hands[1].amount == 0) {
 				//第二手结算，说明结束了，玩家会发牌。
 				//总共：
-				const backBalance = aoPlayer.balance - $Player.balance;
-				if (backBalance > 0) {
-					Indicator.win(backBalance);
-				} else if (backBalance == 0) {
-					Indicator.tie(backBalance);
-				} else {
-					//const loseAmount=$Player.state.hands[0].amount+$Player.state.
-					Indicator.lose(0);
-				}
+				showResult(aoPlayer);
+				// const backBalance = aoPlayer.balance - $Player.balance;
+				// if (backBalance > 0) {
+				// 	Indicator.win(backBalance);
+				// } else if (backBalance == 0) {
+				// 	Indicator.tie(backBalance);
+				// } else {
+				// 	//const loseAmount=$Player.state.hands[0].amount+$Player.state.
+				// 	Indicator.lose(0);
+				// }
 				$Action.newHand = true;
 			} else {
 				//不会到这里
@@ -60,8 +87,9 @@
 				Action.afterDeal(true);
 			} else {
 				if (aoPlayer.state.dealerCards.length > 1) {
-					//庄家发牌了，说明结束了
+					//庄家发牌了，说明结束了，加倍不会有黑杰克					
 					const backBalance = aoPlayer.balance - $Player.balance;
+
 					if (backBalance > 0) {
 						Indicator.win(backBalance);
 					} else if (backBalance == 0) {

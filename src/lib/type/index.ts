@@ -1,11 +1,11 @@
-export type AOPlayer = {
+export type AoPlayer = {
 	addr: string;
 	balance: number;
 	name: string;
-	state: AOState;
+	state: AoState;
 };
 
-export type AOState = {
+export type AoState = {
 	hands: Hand[];
 	activeHandIndex: number;
 	insurance: number;
@@ -18,7 +18,7 @@ export type Hand = {
 	amount: number;
 };
 
-export type BJPlayer = {
+export type BjPlayer = {
 	addr: string;
 	balance: number;
 	name: string;
