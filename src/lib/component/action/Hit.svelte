@@ -10,21 +10,23 @@
 
 	function showResult(aoPlayer: AOPlayer) {
 		const backBalance = aoPlayer.balance - $Player.balance;
-		console.log("第一手牌为：",aoPlayer.state.hands[0].cards)
+		console.log('第一手牌为：', aoPlayer.state.hands[0].cards);
+		console.log('bust', isBust(aoPlayer.state.hands[0].cards));
+
 		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
 			Indicator.blackjack(backBalance);
 		} else if (isBust(aoPlayer.state.hands[0].cards)) {
 			Indicator.bust(backBalance);
-		}
-		const totalBet =
-			$Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
-
-		if (backBalance > totalBet) {
-			Indicator.win(backBalance);
-		} else if (backBalance == totalBet) {
-			Indicator.tie(backBalance);
 		} else {
-			Indicator.lose(backBalance - totalBet);
+			const totalBet =
+				$Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
+			if (backBalance > totalBet) {
+				Indicator.win(backBalance);
+			} else if (backBalance == totalBet) {
+				Indicator.tie(backBalance);
+			} else {
+				Indicator.lose(backBalance - totalBet);
+			}
 		}
 		setTimeout(() => {
 			$Indicator.isShow = false;
@@ -41,7 +43,7 @@
 		});
 
 		Spinner.result();
-		console.log("要牌信息id:",hitMsgId)
+		console.log('要牌信息id:', hitMsgId);
 
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
 		console.log('要牌结果：', readResult);
