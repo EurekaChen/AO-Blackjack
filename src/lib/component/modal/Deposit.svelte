@@ -36,11 +36,14 @@
 
 		console.log('msgId', msgId);
 
-		let depositResult = result({ message: msgId, process: egcProcess });
-		console.log(depositResult);
+		let depositResult =await result({ message: msgId, process: egcProcess });
+		console.log(depositResult);	
+		//自动显示在界面上了？！可是我所$Player.balance+=amount删除了呀！
+		//数量x100在：
+		//depositResult.Messages[0].Tags[7].value
+		//depositResult.Messages[1].Tags[7].value
+		//depositResult.Messages[0].Data为有色文本信息
 	
-		//！！！！
-		$Player.balance += amount;
 	}
   </script>
 <div

@@ -27,7 +27,7 @@
 		});
 
 		Spinner.result();
-		const readResult = await result({ message: doubleBetMsgId, process: bjProcess });
+		const readResult = await result({ message: doubleBetMsgId, process: bjProcess });		
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
 		console.log('加倍后:', aoPlayer);
@@ -73,7 +73,8 @@
 					setTimeout(() => {
 				    $Indicator.isShow = false;
 					}, 1000);
-					$Action.newHand = true;					
+					$Action.newHand = true;		
+					$Player.inGame=false;			
 				}
 			}
 			Player.getState(aoPlayer);

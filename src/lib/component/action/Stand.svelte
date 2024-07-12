@@ -5,59 +5,71 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Action } from '$lib/store/Action';
 	import { Indicator } from '$lib/store/Indicator';
+	import type { AOPlayer } from '$lib/type';
 
+	function showResult(aoPlayer: AOPlayer) {
+		let totalBetAmount = 0;
+		$Player.state.hands.forEach((hand) => {
+			totalBetAmount += hand.amount;
+		});
+
+		let backBalance = aoPlayer.balance - $Player.balance;
+
+		if (backBalance > totalBetAmount) {
+			Indicator.win(backBalance);
+		} else if (backBalance == totalBetAmount) {
+			Indicator.tie(backBalance);
+		} else {
+			Indicator.lose(backBalance - totalBetAmount);
+		}
+
+		setTimeout(() => {
+			$Indicator.isShow = false;
+		}, 3000);
+	}
 
 	async function stand() {
-
 		Action.clearAll();
-		Spinner.info("停牌中")		
+		Spinner.info('停牌中');
 		const standMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Stand' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		Spinner.result();	
-		const readResult = await result({ message: standMsgId, process: bjProcess });	
-		console.log("停牌Msg:",readResult);
+		Spinner.result();
+		const readResult = await result({ message: standMsgId, process: bjProcess });
+		console.log('停牌Msg:', readResult);
 		Spinner.stop();
-
+		
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log("停牌状态：",aoPlayer);
+		console.log('停牌状态：', aoPlayer);
 
-		//两种情况，一种是发下一手牌，一种是庄家发到牌		
-		if (aoPlayer.activeHandIndex>1) {
-			//开始下一手牌
-			Player.getState(aoPlayer);
+		
+		//两种情况，一种是发下一手牌，一种是庄家发到牌
+		if (aoPlayer.state.activeHandIndex > 1) {
+			//开始下一手牌		
+			if(aoPlayer.state.dealerCards.length>1){
+				//庄家发牌，牌局结束
+				showResult(aoPlayer);
+				$Action.newHand=true;
+				$Player.inGame=false;
+			}
+			else{
+				//开始下一手
+				Action.afterDeal(true);
+			}
 		} else {
 			//牌局结束
-			let totalBetAmount = 0;
-			$Player.state.hands.forEach((hand) => {
-				totalBetAmount += hand.amount;
-			});
+			showResult(aoPlayer);
 
-			let backBalance =aoPlayer.balance - $Player.balance;
-
-			if (backBalance > totalBetAmount) {
-				Indicator.win(backBalance)			
-			} else if (backBalance == totalBetAmount) {				
-				Indicator.tie(backBalance)
-			} else {
-				Indicator.lose(backBalance-totalBetAmount)
-			}
-
-			//获取状态
-			Player.getState(aoPlayer);
-
-			setTimeout(() => {
-				$Indicator.isShow = false;
-			}, 3000);
-
-			
-			$Action.newHand = true;		
-			$Player.inGame=false;			
+			$Action.newHand = true;
+			$Player.inGame = false;
 		}
+
+		//获取状态，如果之前获取，会让showResult的balance比较出错。
+		Player.getState(aoPlayer);
 	}
 </script>
 

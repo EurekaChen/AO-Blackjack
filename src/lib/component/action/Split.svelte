@@ -25,9 +25,9 @@
 			tags: [{ name: 'Action', value: 'Split' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
-		Spinner.result();
-
+		Spinner.result();		
 		const readResult = await result({ message: splitMsgId, process: bjProcess });
+		console.log(readResult)
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
 		console.log('分牌后:', aoPlayer);
