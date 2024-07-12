@@ -14,8 +14,13 @@ export function getPoint(card:string):number
     else
     {
         return Number(rankChar); 
-    }
-    
+    }    
+}
+
+export function isSamePoint(cards:string[]){
+    const point1=getPoint(cards[0]);
+    const point2=getPoint(cards[1]);
+    return point1==point2;
 }
 
 // 一个辅助函数，用于计算一手牌总值，将A视为1或11

@@ -10,6 +10,7 @@
 
 	function showResult(aoPlayer: AOPlayer) {
 		const backBalance = aoPlayer.balance - $Player.balance;
+		console.log("第一手牌为：",aoPlayer.state.hands[0].cards)
 		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
 			Indicator.blackjack(backBalance);
 		} else if (isBust(aoPlayer.state.hands[0].cards)) {

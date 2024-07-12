@@ -3,21 +3,20 @@
 	<rect width="1024" height="576" fill="none" stroke="gray" />
 
 	<rect width="126" height="60" x="18" y="18" fill="none" stroke="#2196f3" />
-	<text x="26" y="40" font-size="12" font-weight="bold" fill="#2196f3">Min: </text>
-	<text x="98" y="40" font-size="12" font-weight="bold" fill="#2196f3">5 EGC</text>
-	<text x="26" y="65" font-size="12" font-weight="bold" fill="#2196f3">Max:</text>
-	<text x="76" y="65" font-size="12" font-weight="bold" fill="#2196f3">5000 EGC</text>
+	<text x="30" y="40" font-size="12" font-weight="bold" fill="#2196f3">最小下注 </text>
+	<text x="103" y="40" font-size="12" font-weight="bold" fill="#2196f3">5 EGC</text>
+	<text x="30" y="65" font-size="12" font-weight="bold" fill="#2196f3">最大小注 5000 EGC</text>
 
 
 	<!--从上往下设计-->
 	<text x="512" y="55" fill="#2196F3" font-family="Arial" font-size="40" text-anchor="middle">
-		Blackjack Pays 3:2
+		黑杰克赔付3:2
 	</text>
 
 	<path id="textPath1" d="M 260 0 C 364 170 660 170 764 0" fill="none" />
-	<text font-family="Arial" font-size="24">
+	<text font-family="Arial" font-size="30">
 		<textPath href="#textPath1" text-anchor="middle" fill="#2196f3">
-			<tspan dy="10" dx="295">Dealer Must Draw On 16 And Stand On 17 Or Higher</tspan>
+			<tspan dy="10" dx="295">庄家可要牌至16点 - 硬17点时必须停牌</tspan>
 		</textPath>
 	</text>
 
@@ -26,11 +25,12 @@
 	<path id="textPath2" d="M 180 0 C 320 260 704 260 830 0" fill="none" />
 	<text font-family="Arial" font-size="30" fill="#2196f3">
 		<textPath href="#textPath2" text-anchor="middle">
-			<tspan dy="8" dx="405">Pays 2 : 1  - Insurance - Pays 2 : 1 </tspan>
+			<tspan dy="8" dx="405">2 : 1 赔付 - 保 险 - 2 : 1 赔付</tspan>
 		</textPath>
 	</text>
 
 	<path d="M 150 0 C 300 300 724 300 874 0" stroke="#2196f3" stroke-width="4" fill="none" />
+
 
 	<defs>
 		<filter id="glow">

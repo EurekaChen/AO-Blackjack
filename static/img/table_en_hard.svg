@@ -15,9 +15,9 @@
 	</text>
 
 	<path id="textPath1" d="M 260 0 C 364 170 660 170 764 0" fill="none" />
-	<text font-family="Arial" font-size="24">
+	<text font-family="Arial" font-size="30">
 		<textPath href="#textPath1" text-anchor="middle" fill="#2196f3">
-			<tspan dy="10" dx="295">Dealer Must Draw On 16 And Stand On 17 Or Higher</tspan>
+			<tspan dy="10" dx="295">Dealer Must Draw Until Hard 17</tspan>
 		</textPath>
 	</text>
 

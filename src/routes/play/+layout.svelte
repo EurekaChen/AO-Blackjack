@@ -13,6 +13,7 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 	import type { AOPlayer } from '$lib/type';
+	import { getPoint, isSamePoint } from '$lib/state/evaluate';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -173,9 +174,18 @@
 		}
 		else{
 			//玩第一手牌
-			if(aoPlayer.state.hands[0].cards.length==2){
-				Action.afterDeal(true)
+			if(aoPlayer.state.insurance==0 && aoPlayer.state.dealerCards[0].charAt(0) == 'A')
+			{
+				$Action.insurance=true;
 			}
+
+			if(aoPlayer.state.hands[0].cards.length==2){
+				
+				Action.afterDeal(true)								
+				if(isSamePoint(aoPlayer.state.hands[0].cards)){
+					$Action.split=true;
+				}
+			}			
 			else{
 				Action.afterDeal(false)
 			}			
