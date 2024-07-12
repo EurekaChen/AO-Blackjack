@@ -20,20 +20,9 @@
 	}
 
 	async function join(name: string, addr: string) {
-		//生成新进程
+		
 		$Waiting.isWaiting = true;
-		$Waiting.waitingText = '新用户加入中，请稍候...';
-
-		//注：好象我的游戏不需要创建进程！用钱包地址玩就可以！
-		// const userProcessId = await spawn({
-		// 	module,
-		// 	scheduler,
-		// 	signer: createDataItemSigner(window.arweaveWallet),
-		// 	tags: [{ name: 'Name', value: name }]
-		// });
-
-		//用户信息
-		//console.log('新生成进程:', userProcessId);
+		$Waiting.waitingText = '新用户加入中，请稍候...';		
 
 		const userInfo = { name, addr };
 		const userJsonStr = JSON.stringify(userInfo);
