@@ -1,7 +1,7 @@
 //以下等同于AO中代码
 
 export function getPoint(card: string): number {
-	const rankChar = card.substring(0, 0);
+	const rankChar = card.substring(0, 1);
 	if (rankChar == 'T' || rankChar == 'J' || rankChar == 'Q' || rankChar == 'K') {
 		return 10; //
 	} else if (rankChar == 'A') {
