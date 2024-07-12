@@ -11,6 +11,8 @@
 		<div style="font-size:36px">{$Indicator.icon}{$Indicator.text}</div>
 		{#if $Indicator.amount!=0}
 		<div style="font-size:28px">{$Indicator.amount} EGC</div>
+		{:else}
+		<div style="font-size:28px"> </div>
 		{/if}
 		<button on:click={ok} class="btn btn-outline-primary">OK</button>
 	</div>
