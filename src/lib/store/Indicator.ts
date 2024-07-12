@@ -48,6 +48,15 @@ function createIndicator() {
 				indicator.icon = '🃏';
 				indicator.amount = amount;
 				return indicator;
+			}),
+		bust: (amount: number) =>
+			update((indicator) => {
+				indicator.isShow = true;
+				indicator.class = 'lose';
+				indicator.text = '您爆牌了';
+				indicator.icon = '💥';
+				indicator.amount = amount;
+				return indicator;
 			})
 	};
 }

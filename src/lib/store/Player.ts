@@ -1,10 +1,12 @@
+import type { BJPlayer, AOPlayer } from '$lib/type';
 import { writable } from 'svelte/store';
 
 //数据结构尽量跟OA Lua保持一致
-const initialPlayer = {
+const initialPlayer: BJPlayer = {
 	//注意从钱包提到游戏进程(bjProcess)的EGC数量(quantity)不是balance(amount)！
 	name: '',
 	balance: 0,
+	addr: '',
 	//state在oa中可能为null（未产生牌局），而在js中，因为有下注amout，所以不能通过null判断state状态
 	//尽量保持OA和JS的数据结构一致。
 	state: {
@@ -46,24 +48,30 @@ function createPlayer() {
 				player.inGame = false;
 				return player;
 			}),
-		getState: (oaPlayer) =>
+		getState: (aoPlayer: AOPlayer) =>
 			update((player) => {
-				player.balance = oaPlayer.balance;		
-				//lua索引和js索引相差1		
-				player.state.activeHandIndex = oaPlayer.state.activeHandIndex - 1;			
-				player.state.insurance = oaPlayer.state.insurance;
+				player.balance = aoPlayer.balance;
+				player.name = aoPlayer.name;
+				player.addr = aoPlayer.addr;
 
-				//引用类型不能使用player.state=oaPlayer.state会导致绑的hands无效！
-				player.state.dealerCards = oaPlayer.state.dealerCards;
+				if (player.state) {
+					//lua索引和js索引相差1
+					player.state.activeHandIndex = aoPlayer.state.activeHandIndex - 1;
+					player.state.insurance = aoPlayer.state.insurance;
+					player.state.originalAmount = aoPlayer.state.originalAmount;
 
-				player.state.hands[0].cards = oaPlayer.state.hands[0].cards;
-				player.state.hands[0].amount = oaPlayer.state.hands[0].amount;
-				if (oaPlayer.state.hands.length > 1) {
-					player.state.hands[1].cards = oaPlayer.state.hands[1].cards;
-					player.state.hands[1].amount = oaPlayer.state.hands[1].amount;
-				}				
+					//引用类型不能使用player.state=oaPlayer.state会导致绑的hands无效！
+					player.state.dealerCards = aoPlayer.state.dealerCards;
+
+					player.state.hands[0].cards = aoPlayer.state.hands[0].cards;
+					player.state.hands[0].amount = aoPlayer.state.hands[0].amount;
+					if (aoPlayer.state.hands.length > 1) {
+						player.state.hands[1].cards = aoPlayer.state.hands[1].cards;
+						player.state.hands[1].amount = aoPlayer.state.hands[1].amount;
+					}
+				}
 				return player;
-			})
+			}),
 	};
 }
 

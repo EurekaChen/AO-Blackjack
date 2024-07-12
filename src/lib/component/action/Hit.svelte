@@ -5,6 +5,7 @@
 	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
 	import { bjProcess } from '$lib';
 	import { Indicator } from '$lib/store/Indicator';
+	import { isBlackjack, isBust } from '$lib/state/evaluate';
 
 	async function hit() {
 		Spinner.info('AO要牌中');
@@ -19,35 +20,36 @@
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log("aoPlayer:",aoPlayer);
+		console.log('aoPlayer:', aoPlayer);
 		$Spinner.isWaiting = false;
 
-		if (aoPlayer.state.hands[0].amount == 0 && aoPlayer.state.dealerCards.length == 2) {
-			//玩家筹码被收走，庄家发两张牌，说明爆牌输了
-			const loseAmount = $Player.state.hands[0].amount;
-			Player.getState(aoPlayer); //怎么没清掉筹码？
-			Indicator.lose(loseAmount);
+		if (aoPlayer.state.dealerCards.length > 1) {			
+			//给庄家发牌，说明牌局结束了。
+		
+			const backBalance = aoPlayer.balance - $Player.balance;			
+			if(isBlackjack(aoPlayer.state.hands[0].cards)){
+				Indicator.blackjack(backBalance);
+			}
+			else if(isBust(aoPlayer.state.hands[0].cards)){
+				Indicator.bust(backBalance);
+			}
+			const totalBet =
+				$Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
 
-			$Action.newHand = true;
-			//??没起效？！还有amount不归零？
-			//$Player.state.
-			$Player.inGame = false;
-			//$Player = $Player;
-
+			if (backBalance > totalBet) {
+				Indicator.win(backBalance);
+			} else if (backBalance == totalBet) {
+				Indicator.tie(backBalance);
+			} else {
+				Indicator.lose(backBalance - totalBet);
+			}
 			setTimeout(() => {
 				$Indicator.isShow = false;
 			}, 3000);
-		} else if (aoPlayer.balance > $Player.balance) {
-			//赢钱了
-			const winAmount = aoPlayer.balance - $Player.balance;
-			Action.clearAll();
-			$Action.newHand = true;
+
 			Player.getState(aoPlayer);
-			Indicator.win(winAmount);
+			$Action.newHand = true;
 			$Player.inGame = false;
-			setTimeout(() => {
-				$Indicator.isShow = false;
-			}, 3000);
 		} else {
 			Player.getState(aoPlayer);
 			Action.afterDeal(false);

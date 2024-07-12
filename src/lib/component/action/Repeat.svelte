@@ -3,8 +3,9 @@
 	import { Action } from '$lib/store/Action';
 	import { Waiting } from '$lib/store/Waiting';
 
-	function repeat() {		
-		if($Player.balance<$Player.state.originalAmount){
+	function repeat() {	
+		let repeatAmount=$Player.state.originalAmount
+		if($Player.balance<repeatAmount){
 			$Waiting.alertClass = 'warning';
 			$Waiting.waitingText = '余额不够下注';
 			$Waiting.isWaiting = true;
@@ -13,11 +14,12 @@
 			}, 1000);
 			return;
 		}
-		$Player.state.hands[0].cards = [];
-		$Player.state.dealerCards=[]	
-		$Player.state.hands[0].amount=$Player.state.originalAmount;
-		$Player.balance-=$Player.state.originalAmount;	
+		//$Player.state.hands[0].cards = [];
+		//$Player.state.dealerCards=[]			
+		//$Player.balance-=$Player.state.originalAmount;	
 
+		Player.clearState();
+		$Player.state.hands[0].amount=repeatAmount;
 		Action.clearAll();
 		Action.beforeDeal();
 	}
