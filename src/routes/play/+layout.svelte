@@ -14,6 +14,7 @@
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 	import type { AoPlayer } from '$lib/type';
 	import { isSamePoint } from '$lib/state/evaluate';
+	import { restore } from '$lib/state/restore';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -95,43 +96,7 @@
 			restore(aoPlayer);
 		}
 		info.openModal();
-	}
-
-	//还原游戏
-	function restore(aoPlayer:AoPlayer ) {	
-		Player.getState(aoPlayer);
-		if(aoPlayer.state.activeHandIndex==2){
-			//玩第二手牌
-			if(aoPlayer.state.hands[1].cards.length==2){				
-				//可加倍
-				Action.afterDeal(true)
-			}
-			else{
-				//不可加倍
-				Action.afterDeal(false)
-			}			
-		}
-		else{
-			//玩第一手牌
-			if(aoPlayer.state.insurance==0 && aoPlayer.state.dealerCards[0].charAt(0) == 'A')
-			{
-				$Action.insurance=true;
-			}
-
-			if(aoPlayer.state.hands[0].cards.length==2){
-				//可加倍
-				Action.afterDeal(true)	
-				//可拆牌							
-				if(isSamePoint(aoPlayer.state.hands[0].cards)){
-					$Action.split=true;
-				}
-			}			
-			else{
-				//不可加倍
-				Action.afterDeal(false)
-			}
-		}	
-	}
+	}	
 
 	onMount(async () => {
 		if (window.arweaveWallet) {
