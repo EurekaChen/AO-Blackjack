@@ -4,7 +4,8 @@
 	import { Player } from '$lib/store/Player';
 	import { Spinner } from '$lib/store/Spinner';
 	import { Waiting } from '$lib/store/Waiting';
-	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result } from '$lib/store/Setting';
 
  	async	function insurance() {
 

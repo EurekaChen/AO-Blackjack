@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
-	import { message, result, createDataItemSigner } from '@permaweb/aoconnect';
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result } from '$lib/store/Setting';
 	import { bjProcess } from '$lib/index';
 	import { Spinner } from '$lib/store/Spinner';	
 	import { Action } from '$lib/store/Action';

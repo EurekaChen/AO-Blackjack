@@ -2,7 +2,8 @@
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import { Spinner } from '$lib/store/Spinner';
-	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result } from '$lib/store/Setting';
 	import { bjProcess } from '$lib';
 	import { Indicator } from '$lib/store/Indicator';
 	import { Waiting } from '$lib/store/Waiting';

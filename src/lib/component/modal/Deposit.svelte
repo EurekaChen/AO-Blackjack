@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import Stack from "../Stack.svelte";
-	import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result } from '$lib/store/Setting';
 	import { egcProcess } from "$lib";
 	import { Player } from "$lib/store/Player";
    

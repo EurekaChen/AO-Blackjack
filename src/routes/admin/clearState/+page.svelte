@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { bjProcess } from '$lib';
-	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
-	import { Waiting } from '$lib/store/Waiting';
-	import PlayerPanel from '$lib/component/PlayerPanel.svelte';
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result } from '$lib/store/Setting';
+	import { Waiting } from '$lib/store/Waiting';	
 
 	let addr = 'cjnNO4wraJdTCM4ANTdmCnOnBroT-0MPzKjEIzETTe0';
 	let player="";

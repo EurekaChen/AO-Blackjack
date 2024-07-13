@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { message } from '@permaweb/aoconnect';
 	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message } from '$lib/store/Setting';
 	import { Waiting } from '$lib/store/Waiting';
 
 	//21点进程

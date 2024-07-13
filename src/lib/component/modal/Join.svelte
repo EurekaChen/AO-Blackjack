@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { bjProcess, module, scheduler } from '$lib';
+	import { bjProcess} from '$lib';
 	import { Player } from '$lib/store/Player';
 
 	import { Waiting } from '$lib/store/Waiting';
-	import { createDataItemSigner, message, spawn } from '@permaweb/aoconnect';
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message} from '$lib/store/Setting'
 	import { onMount } from 'svelte';
 
 	export let activeAddress = '';

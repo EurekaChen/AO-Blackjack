@@ -3,7 +3,8 @@
 	import { Action } from '$lib/store/Action';
 	import { Spinner } from '$lib/store/Spinner';
 	import { bjProcess } from '$lib';
-	import { createDataItemSigner, message, result } from '@permaweb/aoconnect';
+	import { createDataItemSigner } from '@permaweb/aoconnect';
+	import { message, result } from '$lib/store/Setting';
 	import { Waiting } from '$lib/store/Waiting';
 
 	async function split() {
