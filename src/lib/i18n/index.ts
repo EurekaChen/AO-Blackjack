@@ -5,7 +5,7 @@ import translations from './translations';
 
 /** @type {import('sveltekit-i18n').Config} */
 const config = {
-  initLocale: 'en',
+  initLocale: 'zh',
   translations,
 };
 

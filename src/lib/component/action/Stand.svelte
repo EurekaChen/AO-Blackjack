@@ -1,13 +1,10 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';
 	import { createDataItemSigner } from '@permaweb/aoconnect';
 	import { message, result } from '$lib/store/Setting';
 	import { bjProcess } from '$lib/index';
 	import { Spinner } from '$lib/store/Spinner';
 	import { Action } from '$lib/store/Action';
 	import { stand as processStand } from '$lib/state/stand';
-
-
 	
 	async function stand() {
 		Action.clearAll();
@@ -19,8 +16,7 @@
 		});
 
 		Spinner.result();
-		const readResult = await result({ message: standMsgId, process: bjProcess });
-		console.log('停牌Msg:', readResult);
+		const readResult = await result({ message: standMsgId, process: bjProcess });	
 		Spinner.stop();
 		
 		const aoPlayerJson = readResult.Messages[0].Data;

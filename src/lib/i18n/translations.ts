@@ -7,12 +7,12 @@ export default {
 		lang,
 		top: {
 			rule: {
-				title: 'Standard Rule',
+				title: 'AO Classic Blackjack Rule',
 				content: rule_en,
 				close: 'Close'
 			},
 			settings: 'Settings',
-			title: 'AO Standard Blackjack',
+			title: 'AO Classic Blackjack',
 			installWallet:"Install Wallet",
 			connect: 'Connect Wallet',
 			disconnect: 'Disconnect'
@@ -23,12 +23,12 @@ export default {
 		lang,
 		top: {
 			rule: {
-				title: '标准21点规则',
+				title: 'AO经典21点规则',
 				content: rule_zh,
 				close: '关闭'
 			},
 			settings: '设置',
-			title: 'AO 标准21点',
+			title: 'AO经典21点',
 			installWallet:"请先安装钱包",
 			connect: '连接钱包',
 			disconnect: '断开钱包'
