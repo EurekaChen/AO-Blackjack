@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t, locales, locale } from '$lib/i18n';
-	import { dryrun } from '@permaweb/aoconnect';
+	import { dryrun } from '$lib/store/Setting';
 	import { onMount } from 'svelte';
 	import 'arweave/web';
 	import { bjProcess, egcProcess } from '$lib/index';
@@ -13,7 +13,7 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 	import type { AoPlayer } from '$lib/type';
-	import { getPoint, isSamePoint } from '$lib/state/evaluate';
+	import { isSamePoint } from '$lib/state/evaluate';
 
 	let walletInstalled = false;
 	let walletConnected = false;
