@@ -8,6 +8,7 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import { t } from '$lib/i18n';
 	import { log } from '$lib/store/Debug';
+	import { showResult } from '$lib/state/showResult';
 
 	async function split() {
 		let amount = $Player.state.hands[0].amount;
@@ -40,9 +41,11 @@
 		log('分牌后aoPlayer:', aoPlayer);
 		Player.getState(aoPlayer);
 		if (aoPlayer.state.activeHandIndex == 0) {
-			//两手都是21点，牌局结束
+			//两手都已经结束
+			showResult(aoPlayer);
 			$Player.inGame = false;		
 			$Action.newHand = true;
+			
 		} else {
 			Action.afterDeal(true);
 		}		

@@ -43,8 +43,10 @@
 		//depositResult.Messages[0].Tags[7].value
 		//depositResult.Messages[1].Tags[7].value
 		//depositResult.Messages[0].Data为有色文本信息
-		let depositAmount = Number(depositResult.Messages[1].Tags[7].value) / 100;
-		$Player.balance += depositAmount;
+		//不一定在索引7
+		//let depositAmount = Number(depositResult.Messages[1].Tags[7].value) / 100;
+		//暂时客户端增加：
+		$Player.balance += amount;
 	}
 </script>
 

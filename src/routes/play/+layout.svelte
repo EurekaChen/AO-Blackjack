@@ -91,8 +91,14 @@
 
 		if (aoPlayer.state) {
 			modalTitle = $t('connect.continue');
+
+			//不允许点击筹码
 			$Player.inGame=true;			
-			restore(aoPlayer);
+			restore(aoPlayer);			
+		}
+		else{
+			//允许点击筹码
+			$Player.inGame=false;
 		}
 		info.openModal();
 	}	
@@ -164,13 +170,14 @@
 					let oaPlayer = await GetPlayer(activeAddress);
 					if (oaPlayer != null) {
 						log("玩家已经存在");
-						welcomeBack(oaPlayer);
+						welcomeBack(oaPlayer);						
 					} else {
 						log("玩家不存在");
 						openJoin();
+						//加入后允许点击：
+						$Player.inGame=false;
 					}
-					//加入或重返后允许点击：
-					$Player.inGame=false;
+					
 				} else {
 					walletConnected = false;
 					log("钱包未连接");

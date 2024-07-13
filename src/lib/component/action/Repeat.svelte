@@ -17,6 +17,7 @@
 		}
 		Player.clearState();
 		$Player.state.hands[0].amount=repeatAmount;
+		$Player.balance-=repeatAmount;
 		Action.clearAll();
 		Action.beforeDeal();
 	}
