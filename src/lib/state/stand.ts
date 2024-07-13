@@ -5,9 +5,11 @@ import type { AoPlayer } from "$lib/type";
 
 import { get } from 'svelte/store';
 import { showResult } from "./showResult";
+import { log } from "$lib/store/Debug";
 
 
 export function stand(aoPlayer:AoPlayer) {
+    log('停牌aoPlayer', aoPlayer);
     //两种情况，一种是发下一手牌，一种是庄家发到牌
     if (aoPlayer.state.activeHandIndex > 1) {
         //开始下一手牌		

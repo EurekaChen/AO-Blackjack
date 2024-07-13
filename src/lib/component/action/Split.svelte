@@ -7,6 +7,7 @@
 	import { message, result } from '$lib/store/Setting';
 	import { Waiting } from '$lib/store/Waiting';
 	import { t } from '$lib/i18n';
+	import { log } from '$lib/store/Debug';
 
 	async function split() {
 		let amount = $Player.state.hands[0].amount;
@@ -27,20 +28,20 @@
 			tags: [{ name: 'Action', value: 'Split' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
+		log("分牌Id:",splitMsgId);
+
 		Spinner.result();		
 		const readResult = await result({ message: splitMsgId, process: bjProcess });
-		console.log(readResult)
+		log("分牌信息:", readResult)
 		const aoPlayerJson = readResult.Messages[0].Data;
-		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log('分牌后:', aoPlayer);
+		const aoPlayer = JSON.parse(aoPlayerJson);		
 		Spinner.stop();
 
+		log('分牌后aoPlayer:', aoPlayer);
 		Player.getState(aoPlayer);
-
 		if (aoPlayer.state.activeHandIndex == 0) {
 			//两手都是21点，牌局结束
-			$Player.inGame = false;
-			Action.clearAll();
+			$Player.inGame = false;		
 			$Action.newHand = true;
 		} else {
 			Action.afterDeal(true);

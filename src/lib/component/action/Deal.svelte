@@ -25,13 +25,14 @@
 			],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
-		log("DealMsgId:",dealMsgId);
+		log("发牌Id:",dealMsgId);
 
 		Spinner.result();
 		const readResult = await result({ message: dealMsgId, process: bjProcess });		
 		Spinner.stop();
 		
-		//返回数据处理
+		log("发牌信息:",readResult);
+
 		let aoPlayerJson = readResult.Messages[0].Data;
 		let aoPlayer = JSON.parse(aoPlayerJson);
 		

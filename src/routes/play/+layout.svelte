@@ -14,6 +14,7 @@
 	import type { AoPlayer } from '$lib/type';
 	import { restore } from '$lib/state/restore';
 	import About from '$lib/component/modal/About.svelte';
+	import { log } from '$lib/store/Debug';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -139,13 +140,13 @@
 			$Player.inGame=true;
 
 			walletInstalled = true;
-			//console.log('钱包已经安装');
+			log('钱包已经安装');
 
 			//如果没有连接，则下面这代码会没有权限！
 			//let activeAddress;
 			try {
 				activeAddress = await window.arweaveWallet.getActiveAddress();
-				//console.log('钱包已经连接，地址：' + activeAddress);
+				log('钱包已经连接，钱包地址：' + activeAddress);
 			} catch (error) {
 				modalTitle = $t('connect.pleaseConnect');
 				modalContent =$t('connect.pleaseConnectContent')+`
@@ -162,14 +163,17 @@
 
 					let oaPlayer = await GetPlayer(activeAddress);
 					if (oaPlayer != null) {
+						log("玩家已经存在");
 						welcomeBack(oaPlayer);
 					} else {
+						log("玩家不存在");
 						openJoin();
 					}
 					//加入或重返后允许点击：
 					$Player.inGame=false;
 				} else {
 					walletConnected = false;
+					log("钱包未连接");
 				}
 			} catch (error) {
 				$Waiting.alertClass = 'danger';
@@ -178,6 +182,7 @@
 			}
 		} else {
 			walletInstalled = false;
+			log("钱包未安装");
 
 			modalTitle = $t('connect.pleaseInstall');
 			modalContent = $t('connect.pleaseInstallContent')

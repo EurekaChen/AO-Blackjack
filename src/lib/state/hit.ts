@@ -5,9 +5,11 @@ import type { AoPlayer } from "$lib/type";
 
 import { get } from 'svelte/store';
 import { showResult } from "./showResult";
+import { log } from "$lib/store/Debug";
 
 
 export function hit(aoPlayer:AoPlayer) {
+    log('要牌后aoPlayer:', aoPlayer);
     if (aoPlayer.state.dealerCards.length > 1) {
         //给庄家发牌，说明牌局结束了。       
         showResult(aoPlayer);

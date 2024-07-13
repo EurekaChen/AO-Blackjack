@@ -7,10 +7,10 @@
 	import { createDataItemSigner } from '@permaweb/aoconnect';
 	import { message, result } from '$lib/store/Setting';
 	import { t } from '$lib/i18n';
+	import { log } from '$lib/store/Debug';
 
- 	async	function insurance() {
-
-		if ($Player.balance < $Player.state.hands[0].amount/2) {
+	async function insurance() {
+		if ($Player.balance < $Player.state.hands[0].amount / 2) {
 			$Waiting.alertClass = 'warning';
 			$Waiting.waitingText = $t('action.balanceLack');
 			$Waiting.isWaiting = true;
@@ -19,36 +19,32 @@
 			}, 1000);
 			return;
 		}
-		
-		//下保险不清空！		
-		//Action.clearAll();		
-		Spinner.info( $t('action.aoInsurancing'));
-		
+
+		Spinner.info($t('action.aoInsurancing'));
 		const insuranceMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Insurance' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
+		log('保险Id:', insuranceMsgId);
 
 		Spinner.result();
 		const readResult = await result({ message: insuranceMsgId, process: bjProcess });
-		console.log("保险结果:",readResult);
+		log('保险信息:', readResult);
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log("aoPlayer:",aoPlayer);
-		$Spinner.isWaiting = false;
 
-		let insuranceAmount = aoPlayer.state.insurance;		
-		$Player.balance -= insuranceAmount;		
-		$Player.state.insurance = insuranceAmount;
-		$Action.insurance=false;
-		
+		Spinner.stop();
+
+		log('aoPlayer:', aoPlayer);
+		Player.getState(aoPlayer);
+		$Action.insurance = false;
 	}
 </script>
 
 <a href="./#" on:click={insurance} style="text-decoration: none;">
 	<svg width="60" height="60">
-		<circle class="back" cx="30" cy="30" r="25" />	
+		<circle class="back" cx="30" cy="30" r="25" />
 		<text x="6" y="43" font-size="36">🛡️</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>

@@ -5,9 +5,11 @@ import type { AoPlayer } from "$lib/type";
 
 import { get } from 'svelte/store';
 import { showResult } from "./showResult";
+import { log } from "$lib/store/Debug";
 
 
 export function doubleBet(aoPlayer: AoPlayer) {
+    log('加倍后aoPlayer:', aoPlayer);
     if (aoPlayer.state.activeHandIndex == 2) {
         //到第二手牌了
         get(Player).balance = get(Player).balance - get(Player).state.originalAmount;

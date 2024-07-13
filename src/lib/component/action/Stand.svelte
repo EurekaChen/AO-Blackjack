@@ -6,6 +6,7 @@
 	import { Action } from '$lib/store/Action';
 	import { stand as processStand } from '$lib/state/stand';
 	import { t } from '$lib/i18n';
+	import { log } from '$lib/store/Debug';
 	
 	async function stand() {
 		Action.clearAll();
@@ -15,15 +16,15 @@
 			tags: [{ name: 'Action', value: 'Stand' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
+		log("停牌Id:",standMsgId);
 
 		Spinner.result();
 		const readResult = await result({ message: standMsgId, process: bjProcess });	
+		log("停牌信息：",readResult)
 		Spinner.stop();
 		
 		const aoPlayerJson = readResult.Messages[0].Data;
-		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log('停牌状态：', aoPlayer);
-				
+		const aoPlayer = JSON.parse(aoPlayerJson);			
 		processStand(aoPlayer);
 	}
 </script>

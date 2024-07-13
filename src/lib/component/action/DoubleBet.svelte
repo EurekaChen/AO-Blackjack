@@ -9,6 +9,7 @@
 
 	import { Waiting } from '$lib/store/Waiting';
 	import { t } from '$lib/i18n';
+	import { log } from '$lib/store/Debug';
 
 
 	async function doubleBet() {
@@ -20,9 +21,7 @@
 				$Waiting.isWaiting = false;
 			}, 1000);
 			return;
-		}
-
-		//显示一下：
+		}	
 
 		Action.clearAll();
 		Spinner.info($t('action.aoDoubling'));
@@ -31,13 +30,14 @@
 			tags: [{ name: 'Action', value: 'Double' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
+		log("加倍Id:",doubleBetMsgId);
 
 		Spinner.result();
 		const readResult = await result({ message: doubleBetMsgId, process: bjProcess });
-		console.log('加倍Result', readResult);
+		log('加倍信息:', readResult);
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log('加倍后:', aoPlayer);
+		
 		$Spinner.isWaiting = false;
 
 	    processDoubleBet(aoPlayer);

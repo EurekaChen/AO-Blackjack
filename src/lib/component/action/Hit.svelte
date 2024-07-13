@@ -6,25 +6,25 @@
 	import { bjProcess } from '$lib';
 	import {hit as processHit} from '$lib/state/hit';
 	import { t } from '$lib/i18n';
+	import { log } from '$lib/store/Debug';
 
 	async function hit() {
-		Spinner.info($t('action.aoHiting'));
 		Action.clearAll();
+
+		Spinner.info($t('action.aoHiting'));		
 		const hitMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Hit' }],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
+		log('要牌Id:', hitMsgId);
 
 		Spinner.result();
-		console.log('要牌信息id:', hitMsgId);
-
 		const readResult = await result({ message: hitMsgId, process: bjProcess });
-		console.log('要牌结果：', readResult);
+		log('要牌信息：', readResult);
 		const aoPlayerJson = readResult.Messages[0].Data;
-		const aoPlayer = JSON.parse(aoPlayerJson);
-		console.log('aoPlayer:', aoPlayer);
-		$Spinner.isWaiting = false;
+		const aoPlayer = JSON.parse(aoPlayerJson);		
+		Spinner.stop();
 
 		processHit(aoPlayer);
 	}
