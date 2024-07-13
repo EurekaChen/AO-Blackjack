@@ -13,6 +13,7 @@
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 	import type { AoPlayer } from '$lib/type';
 	import { restore } from '$lib/state/restore';
+	import About from '$lib/component/modal/About.svelte';
 
 	let walletInstalled = false;
 	let walletConnected = false;
@@ -21,6 +22,7 @@
 	let join: Join;
 	let info: Info;
 	let rule: Rule;
+	let about:About;
 
 	let activeAddress: string;
 	let walletEgc: number;
@@ -201,6 +203,7 @@
 <Deposit bind:this={deposit} max={walletEgc} />
 <Join bind:this={join} {activeAddress} />
 <Rule bind:this={rule} />
+<About bind:this={about} />
 <Info bind:this={info} {modalContent} {modalTitle} />
 
 <!--垂直居中容器-->
@@ -228,8 +231,8 @@
 								>
 							</li>
 							<li>
-								<a class="dropdown-item" href="./#" data-bs-toggle="modal" data-bs-target="#prompt"
-									>{$t('top.settings')}</a
+								<a class="dropdown-item" href="./#" data-bs-toggle="modal" data-bs-target="#about"
+									>{$t('top.about.title')}</a
 								>
 							</li>
 						</ul>
