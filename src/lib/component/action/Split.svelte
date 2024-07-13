@@ -43,15 +43,7 @@
 			$Action.newHand = true;
 		} else {
 			Action.afterDeal(true);
-		}
-		// else if(aoState.activeHandIndex==1){
-		// 	//常规，进入第一手牌
-		// 	//另一手不亮：
-		// 	Action.afterDeal(true);
-		// }else if(aoState.activeHandIndex==2){
-		// 	//进入了第二手
-		// 	Action.afterDeal(true);
-		// }
+		}		
 	}
 </script>
 

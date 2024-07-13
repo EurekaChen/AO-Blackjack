@@ -9,6 +9,20 @@
 	import { isBlackjack, isBust } from '$lib/state/evaluate';
 	import type { AoPlayer } from '$lib/type';
 
+	function processHit(aoPlayer:AoPlayer) {
+			if (aoPlayer.state.dealerCards.length > 1) {
+				//给庄家发牌，说明牌局结束了。
+				console.log('$Player:', $Player);
+				showResult(aoPlayer);
+				Player.getState(aoPlayer);
+				$Action.newHand = true;
+				$Player.inGame = false;
+			} else {
+				Player.getState(aoPlayer);
+				Action.afterDeal(false);
+			}
+		}
+
 	function showResult(aoPlayer: AoPlayer) {
 		const backBalance = aoPlayer.balance - $Player.balance;		
 
@@ -48,24 +62,10 @@
 		console.log('要牌结果：', readResult);
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
-
-		// eslint-disable-next-line no-debugger
-		//debugger;
-
 		console.log('aoPlayer:', aoPlayer);
 		$Spinner.isWaiting = false;
 
-		if (aoPlayer.state.dealerCards.length > 1) {
-			//给庄家发牌，说明牌局结束了。
-			console.log('$Player:', $Player);
-			showResult(aoPlayer);
-			Player.getState(aoPlayer);
-			$Action.newHand = true;
-			$Player.inGame = false;
-		} else {
-			Player.getState(aoPlayer);
-			Action.afterDeal(false);
-		}
+		processHit(aoPlayer);
 	}
 </script>
 

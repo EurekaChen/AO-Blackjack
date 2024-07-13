@@ -1,12 +1,22 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
+	import { Waiting } from '$lib/store/Waiting';
 
 	function doubleChip() {
 		let handAmount = $Player.state.hands[0].amount;
-		if ($Player.balance >= handAmount) {
-			$Player.balance -= handAmount;
-			$Player.state.hands[0].amount += handAmount;
+		if ($Player.balance < handAmount) {
+			$Waiting.alertClass = 'warning';
+			$Waiting.confirm = true;
+			$Waiting.isWaiting = true;
+			$Waiting.waitingText = '加倍筹码不够';
+			setTimeout(() => {
+				$Waiting.isWaiting = false;
+			}, 1000);
+			return;
 		}
+		
+		$Player.balance -= handAmount;
+		$Player.state.hands[0].amount += handAmount;
 	}
 </script>
 

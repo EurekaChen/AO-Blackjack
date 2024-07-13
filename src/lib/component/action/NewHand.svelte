@@ -5,7 +5,10 @@
 	function newHand() {		
 		$Player.state.hands[0].cards = [];
 		$Player.state.hands[1].cards= [];
-	    $Player.state.dealerCards=[];		
+		$Player.state.hands[0].amount=0;
+		$Player.state.hands[1].amount=0;
+	    $Player.state.dealerCards=[];
+		$Player.state.insurance=0;		
 		Action.clearAll();		
 	}
 </script>

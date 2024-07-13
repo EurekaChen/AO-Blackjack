@@ -14,10 +14,6 @@
 			}, 1000);
 			return;
 		}
-		//$Player.state.hands[0].cards = [];
-		//$Player.state.dealerCards=[]			
-		//$Player.balance-=$Player.state.originalAmount;	
-
 		Player.clearState();
 		$Player.state.hands[0].amount=repeatAmount;
 		Action.clearAll();

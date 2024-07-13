@@ -10,9 +10,43 @@
 	import { isBlackjack, isBust } from '$lib/state/evaluate';
 	import type { AoPlayer } from '$lib/type';
 
+	function processDoubleBet(aoPlayer: AoPlayer) {
+		if (aoPlayer.state.activeHandIndex == 2) {
+			//到第二手牌了
+			$Player.balance = $Player.balance - $Player.state.originalAmount;
+			$Player.state.hands[1].amount += $Player.state.originalAmount;
+
+			if (aoPlayer.state.hands[1].amount == 0) {
+				//第二手结算，说明结束了，玩家会发牌。
+				//总共：
+				showResult(aoPlayer);
+				$Action.newHand = true;
+			} else {
+				//不会到这里
+				throw '第二手加倍后应该停牌重新开始';
+			}
+		} else {
+			//第一手牌加倍，加倍后停牌
+			$Player.balance = $Player.balance - $Player.state.originalAmount;
+			$Player.state.hands[0].amount += $Player.state.originalAmount;
+
+			if (aoPlayer.state.hands.length > 1) {
+				//转到第二手：
+				Action.afterDeal(true);
+			} else {
+				if (aoPlayer.state.dealerCards.length > 1) {
+					//庄家发牌了，说明结束了，加倍不会有黑杰克
+					showResult(aoPlayer);
+					$Action.newHand = true;
+					$Player.inGame = false;
+				}
+			}
+			Player.getState(aoPlayer);
+		}
+	}
 
 	function showResult(aoPlayer: AoPlayer) {
-		const backBalance = aoPlayer.balance - $Player.balance;		
+		const backBalance = aoPlayer.balance - $Player.balance;
 
 		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
 			Indicator.blackjack(backBalance);
@@ -34,7 +68,7 @@
 		}, 3000);
 	}
 
-	async function doubleBet() {		
+	async function doubleBet() {
 		if ($Player.balance < $Player.state.hands[0].amount) {
 			$Waiting.alertClass = 'warning';
 			$Waiting.waitingText = '余额不够加倍';
@@ -45,7 +79,7 @@
 			return;
 		}
 
-		//显示一下：		
+		//显示一下：
 
 		Action.clearAll();
 		Spinner.info('AO加倍中');
@@ -56,69 +90,14 @@
 		});
 
 		Spinner.result();
-		const readResult = await result({ message: doubleBetMsgId, process: bjProcess });		
-		console.log("加倍Result",readResult);
+		const readResult = await result({ message: doubleBetMsgId, process: bjProcess });
+		console.log('加倍Result', readResult);
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);
 		console.log('加倍后:', aoPlayer);
-
 		$Spinner.isWaiting = false;
 
-		if (aoPlayer.activeAddress == 2) {
-			//到第二手牌了
-			$Player.balance=$Player.balance-$Player.state.originalAmount;
-			$Player.state.hands[1].amount+=$Player.state.originalAmount;
-
-			if (aoPlayer.hands[1].amount == 0) {
-				//第二手结算，说明结束了，玩家会发牌。
-				//总共：
-				showResult(aoPlayer);
-				// const backBalance = aoPlayer.balance - $Player.balance;
-				// if (backBalance > 0) {
-				// 	Indicator.win(backBalance);
-				// } else if (backBalance == 0) {
-				// 	Indicator.tie(backBalance);
-				// } else {
-				// 	//const loseAmount=$Player.state.hands[0].amount+$Player.state.
-				// 	Indicator.lose(0);
-				// }
-				$Action.newHand = true;
-			} else {
-				//不会到这里
-				throw '第二手加倍后应该停牌重新开始';
-			}
-		} else {
-			//第一手牌加倍，加倍后停牌
-			$Player.balance=$Player.balance-$Player.state.originalAmount;
-			$Player.state.hands[0].amount+=$Player.state.originalAmount;
-
-			if (aoPlayer.state.hands.length > 1) {
-				//转到第二手：
-				Action.afterDeal(true);
-			} else {
-				if (aoPlayer.state.dealerCards.length > 1) {
-					//庄家发牌了，说明结束了，加倍不会有黑杰克					
-					showResult(aoPlayer);
-					//下面使用$player出错了！因为前面有过计算。
-					// const backBalance = aoPlayer.balance - $Player.balance;
-
-					// if (backBalance > 0) {
-					// 	Indicator.win(backBalance);
-					// } else if (backBalance == 0) {
-					// 	Indicator.tie(backBalance);
-					// } else {
-					// 	//const loseAmount=$Player.state.hands[0].amount+$Player.state.
-					// 	Indicator.lose(0);
-					// }
-					// setTimeout(() => {
-				    // $Indicator.isShow = false;
-					// }, 1000);
-					$Action.newHand = true;		
-					$Player.inGame=false;			
-				}
-			}
-			Player.getState(aoPlayer);
-		}
+		processDoubleBet(aoPlayer);
 	}
 </script>
 

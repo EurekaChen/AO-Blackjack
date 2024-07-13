@@ -38,10 +38,8 @@
 		$Spinner.isWaiting = false;
 
 		let insuranceAmount = aoPlayer.state.insurance;		
-		$Player.balance -= insuranceAmount;
-		console.log("下保险:",insuranceAmount);
+		$Player.balance -= insuranceAmount;		
 		$Player.state.insurance = insuranceAmount;
-		//$Player=$Player;
 		$Action.insurance=false;
 		
 	}

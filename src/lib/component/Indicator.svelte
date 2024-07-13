@@ -9,8 +9,8 @@
 {#if $Indicator.isShow}
 	<div class="text-center {$Indicator.class}">
 		<div style="font-size:36px">{$Indicator.icon}{$Indicator.text}</div>
-		{#if $Indicator.amount!=0}
-		<div style="font-size:28px">{$Indicator.amount} EGC</div>
+		{#if $Indicator.amount>0}
+		<div style="font-size:28px">返回 {$Indicator.amount} EGC</div>
 		{:else}
 		<div style="font-size:28px">&nbsp;</div>
 		{/if}

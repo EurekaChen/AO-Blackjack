@@ -20,6 +20,8 @@
 		$Player.balance -= 2 * handAmount;
 		$Player.state.hands[0].amount = 2 * handAmount;
 
+		$Player.state.hands[1].amount = 0;
+
 		$Player.state.hands[0].cards = [];
 		$Player.state.hands[1].cards = [];
 		$Player.state.dealerCards = [];

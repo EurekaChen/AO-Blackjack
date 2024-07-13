@@ -4,7 +4,7 @@
 
 	function clear() {
 		let clearAmount = $Player.state.hands[0].amount;
-		$Player.balance = $Player.balance + clearAmount;
+		$Player.balance = $Player.balance + clearAmount;		
 		$Player.state.hands[0].amount = 0;
 		$Player.state.hands[1].amount = 0;
 		Action.clearAll();
