@@ -7,6 +7,7 @@
 	import { stand as processStand } from '$lib/state/stand';
 	import { t } from '$lib/i18n';
 	import { log } from '$lib/store/Debug';
+	import { Player } from '$lib/store/Player';
 	
 	async function stand() {
 		Action.clearAll();
@@ -26,6 +27,7 @@
 		const aoPlayerJson = readResult.Messages[0].Data;
 		const aoPlayer = JSON.parse(aoPlayerJson);			
 		processStand(aoPlayer);
+		//$Player.inGame=
 	}
 </script>
 

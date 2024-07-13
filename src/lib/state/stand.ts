@@ -16,7 +16,9 @@ export function stand(aoPlayer:AoPlayer) {
         if(aoPlayer.state.dealerCards.length>1){
             //庄家发牌，牌局结束
             showResult(aoPlayer);
-            get(Action).newHand=true;
+            Action.showRepeat();
+            //get(Action).newHand=true;
+            
             get(Player).inGame=false;
         }
         else{
@@ -27,7 +29,9 @@ export function stand(aoPlayer:AoPlayer) {
         //牌局结束
         showResult(aoPlayer);
 
-        get(Action).newHand = true;
+        //get(Action).newHand = true;
+        Action.showRepeat();
+        //是不是也有问题？
         get(Player).inGame = false;
     }
 
