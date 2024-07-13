@@ -1,4 +1,5 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
+import { t } from '$lib/i18n';
 
 const initialIndicator = {
 	isShow: false,
@@ -17,7 +18,7 @@ function createIndicator() {
 			update((indicator) => {
 				indicator.isShow = true;
 				indicator.class = 'win';
-				indicator.text = '您赢了';
+				indicator.text = get(t)('indicator.win');
 				indicator.amount = amount;
 				indicator.icon = '🏆';
 				return indicator;
@@ -26,7 +27,7 @@ function createIndicator() {
 			update((indicator) => {
 				indicator.isShow = true;
 				indicator.class = 'lose';
-				indicator.text = '您输了';
+				indicator.text = get(t)('indicator.lose');
 				indicator.amount = amount;
 				indicator.icon = '😞';
 				return indicator;
@@ -35,7 +36,7 @@ function createIndicator() {
 			update((indicator) => {
 				indicator.isShow = true;
 				indicator.class = 'tie';
-				indicator.text = '平手';
+				indicator.text = get(t)('indicator.tie');
 				indicator.icon = '🤝';
 				indicator.amount = amount;
 				return indicator;
@@ -44,7 +45,7 @@ function createIndicator() {
 			update((indicator) => {
 				indicator.isShow = true;
 				indicator.class = 'win';
-				indicator.text = '黑杰克';
+				indicator.text = get(t)('indicator.blackjack');
 				indicator.icon = '🃏';
 				indicator.amount = amount;
 				return indicator;
@@ -53,7 +54,7 @@ function createIndicator() {
 			update((indicator) => {
 				indicator.isShow = true;
 				indicator.class = 'lose';
-				indicator.text = '您爆牌了';
+				indicator.text = get(t)('indicator.bust');
 				indicator.icon = '💥';
 				indicator.amount = amount;
 				return indicator;

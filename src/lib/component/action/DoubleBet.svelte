@@ -8,12 +8,13 @@
 	import { doubleBet as processDoubleBet} from '$lib/state/doubleBet';
 
 	import { Waiting } from '$lib/store/Waiting';
+	import { t } from '$lib/i18n';
 
 
 	async function doubleBet() {
 		if ($Player.balance < $Player.state.hands[0].amount) {
 			$Waiting.alertClass = 'warning';
-			$Waiting.waitingText = '余额不够加倍';
+			$Waiting.waitingText = $t('action.balanceLack');
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
@@ -24,7 +25,7 @@
 		//显示一下：
 
 		Action.clearAll();
-		Spinner.info('AO加倍中');
+		Spinner.info($t('action.aoDoubling'));
 		const doubleBetMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Double' }],
@@ -50,7 +51,7 @@
 		<text x="18" y="43" font-size="36">２</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#ff9800;text-align:center;font-weight:bolder">加 倍</div>
+	<div style="color:#ff9800;text-align:center;font-weight:bolder">{$t('action.double')}</div>
 </a>
 
 <style>

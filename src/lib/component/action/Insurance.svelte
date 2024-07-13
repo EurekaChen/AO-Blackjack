@@ -6,12 +6,13 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import { createDataItemSigner } from '@permaweb/aoconnect';
 	import { message, result } from '$lib/store/Setting';
+	import { t } from '$lib/i18n';
 
  	async	function insurance() {
 
 		if ($Player.balance < $Player.state.hands[0].amount/2) {
 			$Waiting.alertClass = 'warning';
-			$Waiting.waitingText = '余额不够保险';
+			$Waiting.waitingText = $t('action.balanceLack');
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
@@ -21,7 +22,7 @@
 		
 		//下保险不清空！		
 		//Action.clearAll();		
-		Spinner.info('AO买保险');
+		Spinner.info( $t('action.aoInsurancing'));
 		
 		const insuranceMsgId = await message({
 			process: bjProcess,
@@ -51,7 +52,7 @@
 		<text x="6" y="43" font-size="36">🛡️</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#90caf9;text-align:center;font-weight:bolder">保 险</div>
+	<div style="color:#90caf9;text-align:center;font-weight:bolder">{$t('action.insurance')}</div>
 </a>
 
 <style>

@@ -3,6 +3,7 @@
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import { Waiting } from '$lib/store/Waiting';
+	import { t } from '$lib/i18n';
 
 	let chipOffset = 6;
 	$: disabled = $Player.inGame;
@@ -36,7 +37,7 @@
 		if (amount < 5 || amount > 5000){
 			
 			$Waiting.alertClass = 'warning';
-			$Waiting.waitingText = '下注额不在区间内';
+			$Waiting.waitingText =  $t('action.outRange');
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
@@ -46,7 +47,7 @@
 		//余额不够	
 		if ($Player.balance < amount) {
 			$Waiting.alertClass = 'warning';
-			$Waiting.waitingText = '余额已经不到 '+amount+" EGC";
+			$Waiting.waitingText =  $t('action.balanceLack');
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
@@ -58,10 +59,7 @@
 		if (!$Player.inGame && $Player.state.dealerCards.length > 0) {
 			Player.clearState();
 		}
-
 		
-
-			
 
 		$Player.balance -= amount;
 		$Player.state.hands[0].amount += amount;

@@ -5,10 +5,11 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Action } from '$lib/store/Action';
 	import { stand as processStand } from '$lib/state/stand';
+	import { t } from '$lib/i18n';
 	
 	async function stand() {
 		Action.clearAll();
-		Spinner.info('停牌中');
+		Spinner.info($t('action.aoStanding'));
 		const standMsgId = await message({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'Stand' }],
@@ -33,7 +34,7 @@
 		<text x="30" y="43" font-size="35">⃠</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#DD443B;text-align:center;font-weight:bolder">停 牌</div>
+	<div style="color:#DD443B;text-align:center;font-weight:bolder">{$t('action.stand')}</div>
 </a>
 
 <style>

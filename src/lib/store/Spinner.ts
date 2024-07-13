@@ -1,9 +1,10 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
+import { t } from '$lib/i18n';
 
 const initialSpinner = {
 	isWaiting:false,
     colorClass:'info',
-    text:'请稍候'   
+    text:get(t)('action.waiting')		   
 };
 
 
@@ -16,7 +17,7 @@ function createSpinner() {
 			update((spinner) => {
 				spinner.isWaiting = false;
 				spinner.colorClass = 'primary';
-				spinner.text = '请稍候';				
+				spinner.text = get(t)('action.waiting');				
 				return spinner;
 			}),
 		info: (text: string) =>
@@ -29,7 +30,7 @@ function createSpinner() {
 		result: () =>
 			update((spinner) => {
 				spinner.isWaiting = true;
-				spinner.text = "获取结果中";
+				spinner.text = get(t)('action.querying');			
 				spinner.colorClass = 'success';								
 				return spinner;
 			})		

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n';
 	import { Action } from '$lib/store/Action';
 	import { Player } from '$lib/store/Player';
 	import { Waiting } from '$lib/store/Waiting';
@@ -10,7 +11,7 @@
 			$Waiting.alertClass = 'warning';
 			$Waiting.confirm = true;
 			$Waiting.isWaiting = true;
-			$Waiting.waitingText = '加倍下注筹码不够';
+			$Waiting.waitingText = $t('action.balanceLack');
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
 			}, 1000);
@@ -38,7 +39,7 @@
 		<text x="18" y="43" font-size="36">２</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#ff9800;text-align:center;font-weight:bolder">加倍下注</div>
+	<div style="color:#ff9800;text-align:center;font-weight:bolder">{$t('action.doubleBet')}</div>
 </a>
 
 <style>

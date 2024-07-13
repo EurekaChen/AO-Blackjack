@@ -5,9 +5,10 @@
 	import { message, result } from '$lib/store/Setting';
 	import { bjProcess } from '$lib';
 	import {hit as processHit} from '$lib/state/hit';
+	import { t } from '$lib/i18n';
 
 	async function hit() {
-		Spinner.info('AO要牌中');
+		Spinner.info($t('action.aoHiting'));
 		Action.clearAll();
 		const hitMsgId = await message({
 			process: bjProcess,
@@ -37,7 +38,7 @@
 		<text x="8" y="38" font-size="24" font-weight="bolder">+</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#90caf9;text-align:center;font-weight:bolder">要 牌</div>
+	<div style="color:#90caf9;text-align:center;font-weight:bolder">{$t('action.hit')}</div>
 </a>
 
 <style>

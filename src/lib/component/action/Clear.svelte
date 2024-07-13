@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
+	import { t } from '$lib/i18n';
 
 	function clear() {
 		let clearAmount = $Player.state.hands[0].amount;
@@ -17,7 +18,7 @@
 		<text x="19" y="39" font-size="26">✕</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#cccccc;text-align:center;font-weight:bolder">清 除</div>
+	<div style="color:#cccccc;text-align:center;font-weight:bolder">{$t('action.clear')}</div>
 </a>
 
 <style>

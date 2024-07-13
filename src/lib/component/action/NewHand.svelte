@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
+	import { t } from '$lib/i18n';
 
 	function newHand() {		
 		$Player.state.hands[0].cards = [];
@@ -19,7 +20,7 @@
 		<text x="17" y="40" font-size="32">↻</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#cccccc;text-align:center;font-weight:bolder">重新开始</div>
+	<div style="color:#cccccc;text-align:center;font-weight:bolder"> {$t('action.newHand')}</div>
 </a>
 
 <style>

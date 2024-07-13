@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n';
 	import { Indicator } from '$lib/store/Indicator';
 	function ok() {
 		$Indicator.isShow = false;
@@ -10,7 +11,7 @@
 	<div class="text-center {$Indicator.class}">
 		<div style="font-size:36px">{$Indicator.icon}{$Indicator.text}</div>
 		{#if $Indicator.amount>0}
-		<div style="font-size:28px">返回 {$Indicator.amount} EGC</div>
+		<div style="font-size:28px"> {$t('action.back')} {$Indicator.amount} EGC</div>
 		{:else}
 		<div style="font-size:28px">&nbsp;</div>
 		{/if}

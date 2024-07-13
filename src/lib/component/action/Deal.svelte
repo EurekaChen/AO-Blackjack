@@ -6,13 +6,14 @@
 	import { Spinner } from '$lib/store/Spinner';
 	import { Action } from '$lib/store/Action';
 	import { deal as processDeal } from '$lib/state/deal';
+	import { t } from '$lib/i18n';
 	
 	async function deal() {
 		//按钮后不能再动筹码
 		$Player.inGame = true;
 		Action.clearAll();
 
-		Spinner.info('AO发牌中');
+		Spinner.info($t('action.aoDealing'));
 		$Player.state.originalAmount = $Player.state.hands[0].amount;
 		const dealMsgId = await message({
 			process: bjProcess,
@@ -44,7 +45,7 @@
 		<text x="22" y="36">♣</text>
 		<circle class="hoverCircle" cx="30" cy="30" r="25" />
 	</svg>
-	<div style="color:#90caf9;text-align:center;font-weight:bolder">发 牌</div>
+	<div style="color:#90caf9;text-align:center;font-weight:bolder">{$t('action.deal')}</div>
 </a>
 
 <style>
