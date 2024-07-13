@@ -7,6 +7,7 @@
 	import { Action } from '$lib/store/Action';
 	import { deal as processDeal } from '$lib/state/deal';
 	import { t } from '$lib/i18n';
+	import {log} from '$lib/store/Debug'
 	
 	async function deal() {
 		//按钮后不能再动筹码
@@ -15,6 +16,7 @@
 
 		Spinner.info($t('action.aoDealing'));
 		$Player.state.originalAmount = $Player.state.hands[0].amount;
+		
 		const dealMsgId = await message({
 			process: bjProcess,
 			tags: [
@@ -23,16 +25,16 @@
 			],
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
+		log("DealMsgId:",dealMsgId);
 
 		Spinner.result();
-		const readResult = await result({ message: dealMsgId, process: bjProcess });
-		console.log('oa返回信息：', readResult);
+		const readResult = await result({ message: dealMsgId, process: bjProcess });		
 		Spinner.stop();
 		
 		//返回数据处理
 		let aoPlayerJson = readResult.Messages[0].Data;
 		let aoPlayer = JSON.parse(aoPlayerJson);
-		console.log('玩家状态：', aoPlayer);
+		
 		processDeal(aoPlayer);
 	}
 </script>

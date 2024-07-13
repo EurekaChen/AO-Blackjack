@@ -4,7 +4,6 @@ import rule_zh from './rule_zh.html?raw';
 
 import about_en from './about_en.html?raw';
 import about_zh from './about_zh.html?raw';
-import { bufferToString } from 'arweave/web/lib/utils';
 
 export default {
 	en: {
