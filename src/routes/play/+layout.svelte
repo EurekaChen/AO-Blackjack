@@ -66,9 +66,9 @@
 		let addrLast6 = aoPlayer.addr.substring(aoPlayer.addr.length - 6);
 		let shortAddr = addrFirst6 + '......' + addrLast6;
 
-		modalTitle = '欢迎回来';
+		modalTitle = '🎉欢迎回来👋';
 		modalContent = `
-		<dl class="row">
+		<dl class="row mx-5">		
 			<dt class="col-3">钱包地址</dt>
 			<dd class="col-9" title="${aoPlayer.addr}"> ${shortAddr}</dd>
 			<dt class="col-3">玩家名称</dt>
@@ -88,7 +88,7 @@
 		$Player.addr=aoPlayer.addr;	
 
 		if (aoPlayer.state) {
-			modalTitle = '上一局还未结束';
+			modalTitle = '🎮继续上一局牌🎮';
 			$Player.inGame=true;
 
 			//考虑是不是传回balance和不要deck，其实拿到deck也不影响。
@@ -100,6 +100,10 @@
 
 	onMount(async () => {
 		if (window.arweaveWallet) {
+
+			//阻止点击
+			$Player.inGame=true;
+
 			walletInstalled = true;
 			console.log('钱包已经安装');
 
@@ -129,6 +133,8 @@
 					} else {
 						openJoin();
 					}
+					//允许点击：
+					$Player.inGame=false;
 				} else {
 					walletConnected = false;
 				}
@@ -148,7 +154,7 @@
 					<a class="btn btn-primary " href="https://www.arconnect.io/download">钱包下载地址</a>
 				 </p>`;
 
-			info.show();
+			info.openModal();
 		}
 	});
 

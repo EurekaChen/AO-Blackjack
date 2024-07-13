@@ -16,7 +16,7 @@
 
 <div class="modal fade" id="info" tabindex="-1" aria-labelledby="infoTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
+		<div class="modal-content rounded-4 shadow" style="background-color: #bbdefb;">
 			<div class="modal-header p-4 pb-4 border-bottom-0">
 				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">{modalTitle}</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
