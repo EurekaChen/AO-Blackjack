@@ -43,8 +43,8 @@ export function isBust(cards: string[]) {
 
 export function isBlackjack(cards: string[]) {
 	//必须是两张牌
-	if (cards.length != 2) return false;
-	if (getPoint(cards[1]) != 11 && getPoint(cards[2]) != 11) return false;
-	if (getPoint(cards[1]) != 10 && getPoint(cards[2]) != 10) return false;
-	return true;
+	if (cards.length != 2) return false;	
+	if (getPoint(cards[0]) == 11 && getPoint(cards[1]) == 10) return true;
+	if (getPoint(cards[0]) == 10 && getPoint(cards[1]) == 11) return true;
+	return false;
 }

@@ -54,3 +54,27 @@ export function showResult(aoPlayer: AoPlayer) {
 //         $Indicator.isShow = false;
 //     }, 3000);
 // }
+
+// stand：
+
+
+// function showResult(aoPlayer: AoPlayer) {
+// 	let totalBetAmount = 0;
+// 	$Player.state.hands.forEach((hand) => {
+// 		totalBetAmount += hand.amount;
+// 	});
+
+// 	let backBalance = aoPlayer.balance - $Player.balance;
+
+// 	if (backBalance > totalBetAmount) {
+// 		Indicator.win(backBalance);
+// 	} else if (backBalance == totalBetAmount) {
+// 		Indicator.tie(backBalance);
+// 	} else {
+// 		Indicator.lose(backBalance - totalBetAmount);
+// 	}
+
+// 	setTimeout(() => {
+// 		$Indicator.isShow = false;
+// 	}, 3000);
+// }
