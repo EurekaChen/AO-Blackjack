@@ -2,15 +2,13 @@
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 
-	
 	function clear() {
 		let clearAmount = $Player.state.hands[0].amount;
 		$Player.balance = $Player.balance + clearAmount;
 		$Player.state.hands[0].amount = 0;
-		//$Player.state.hands[1].amount=0;
-		Action.clearAll();	
+		$Player.state.hands[1].amount = 0;
+		Action.clearAll();
 	}
-	
 </script>
 
 <a href="./#" on:click={clear} style="text-decoration: none;">

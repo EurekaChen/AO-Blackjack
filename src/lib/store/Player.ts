@@ -65,6 +65,7 @@ function createPlayer() {
 
 					player.state.hands[0].cards = aoPlayer.state.hands[0].cards;
 					player.state.hands[0].amount = aoPlayer.state.hands[0].amount;
+					
 					if (aoPlayer.state.hands.length > 1) {
 						player.state.hands[1].cards = aoPlayer.state.hands[1].cards;
 						player.state.hands[1].amount = aoPlayer.state.hands[1].amount;

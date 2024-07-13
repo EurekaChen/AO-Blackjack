@@ -33,7 +33,7 @@
 	async function queryWalletEgc(addr: string) {
 		$Waiting.isWaiting = true;
 		$Waiting.alertClass = 'info';
-		$Waiting.waitingText = '正在查询您钱包里的的EGC余额';
+		$Waiting.waitingText = '正在获取的EGC余额...';
 		let queryBalance = await dryrun({
 			process: egcProcess,
 			tags: [
@@ -45,7 +45,8 @@
 	}
 
 	async function GetPlayer(addr: string) {
-		$Waiting.waitingText = '正在查询玩家信息';
+		$Waiting.waitingText = '正在查询玩家信息...';
+		$Waiting.alertClass = 'info';
 		let getPlayerMsg = await dryrun({
 			process: bjProcess,
 			tags: [{ name: 'Action', value: 'GetPlayer' }],
@@ -61,7 +62,7 @@
 		}
 	}
 
-	function welcomeBack(aoPlayer: { addr: string; balance: number; name: string; state: any }) {
+	function welcomeBack(aoPlayer: AoPlayer) {
 		let addrFirst6 = aoPlayer.addr.substring(0, 6);
 		let addrLast6 = aoPlayer.addr.substring(aoPlayer.addr.length - 6);
 		let shortAddr = addrFirst6 + '......' + addrLast6;
@@ -97,67 +98,7 @@
 		}
 		info.openModal();
 	}	
-
-	onMount(async () => {
-		if (window.arweaveWallet) {
-
-			//阻止点击
-			$Player.inGame=true;
-
-			walletInstalled = true;
-			console.log('钱包已经安装');
-
-			//如果没有连接，则下面这代码会没有权限！
-			//let activeAddress;
-			try {
-				activeAddress = await window.arweaveWallet.getActiveAddress();
-				console.log('钱包已经连接，地址：' + activeAddress);
-			} catch (error) {
-				modalTitle = '请先连接钱包';
-				modalContent = `<p>
-					AO 21点游戏基于Arweave AO，玩游戏需要首先连接Arweave钱包！
-				 </p>
-				 <div class="alert-warning alert">提示信息：${error}
-				 `;
-				info.openModal();
-			}
-
-			try {
-				if (activeAddress) {
-					walletConnected = true;
-					walletEgc = await queryWalletEgc(activeAddress);
-
-					let oaPlayer = await GetPlayer(activeAddress);
-					if (oaPlayer != null) {
-						welcomeBack(oaPlayer);
-					} else {
-						openJoin();
-					}
-					//允许点击：
-					$Player.inGame=false;
-				} else {
-					walletConnected = false;
-				}
-			} catch (error) {
-				$Waiting.alertClass = 'danger';
-				$Waiting.waitingText = '数据请求失败，请刷新重试';
-				console.log(error);
-			}
-		} else {
-			walletInstalled = false;
-
-			modalTitle = '请先安装钱包';
-			modalContent = `<p>
-					AO 21点游戏基于Arweave AO,需要首先安装Arweave钱包！
-				 </p>
-				 <p class="text-center">
-					<a class="btn btn-primary " href="https://www.arconnect.io/download">钱包下载地址</a>
-				 </p>`;
-
-			info.openModal();
-		}
-	});
-
+	
 	async function connectWallet() {
 		try {
 			await window.arweaveWallet.connect([
@@ -196,8 +137,69 @@
 	function openJoin() {
 		join.openModal();
 	}
+
+	onMount(async () => {
+		if (window.arweaveWallet) {
+
+			//阻止点击
+			$Player.inGame=true;
+
+			walletInstalled = true;
+			console.log('钱包已经安装');
+
+			//如果没有连接，则下面这代码会没有权限！
+			//let activeAddress;
+			try {
+				activeAddress = await window.arweaveWallet.getActiveAddress();
+				console.log('钱包已经连接，地址：' + activeAddress);
+			} catch (error) {
+				modalTitle = '请先连接钱包';
+				modalContent = `<p>
+					AO 21点游戏基于Arweave AO，玩游戏需要首先连接Arweave钱包！
+				 </p>
+				 <div class="alert-warning alert">提示信息：${error}
+				 `;
+				info.openModal();
+			}
+
+			try {
+				if (activeAddress) {
+					walletConnected = true;
+					walletEgc = await queryWalletEgc(activeAddress);
+
+					let oaPlayer = await GetPlayer(activeAddress);
+					if (oaPlayer != null) {
+						welcomeBack(oaPlayer);
+					} else {
+						openJoin();
+					}
+					//加入或重返后允许点击：
+					$Player.inGame=false;
+				} else {
+					walletConnected = false;
+				}
+			} catch (error) {
+				$Waiting.alertClass = 'danger';
+				$Waiting.waitingText = '数据请求失败，请刷新重试';
+				console.log(error);
+			}
+		} else {
+			walletInstalled = false;
+
+			modalTitle = '请先安装钱包';
+			modalContent = `<p>
+					AO 21点游戏基于Arweave AO,需要首先安装Arweave钱包！
+				 </p>
+				 <p class="text-center">
+					<a class="btn btn-primary " href="https://www.arconnect.io/download">钱包下载地址</a>
+				 </p>`;
+
+			info.openModal();
+		}
+	});
 </script>
 
+<!--弹出窗口-->
 <Deposit bind:this={deposit} max={walletEgc} />
 <Join bind:this={join} {activeAddress} />
 <Rule bind:this={rule} />
@@ -208,7 +210,7 @@
 	<!--经考虑后牌桌固定大小1024x576，其它（顶部和底部）可以再加 -->
 	<div class="row back">
 		<!--顶部标题区域-->
-		<div class="container text-bg-dark" style="height: 45px;width:1024px">
+		<div class="container text-bg-dark header">
 			<header class="d-flex align-items-center justify-content-center justify-content-md-between">
 				<!--下拦菜单-->
 				<div class="col-md-3">
@@ -304,5 +306,9 @@
 		background-color: #333333;
 		opacity: 0.9;
 		width: 1024px;
+	}
+
+	.header{
+		height: 45px;width:1024px
 	}
 </style>
