@@ -66,16 +66,16 @@ export default {
 			aoStanding: 'AO standing',
 			stand: 'Stand',
 			outRange: 'Bet amount is out of range',
-			back: 'Back'
+			back: 'Back',
+			waiting: 'Waiting',
+			querying: 'Querying'
 		},
 		indicator: {
 			win: 'You win',
 			lose: 'You lose',
 			tie: 'Tie',
 			blackjack: 'Blackjack',
-			bust: 'You bust',
-			waiting: 'Waiting',
-			querying: 'Querying'
+			bust: 'You bust'			
 		},
 		join: {
 			title: 'Welcome to AO Classic Blackjack',
