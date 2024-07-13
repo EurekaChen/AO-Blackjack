@@ -5,6 +5,7 @@
 	import { message, result } from '$lib/store/Setting';
 	import { egcProcess } from "$lib";
 	import { Player } from "$lib/store/Player";
+	import { log } from "$lib/store/Debug";
    
     
     let depositAmount= 10;
@@ -35,17 +36,16 @@
 			signer: createDataItemSigner(window.arweaveWallet)
 		});
 
-		console.log('msgId', msgId);
+		log('存入EGC的Id:', msgId);
 
 		let depositResult =await result({ message: msgId, process: egcProcess });
-		console.log(depositResult);			
+		log('存入EGC信息:',depositResult);			
 		//数量x100在：
 		//depositResult.Messages[0].Tags[7].value
 		//depositResult.Messages[1].Tags[7].value
 		//depositResult.Messages[0].Data为有色文本信息
 	    let depositAmount= Number(depositResult.Messages[1].Tags[7].value)/100;
-		$Player.balance+=depositAmount;
-	
+		$Player.balance+=depositAmount;	
 	}
   </script>
 <div

@@ -26,9 +26,7 @@
 		$Waiting.waitingText = '新用户加入中，请稍候...';		
 
 		const userInfo = { name, addr };
-		const userJsonStr = JSON.stringify(userInfo);
-
-		console.log('注册信息:', userJsonStr);
+		const userJsonStr = JSON.stringify(userInfo);		
 
 		//直接发送注册信息
 		//会连接到arweave.net不翻墙会出错
