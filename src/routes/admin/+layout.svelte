@@ -178,9 +178,10 @@
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="/admin/clearAll"> 清理所有玩家 </a>
-							</li>
+							</li>							
+							<hr />
 							<li class="nav-item">
-								<a class="nav-link" href="/admin/debug"> 代码调试 </a>
+								<a class="nav-link" href="/admin/egc"> EGC余额 </a>
 							</li>
 						</ul>
 					</nav>

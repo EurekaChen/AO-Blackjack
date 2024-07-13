@@ -5,7 +5,6 @@
 	import 'arweave/web';
 	import { bjProcess, egcProcess } from '$lib/index';
 	import { Player } from '$lib/store/Player';
-	import { Action } from '$lib/store/Action';
 	import Deposit from '$lib/component/modal/Deposit.svelte';
 	import Join from '$lib/component/modal/Join.svelte';
 	import Info from '$lib/component/modal/Info.svelte';
@@ -13,7 +12,6 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import WaitingAlert from '$lib/component/WaitingAlert.svelte';
 	import type { AoPlayer } from '$lib/type';
-	import { isSamePoint } from '$lib/state/evaluate';
 	import { restore } from '$lib/state/restore';
 
 	let walletInstalled = false;
