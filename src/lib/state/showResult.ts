@@ -24,8 +24,33 @@ export function showResult(aoPlayer: AoPlayer) {
 			Indicator.lose(backBalance - totalBet);
 		}
 	}
-    
+
 	setTimeout(() => {
 		get(Indicator).isShow = false;
 	}, 3000);
 }
+
+
+// hit里的：
+// function showResult(aoPlayer: AoPlayer) {
+//     const backBalance = aoPlayer.balance - $Player.balance;		
+
+//     if (isBlackjack(aoPlayer.state.hands[0].cards)) {
+//         Indicator.blackjack(backBalance);
+//     } else if (isBust(aoPlayer.state.hands[0].cards)) {
+//         Indicator.bust(backBalance);
+//     } else {
+//         const totalBet =
+//             $Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
+//         if (backBalance > totalBet) {
+//             Indicator.win(backBalance);
+//         } else if (backBalance == totalBet) {
+//             Indicator.tie(backBalance);
+//         } else {
+//             Indicator.lose(backBalance - totalBet);
+//         }
+//     }
+//     setTimeout(() => {
+//         $Indicator.isShow = false;
+//     }, 3000);
+// }

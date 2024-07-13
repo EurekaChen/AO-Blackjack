@@ -1,50 +1,10 @@
 <script lang="ts">
-	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import { Spinner } from '$lib/store/Spinner';
 	import { createDataItemSigner } from '@permaweb/aoconnect';
 	import { message, result } from '$lib/store/Setting';
 	import { bjProcess } from '$lib';
-	import { Indicator } from '$lib/store/Indicator';
-	import { isBlackjack, isBust } from '$lib/state/evaluate';
-	import type { AoPlayer } from '$lib/type';
-
-	function processHit(aoPlayer:AoPlayer) {
-			if (aoPlayer.state.dealerCards.length > 1) {
-				//给庄家发牌，说明牌局结束了。
-				console.log('$Player:', $Player);
-				showResult(aoPlayer);
-				Player.getState(aoPlayer);
-				$Action.newHand = true;
-				$Player.inGame = false;
-			} else {
-				Player.getState(aoPlayer);
-				Action.afterDeal(false);
-			}
-		}
-
-	function showResult(aoPlayer: AoPlayer) {
-		const backBalance = aoPlayer.balance - $Player.balance;		
-
-		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
-			Indicator.blackjack(backBalance);
-		} else if (isBust(aoPlayer.state.hands[0].cards)) {
-			Indicator.bust(backBalance);
-		} else {
-			const totalBet =
-				$Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
-			if (backBalance > totalBet) {
-				Indicator.win(backBalance);
-			} else if (backBalance == totalBet) {
-				Indicator.tie(backBalance);
-			} else {
-				Indicator.lose(backBalance - totalBet);
-			}
-		}
-		setTimeout(() => {
-			$Indicator.isShow = false;
-		}, 3000);
-	}
+	import {hit as processHit} from '$lib/state/hit';
 
 	async function hit() {
 		Spinner.info('AO要牌中');
