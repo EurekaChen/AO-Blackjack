@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { bjProcess} from '$lib';
+	import { t } from '$lib/i18n';
 	import { Player } from '$lib/store/Player';
 
 	import { Waiting } from '$lib/store/Waiting';
@@ -23,7 +24,7 @@
 	async function join(name: string, addr: string) {
 		
 		$Waiting.isWaiting = true;
-		$Waiting.waitingText = '新用户加入中，请稍候...';		
+		$Waiting.waitingText = $t('join.waiting');		
 
 		const userInfo = { name, addr };
 		const userJsonStr = JSON.stringify(userInfo);		
@@ -43,7 +44,7 @@
 		$Player.name = nickname;
 
 		$Waiting.alertClass = 'primary';
-		$Waiting.waitingText = '加入成功...';
+		$Waiting.waitingText = $t('join.success');
 		setTimeout(() => {
 			$Waiting.isWaiting = false;
 		}, 1000);
@@ -55,21 +56,21 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
 			<div class="modal-header p-4 pb-4 border-bottom-0">
-				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">欢迎加入21点游戏</h1>
+				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">{$t('join.title')}</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body p-4 pt-0">
 				<div class="mb-3 text-center">
-					<div class="fs-4">您的钱包地址</div>
+					<div class="fs-4">{$t('join.addr')}</div>
 					<div>{activeAddress}</div>
-					<div class="fs-4">请输入昵称</div>
+					<div class="fs-4">{$t('join.nickname')}</div>
 					<input
 						type="text"
 						class="form-control rounded-3 w-50 mx-auto m-1 h-75"
 						bind:value={nickname}
-						placeholder="请输入昵称"
+						placeholder="{$t('join.nickname')}"
 					/>
-					<div class="alert alert-info fs-5">首次加入赠送 100EGC 筹码</div>
+					<div class="alert alert-info fs-5">{$t('join.offer100')}</div>
 				</div>
 			</div>
 			<div class="modal-footer text-center">
@@ -78,7 +79,7 @@
 					class="btn btn-primary mx-5 w-100"
 					data-bs-dismiss="modal"
 					on:click={() => join(nickname, activeAddress)}
-					>加 入
+					>{$t('join.join')}
 				</button>
 			</div>
 		</div>

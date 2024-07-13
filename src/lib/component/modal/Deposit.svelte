@@ -1,28 +1,27 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import Stack from "../Stack.svelte";
+	import { t } from '$lib/i18n';
+	import { onMount } from 'svelte';
+	import Stack from '../Stack.svelte';
 	import { createDataItemSigner } from '@permaweb/aoconnect';
 	import { message, result } from '$lib/store/Setting';
-	import { egcProcess } from "$lib";
-	import { Player } from "$lib/store/Player";
-	import { log } from "$lib/store/Debug";
-   
-    
-    let depositAmount= 10;
-    export let max:number;
- 
-    let modal: { show: () => void; hide: () => void; };
+	import { egcProcess } from '$lib';
+	import { Player } from '$lib/store/Player';
+	import { log } from '$lib/store/Debug';
 
-    onMount(async () => {				
-       modal= new bootstrap.Modal(document.getElementById('deposit'));
-    }); 
+	let depositAmount = 10;
+	export let max: number;
 
-    export function openModal(){
-        modal.show();
-    }
-   
-    async function deposit(amount: number) {
-	
+	let modal: { show: () => void; hide: () => void };
+
+	onMount(async () => {
+		modal = new bootstrap.Modal(document.getElementById('deposit'));
+	});
+
+	export function openModal() {
+		modal.show();
+	}
+
+	async function deposit(amount: number) {
 		//需x100才能显示正常（有两位小数）
 		let quantity = amount * 100;
 		let msgId = await message({
@@ -38,16 +37,17 @@
 
 		log('存入EGC的Id:', msgId);
 
-		let depositResult =await result({ message: msgId, process: egcProcess });
-		log('存入EGC信息:',depositResult);			
+		let depositResult = await result({ message: msgId, process: egcProcess });
+		log('存入EGC信息:', depositResult);
 		//数量x100在：
 		//depositResult.Messages[0].Tags[7].value
 		//depositResult.Messages[1].Tags[7].value
 		//depositResult.Messages[0].Data为有色文本信息
-	    let depositAmount= Number(depositResult.Messages[1].Tags[7].value)/100;
-		$Player.balance+=depositAmount;	
+		let depositAmount = Number(depositResult.Messages[1].Tags[7].value) / 100;
+		$Player.balance += depositAmount;
 	}
-  </script>
+</script>
+
 <div
 	class="modal fade"
 	id="deposit"
@@ -58,7 +58,7 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content rounded-2 shadow" style="background-color: #bbdefb;">
 			<div class="modal-header p-5 pb-4 border-bottom-0">
-				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">带入更多筹码</h1>
+				<h1 class="fw-bold mb-0 fs-2 w-100 text-center">{$t('deposit.more')}</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body p-5 pt-0">
@@ -66,9 +66,9 @@
 					<div class="row">
 						<div class="col-8">
 							<label for="floatingInput"
-								>请输入数量
+								>{$t('deposit.amount')}
 								{#if max}
-									(共有{max})
+									({$t('deposit.total')}{max})
 								{/if}
 							</label>
 							<br />
@@ -79,7 +79,7 @@
 								class="form-control rounded-3 w-50"
 								id="floatingInput"
 								bind:value={depositAmount}
-								placeholder="请输入数量"
+								placeholder={$t('deposit.amount')}
 							/>
 							<br />
 							<input class="w-75" type="range" bind:value={depositAmount} min="5" step="5" {max} />
@@ -99,7 +99,7 @@
 					type="button"
 					class="btn btn-primary mx-5 w-100"
 					data-bs-dismiss="modal"
-					on:click={() => deposit(depositAmount)}>带入筹码</button
+					on:click={() => deposit(depositAmount)}>{$t('deposit.deposit')}</button
 				>
 			</div>
 		</div>

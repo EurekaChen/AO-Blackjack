@@ -28,7 +28,7 @@ export default {
 		connect: {
 			pleaseConnect: 'Please connect your wallet first',
 			pleaseConnectContent:
-				'AO Classic Blackjack game is based on Arweave AO, please connect your wallet first',
+				'<p>AO Classic Blackjack game is based on Arweave AO, please connect your wallet first</p>',
 			queryEgc: 'Retrieving EGC balance...',
 			queryPlayer: 'Querying player information...',
 			welcomeBack: '🎉Welcome back👋',
@@ -42,7 +42,7 @@ export default {
 			refresh: 'Data request failed, please refresh and try again',
 			pleaseInstall: 'Please install wallet first',
 			pleaseInstallContent:
-				'AO Blackjack game is based on Arweave AO, you need to install Arweave wallet first!',
+				'<p>AO Blackjack game is based on Arweave AO, you need to install Arweave wallet first!</p>',
 			installLink: 'Wallet download link',
 			addChip: 'Add chips',
 			player: 'Player'
@@ -77,6 +77,21 @@ export default {
 			waiting: 'Waiting',
 			querying: 'Querying'
 		},
+		join: {
+			title: 'Welcome to AO Classic Blackjack',
+			addr: 'Your wallet address',
+			nickname: 'Your nickname',
+			offer100: 'First-time joiners receive 100 EGC',
+			join: 'Join',
+			success: 'Successfully joined',
+			waiting: 'New player joining, please wait...'
+		},
+		deposit: {
+			more: 'Add more chips',
+			amount: 'Please enter the amount',
+			total: 'Total',
+			deposit: 'Deposit'
+		},
 		table: 'table_en'
 	},
 	zh: {
@@ -100,7 +115,7 @@ export default {
 		},
 		connect: {
 			pleaseConnect: '请先连接钱包',
-			pleaseConnectContent: 'AO经典21点游戏基于 Arweave AO，请先连接钱包',
+			pleaseConnectContent: '<p>AO经典21点游戏基于 Arweave AO，请先连接钱包</p>',
 			queryEgc: '正在获取的EGC余额...',
 			queryPlayer: '正在查询玩家信息...',
 			welcomeBack: '🎉欢迎回来👋',
@@ -113,7 +128,7 @@ export default {
 			fail: '连接钱包失败',
 			refresh: '数据请求失败，请刷新重试',
 			pleaseInstall: '请先安装钱包',
-			pleaseInstallContent: 'AO 21点游戏基于Arweave AO,需要首先安装Arweave钱包！',
+			pleaseInstallContent: '<p>AO 21点游戏基于Arweave AO,需要首先安装Arweave钱包！</p>',
 			installLink: '钱包下载链接',
 			addChip: '增加筹码',
 			player: '玩家'
@@ -147,6 +162,21 @@ export default {
 			tie: '平 手',
 			blackjack: '黑杰克',
 			bust: '您爆了'
+		},
+		join: {
+			title: '欢迎加入AO经典21点',
+			addr: '您的钱包地址',
+			nickname: '请输入您的昵称',
+			offer100: '首次加入赠送 100EGC 筹码',
+			join: '加 入',
+			success: '加入成功',
+			waiting: '新用户加入中，请稍候...'
+		},
+		deposit: {
+			more: '带入更多筹码',
+			amount: '请输入数量',
+			total: '共有',
+			deposit: '带入筹码'
 		},
 		table: 'table_zh'
 	}
