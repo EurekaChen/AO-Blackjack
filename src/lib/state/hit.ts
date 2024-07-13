@@ -15,6 +15,7 @@ export function hit(aoPlayer:AoPlayer) {
         showResult(aoPlayer);
         Player.getState(aoPlayer);
         get(Action).newHand = true;
+        log("newHand:",get(Action).newHand);       
         get(Player).inGame = false;
     } else {
         Player.getState(aoPlayer);

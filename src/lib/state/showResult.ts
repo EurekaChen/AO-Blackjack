@@ -31,6 +31,8 @@ export function showResult(aoPlayer: AoPlayer) {
 	}
 
 	setTimeout(() => {
-		get(Indicator).isShow = false;
+		const currentValue = get(Indicator);
+		currentValue.isShow = false;
+		Indicator.set(currentValue);
 	}, 3000);
 }
