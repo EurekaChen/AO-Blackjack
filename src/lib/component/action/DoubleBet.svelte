@@ -5,68 +5,10 @@
 	import { createDataItemSigner } from '@permaweb/aoconnect';
 	import { message, result } from '$lib/store/Setting';
 	import { bjProcess } from '$lib';
-	import { Indicator } from '$lib/store/Indicator';
+	import { doubleBet as processDoubleBet} from '$lib/state/doubleBet';
+
 	import { Waiting } from '$lib/store/Waiting';
-	import { isBlackjack, isBust } from '$lib/state/evaluate';
-	import type { AoPlayer } from '$lib/type';
 
-	function processDoubleBet(aoPlayer: AoPlayer) {
-		if (aoPlayer.state.activeHandIndex == 2) {
-			//到第二手牌了
-			$Player.balance = $Player.balance - $Player.state.originalAmount;
-			$Player.state.hands[1].amount += $Player.state.originalAmount;
-
-			if (aoPlayer.state.hands[1].amount == 0) {
-				//第二手结算，说明结束了，玩家会发牌。
-				//总共：
-				showResult(aoPlayer);
-				$Action.newHand = true;
-			} else {
-				//不会到这里
-				throw '第二手加倍后应该停牌重新开始';
-			}
-		} else {
-			//第一手牌加倍，加倍后停牌
-			$Player.balance = $Player.balance - $Player.state.originalAmount;
-			$Player.state.hands[0].amount += $Player.state.originalAmount;
-
-			if (aoPlayer.state.hands.length > 1) {
-				//转到第二手：
-				Action.afterDeal(true);
-			} else {
-				if (aoPlayer.state.dealerCards.length > 1) {
-					//庄家发牌了，说明结束了，加倍不会有黑杰克
-					showResult(aoPlayer);
-					$Action.newHand = true;
-					$Player.inGame = false;
-				}
-			}
-			Player.getState(aoPlayer);
-		}
-	}
-
-	function showResult(aoPlayer: AoPlayer) {
-		const backBalance = aoPlayer.balance - $Player.balance;
-
-		if (isBlackjack(aoPlayer.state.hands[0].cards)) {
-			Indicator.blackjack(backBalance);
-		} else if (isBust(aoPlayer.state.hands[0].cards)) {
-			Indicator.bust(backBalance);
-		} else {
-			const totalBet =
-				$Player.state.hands[0].amount + $Player.state.hands[1].amount + $Player.state.insurance;
-			if (backBalance > totalBet) {
-				Indicator.win(backBalance);
-			} else if (backBalance == totalBet) {
-				Indicator.tie(backBalance);
-			} else {
-				Indicator.lose(backBalance - totalBet);
-			}
-		}
-		setTimeout(() => {
-			$Indicator.isShow = false;
-		}, 3000);
-	}
 
 	async function doubleBet() {
 		if ($Player.balance < $Player.state.hands[0].amount) {
@@ -97,7 +39,7 @@
 		console.log('加倍后:', aoPlayer);
 		$Spinner.isWaiting = false;
 
-		processDoubleBet(aoPlayer);
+	    processDoubleBet(aoPlayer);
 	}
 </script>
 
