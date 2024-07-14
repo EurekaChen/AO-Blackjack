@@ -34,7 +34,7 @@
 
 	function betChip(amount: number) {
 		//限额
-		if (amount < 5 || amount > 5000){
+		if (amount < 5 || $Player.state.hands[0].amount + amount > 5000){
 			
 			$Waiting.alertClass = 'warning';
 			$Waiting.waitingText =  $t('action.outRange');
