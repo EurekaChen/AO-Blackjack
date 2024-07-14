@@ -85,8 +85,7 @@
 		let shortAddr = addrFirst6 + '......' + addrLast6;
 
 		modalTitle = $t('connect.welcomeBack');
-		modalContent = `
-		<dl class="row mx-5">		
+		modalContent = `<dl class="row mx-5">		
 			<dt class="col-3">${$t('connect.addr')}</dt>
 			<dd class="col-9" title="${aoPlayer.addr}"> ${shortAddr}</dd>
 			<dt class="col-3">${$t('connect.playerName')}</dt>
@@ -98,7 +97,8 @@
 		</dl>					
 		`;
 		if (aoPlayer.balance < 5) {
-			modalContent += `<div class="alert alert-warning text-center">$t('connect.pleaseAdd')</div>`;
+			modalContent +=
+				`<div class="alert alert-warning text-center">` + $t('connect.pleaseAdd') + `</div>`;
 		}
 
 		$Player.balance = aoPlayer.balance;
@@ -208,7 +208,7 @@
 </script>
 
 <!--弹出窗口-->
-<Deposit bind:this={deposit} max={walletEgc} />
+<Deposit bind:this={deposit} />
 <Join bind:this={join} {activeAddress} />
 <Rule bind:this={rule} />
 <About bind:this={about} />
