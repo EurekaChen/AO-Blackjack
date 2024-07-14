@@ -23,13 +23,29 @@
 	let join: Join;
 	let info: Info;
 	let rule: Rule;
-	let about:About;
+	let about: About;
 
 	let activeAddress: string;
 	let walletEgc: number;
 
 	let modalTitle = $t('connect.pleaseConnect');
 	let modalContent = $t('connect.pleaseConnectContent');
+
+	async function connected(activeAddress: string) {
+		walletConnected = true;
+		walletEgc = await queryWalletEgc(activeAddress);
+
+		let oaPlayer = await GetPlayer(activeAddress);
+		if (oaPlayer != null) {
+			log('玩家已经存在');
+			welcomeBack(oaPlayer);
+		} else {
+			log('玩家不存在');
+			openJoin();
+			//加入后允许点击：
+			$Player.inGame = false;
+		}
+	}
 
 	async function queryWalletEgc(addr: string) {
 		$Waiting.isWaiting = true;
@@ -46,7 +62,7 @@
 	}
 
 	async function GetPlayer(addr: string) {
-		$Waiting.waitingText =  $t('connect.queryPlayer');
+		$Waiting.waitingText = $t('connect.queryPlayer');
 		$Waiting.alertClass = 'info';
 		let getPlayerMsg = await dryrun({
 			process: bjProcess,
@@ -86,23 +102,22 @@
 		}
 
 		$Player.balance = aoPlayer.balance;
-		$Player.name = aoPlayer.name;	
-		$Player.addr=aoPlayer.addr;	
+		$Player.name = aoPlayer.name;
+		$Player.addr = aoPlayer.addr;
 
 		if (aoPlayer.state) {
 			modalTitle = $t('connect.continue');
 
 			//不允许点击筹码
-			$Player.inGame=true;			
-			restore(aoPlayer);			
-		}
-		else{
+			$Player.inGame = true;
+			restore(aoPlayer);
+		} else {
 			//允许点击筹码
-			$Player.inGame=false;
+			$Player.inGame = false;
 		}
 		info.openModal();
-	}	
-	
+	}
+
 	async function connectWallet() {
 		try {
 			await window.arweaveWallet.connect([
@@ -111,9 +126,13 @@
 				'SIGN_TRANSACTION'
 			]);
 			walletConnected = true;
+			activeAddress = await window.arweaveWallet.getActiveAddress();
+			connected(activeAddress);
 		} catch (error) {
-			modalTitle =$t('connect.fail');
-			modalContent = $t('connect.failContent')+`
+			modalTitle = $t('connect.fail');
+			modalContent =
+				$t('connect.failContent') +
+				`
 				 <p class="text-center alert-danger ">
 					 ${error}
 				 </p>`;
@@ -125,7 +144,7 @@
 		try {
 			// 请求断开 ArConnect 钱包
 			await window.arweaveWallet.disconnect();
-			walletConnected = false;			
+			walletConnected = false;
 		} catch (error) {
 			console.error('Failed to disconnect from ArConnect wallet', error);
 		}
@@ -141,9 +160,8 @@
 
 	onMount(async () => {
 		if (window.arweaveWallet) {
-
 			//阻止点击
-			$Player.inGame=true;
+			$Player.inGame = true;
 
 			walletInstalled = true;
 			log('钱包已经安装');
@@ -155,32 +173,18 @@
 				log('钱包已经连接，钱包地址：' + activeAddress);
 			} catch (error) {
 				modalTitle = $t('connect.pleaseConnect');
-				modalContent =$t('connect.pleaseConnectContent')+`
-				 </p>
-				 <div class="alert-warning alert">${error}
-				 `;
+				modalContent = $t('connect.pleaseConnectContent');
+				//不向用户展示错误。
+				log('连接钱包问题:', error);
 				info.openModal();
 			}
 
 			try {
 				if (activeAddress) {
-					walletConnected = true;
-					walletEgc = await queryWalletEgc(activeAddress);
-
-					let oaPlayer = await GetPlayer(activeAddress);
-					if (oaPlayer != null) {
-						log("玩家已经存在");
-						welcomeBack(oaPlayer);						
-					} else {
-						log("玩家不存在");
-						openJoin();
-						//加入后允许点击：
-						$Player.inGame=false;
-					}
-					
+					connected(activeAddress);
 				} else {
 					walletConnected = false;
-					log("钱包未连接");
+					log('钱包未连接');
 				}
 			} catch (error) {
 				$Waiting.alertClass = 'danger';
@@ -189,12 +193,14 @@
 			}
 		} else {
 			walletInstalled = false;
-			log("钱包未安装");
+			log('钱包未安装');
 
 			modalTitle = $t('connect.pleaseInstall');
-			modalContent = $t('connect.pleaseInstallContent')
-			+'<p class="text-center">	<a class="btn btn-primary " href="https://www.arconnect.io/download">'
-			+ $t('connect.installLink')+'</a>';				 
+			modalContent =
+				$t('connect.pleaseInstallContent') +
+				'<p class="text-center">	<a class="btn btn-primary " href="https://www.arconnect.io/download">' +
+				$t('connect.installLink') +
+				'</a>';
 
 			info.openModal();
 		}
@@ -311,7 +317,8 @@
 		width: 1024px;
 	}
 
-	.header{
-		height: 45px;width:1024px
+	.header {
+		height: 45px;
+		width: 1024px;
 	}
 </style>

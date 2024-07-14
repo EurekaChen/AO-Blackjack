@@ -5,7 +5,7 @@
 	<rect width="126" height="60" x="18" y="18" fill="none" stroke="#2196f3" />
 	<text x="30" y="40" font-size="12" font-weight="bold" fill="#2196f3">最小下注 </text>
 	<text x="103" y="40" font-size="12" font-weight="bold" fill="#2196f3">5 EGC</text>
-	<text x="30" y="65" font-size="12" font-weight="bold" fill="#2196f3">最大小注 5000 EGC</text>
+	<text x="30" y="65" font-size="12" font-weight="bold" fill="#2196f3">最大下注 5000 EGC</text>
 
 
 	<!--从上往下设计-->
