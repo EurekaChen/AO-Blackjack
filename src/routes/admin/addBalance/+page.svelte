@@ -42,7 +42,7 @@
 <div class="fs-5">请输入玩家余额</div>
 <input type="number" class="form-control" bind:value={amount} placeholder="金额数量" />
 <hr />
-<button class="btn btn-outline-primary form-control" on:click={addBalance}>修改玩家余额</button>
+<button class="btn btn-outline-primary form-control" on:click={addBalance}>添加玩家余额</button>
 <pre>
 	{player}	
 </pre>

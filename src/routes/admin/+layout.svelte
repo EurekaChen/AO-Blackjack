@@ -183,6 +183,9 @@
 							<li class="nav-item">
 								<a class="nav-link" href="/admin/egc"> EGC余额 </a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/admin/transfer"> EGC转账 </a>
+							</li>
 						</ul>
 					</nav>
 				</div>
