@@ -90,7 +90,12 @@ export default {
 			more: 'Add more chips',
 			amount: 'Please enter the amount',
 			total: 'Total',
-			deposit: 'Deposit'
+			deposit: 'Deposit',
+			notEnough: 'No enough for 5 EGC in your wallet',
+			error: "There was a problem depositing EGC, please contact service",
+			cancel: "You have cancelled deposit EGC",
+			add:"You add ",
+			querying:"Querying"
 		},
 		table: 'table_en'
 	},
@@ -176,7 +181,12 @@ export default {
 			more: '带入更多筹码',
 			amount: '请输入数量',
 			total: '共有',
-			deposit: '带入筹码'
+			deposit: '带入筹码',
+			notEnough: '您钱包里的筹码不够 5 EGC',
+			error:"存入 EGC 时出现问题，请联系客服人员",
+			cancel:"您是否已经取消增加筹码",
+			add:"您添加了 ",
+			querying:"查询中，请稍候"
 		},
 		table: 'table_zh'
 	}
