@@ -10,30 +10,37 @@ import { log } from '$lib/store/Debug';
 export function doubleBet(aoPlayer: AoPlayer) {
 	log('加倍后aoPlayer:', aoPlayer);
 	if (aoPlayer.state.activeHandIndex == 2) {
-		//第二手牌加倍将结束牌局
-		//get(Player).balance = get(Player).balance - get(Player).state.originalAmount;
-		//get(Player).state.hands[1].amount += get(Player).state.originalAmount;
+		//第二手牌加倍后装将直接庄家发牌并结束牌局
+		Player.getState(aoPlayer);
+		showResult(aoPlayer);
+		//动画说明:因为输赢小框盖注了筹码，故不去实现收付筹码动画。
 
-		if (aoPlayer.state.hands[1].amount == 0) {
-			//第二手结算，说明结束了，玩家会发牌。
-			showResult(aoPlayer);
-			//动画说明:因为输赢小框盖注了筹码，故不去实现收付筹码动画。
-			get(Action).newHand = true;
-		}
+		//此句不会引起更新：
+		//get(Action).newHand = true;
+		const currentAction = get(Action);
+		currentAction.newHand = true;
+		Action.set(currentAction);
+
+		get(Player).inGame=false;
+		
 	} else {
-		//第一手牌加倍，加倍后停牌
-		//get(Player).balance = get(Player).balance - get(Player).state.originalAmount;
-		//get(Player).state.hands[0].amount += get(Player).state.originalAmount;
-
+		//第一手牌加倍
 		if (aoPlayer.state.hands.length > 1) {
-			//转到第二手：
+			//如果有两手，则转到第二手开始要牌
 			Action.afterDeal(true);
 		} else {
+			//第一手牌加倍后将停牌，庄家发牌
 			if (aoPlayer.state.dealerCards.length > 1) {
 				//庄家发牌了，说明结束了，加倍不会有黑杰克
 				showResult(aoPlayer);
 				//动画说明:因为输赢小框盖注了筹码，故不去实现收付筹码动画。
-				get(Action).newHand = true;
+
+				//此句不会引起更新
+				//et(Action).newHand = true;
+				const currentAction = get(Action);
+				currentAction.newHand = true;
+				Action.set(currentAction);
+
 				get(Player).inGame = false;
 			}
 		}
