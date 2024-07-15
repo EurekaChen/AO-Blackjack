@@ -5,6 +5,28 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import { t } from '$lib/i18n';
 
+	//动画
+	import { tweened } from 'svelte/motion';
+	import { cubicOut } from 'svelte/easing';
+	import Stack from './Stack.svelte';
+	let moveAmount=0;
+	let startPosition = { left: 120, top: 360 };
+	let endPosition = { left: 477, top: 340 };
+
+	const position = tweened(startPosition, { duration: 600, easing: cubicOut });
+
+	function startAnimation(amount:number) {
+		moveAmount=amount;
+		position.set(endPosition).then(() => {				
+			position.set(startPosition, { duration: 0 });	
+			$Player.state.hands[0].amount += amount;
+			$Player=$Player;	
+			moveAmount=0;
+		});		
+	}
+
+
+
 	let chipOffset = 6;
 	$: disabled = $Player.inGame;
 	$: cursor = $Player.inGame ? 'cursor: not-allowed' : 'cursor: pointer';
@@ -34,20 +56,20 @@
 
 	function betChip(amount: number) {
 		//限额
-		if (amount < 5 || $Player.state.hands[0].amount + amount > 5000){
-			
+		
+		if (amount < 5 || $Player.state.hands[0].amount + amount > 5000) {
 			$Waiting.alertClass = 'warning';
-			$Waiting.waitingText =  $t('action.outRange');
+			$Waiting.waitingText = $t('action.outRange');
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
 			}, 1000);
 			return;
-		}	
-		//余额不够	
+		}
+		//余额不够
 		if ($Player.balance < amount) {
 			$Waiting.alertClass = 'warning';
-			$Waiting.waitingText =  $t('action.balanceLack');
+			$Waiting.waitingText = $t('action.balanceLack');
 			$Waiting.isWaiting = true;
 			setTimeout(() => {
 				$Waiting.isWaiting = false;
@@ -59,10 +81,14 @@
 		if (!$Player.inGame && $Player.state.dealerCards.length > 0) {
 			Player.clearState();
 		}
-		
 
 		$Player.balance -= amount;
-		$Player.state.hands[0].amount += amount;
+		
+
+		
+		startAnimation(amount);
+		//$Player.state.hands[0].amount += amount;
+		
 
 		Action.clearAll();
 		Action.beforeDeal();
@@ -76,8 +102,13 @@
 	}
 </script>
 
+<div id="move" style="position:absolute;left:{$position.left}px;top:{$position.top}px;">
+	<Stack amount={moveAmount} />
+</div>
+
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+ 
 <div id="chipSelector" class:disabled on:click|capture={handleClick}>
 	<button on:click={downChip}>
 		<img
