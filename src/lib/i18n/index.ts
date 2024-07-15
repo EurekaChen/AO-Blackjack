@@ -2,11 +2,21 @@
 
 import i18n from 'sveltekit-i18n';
 import translations from './translations';
+import { browser } from '$app/environment';
 
-/** @type {import('sveltekit-i18n').Config} */
+let lang: string = 'en';
+if (browser) {
+	const language = window.navigator.language;
+	if (language.includes('zh')) {
+		lang = 'zh';
+	} else {
+		lang = 'en';
+	}
+}
+
 const config = {
-  initLocale: 'zh',
-  translations,
+	initLocale: lang,
+	translations
 };
 
 export const { t, l, locales, locale } = new i18n(config);
