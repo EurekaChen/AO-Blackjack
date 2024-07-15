@@ -9,6 +9,7 @@
 	import { tweened } from 'svelte/motion';
 	import { cubicOut } from 'svelte/easing';
 	import Stack from './Stack.svelte';
+	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
 	let moveAmount=0;
 	let startPosition = { left: 120, top: 360 };
 	let endPosition = { left: 477, top: 340 };
@@ -82,13 +83,13 @@
 			Player.clearState();
 		}
 
-		$Player.balance -= amount;
-		
-
-		
-		startAnimation(amount);
-		//$Player.state.hands[0].amount += amount;
-		
+		//减去数量
+		$Player.balance -= amount;		
+		//触发动画
+		$MoveChip.startPosition = ChipPosition.player;
+		$MoveChip.endPosition = ChipPosition.hand1;			
+		$MoveChip.amount = amount;	
+		//触发后添加
 
 		Action.clearAll();
 		Action.beforeDeal();

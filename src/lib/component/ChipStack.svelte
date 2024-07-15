@@ -7,12 +7,10 @@
 	import { cubicOut } from 'svelte/easing';
 	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
 
-	//let startPosition = { left: 120, top: 360 };
-	//let endPosition = { left: 477, top: 340 };
-
 	let moveAmount = 0;
 	let position = tweened($MoveChip.startPosition, { duration: 600, easing: cubicOut });
 
+	//数量大于0时触发移动
 	$: if ($MoveChip.amount > 0) {
 		position = tweened($MoveChip.startPosition, { duration: 600, easing: cubicOut });
 		moveAmount = $MoveChip.amount;
