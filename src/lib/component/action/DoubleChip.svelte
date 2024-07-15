@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { t } from '$lib/i18n';
+	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
 	import { Player } from '$lib/store/Player';
 	import { Waiting } from '$lib/store/Waiting';
 
@@ -17,7 +18,12 @@
 		}
 		
 		$Player.balance -= handAmount;
-		$Player.state.hands[0].amount += handAmount;
+		//产生移动效果：
+		$MoveChip.startPosition=ChipPosition.player;
+		$MoveChip.endPosition=ChipPosition.hand1;
+		//触发移动
+		$MoveChip.amount=handAmount;		
+		//在动画结束处处理：$Player.state.hands[0].amount += handAmount;	
 	}
 </script>
 

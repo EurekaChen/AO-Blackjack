@@ -2,33 +2,20 @@
 	import { Player } from '$lib/store/Player';
 	import { Action } from '$lib/store/Action';
 	import { t } from '$lib/i18n';
-	import { tweened } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
-	import Stack from '../Stack.svelte';
-
-	//实现动画效果：
-	let clearAmount=0;
-	let startPosition = { left: -305, top: -85 };
-	let endPosition = { left: -660, top: -65 };
-
-	const position = tweened(startPosition, { duration: 600, easing: cubicOut });
-
+	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
+	
 	function clear() {
-		clearAmount=$Player.state.hands[0].amount;
-		$Player.state.hands[0].amount = 0;
-		//不会有数据：$Player.state.hands[1].amount = 0;		
-		position.set(endPosition).then(() => {				
-			position.set(startPosition, { duration: 0 });				
-			$Player.balance = $Player.balance + clearAmount;				
-			clearAmount=0;
-			Action.clearAll();
-		});		
+		let amount=$Player.state.hands[0].amount;
+		
+		$MoveChip.startPosition = ChipPosition.hand1;
+		$MoveChip.endPosition = ChipPosition.player;
+		
+		$Player.state.hands[0].amount=0;
+		//触发动画
+		$MoveChip.amount = amount;
+		Action.clearAll();
 	}
 </script>
-
-<div style="position:absolute;left:{$position.left}px;top:{$position.top}px;">
-	<Stack amount={clearAmount} />
-</div>
 
 <a href="./#" on:click={clear} style="text-decoration: none;">
 	<svg width="60" height="60">
