@@ -9,6 +9,7 @@
 	import { t } from '$lib/i18n';
 	import { log } from '$lib/store/Debug';
 	import { showResult } from '$lib/state/showResult';
+	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
 
 	async function split() {
 		let amount = $Player.state.hands[0].amount;
@@ -21,6 +22,16 @@
 			}, 1000);
 			return;
 		}
+
+		//移动筹码动画：
+		let handAmount=$Player.state.originalAmount;
+		$Player.balance -= handAmount;
+		//产生移动效果：
+		$MoveChip.startPosition=ChipPosition.player;
+		$MoveChip.endPosition=ChipPosition.hand2;				
+		//触发移动
+		$MoveChip.amount=handAmount;		
+		//在动画结束处处理：$Player.state.hands[1].amount += handAmount;
 
 		Action.clearAll();
 		Spinner.info( $t('action.aoSpliting'));
