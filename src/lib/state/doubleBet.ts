@@ -17,6 +17,7 @@ export function doubleBet(aoPlayer: AoPlayer) {
 		if (aoPlayer.state.hands[1].amount == 0) {
 			//第二手结算，说明结束了，玩家会发牌。
 			showResult(aoPlayer);
+			//动画说明:因为输赢小框盖注了筹码，故不去实现收付筹码动画。
 			get(Action).newHand = true;
 		}
 	} else {
@@ -31,6 +32,7 @@ export function doubleBet(aoPlayer: AoPlayer) {
 			if (aoPlayer.state.dealerCards.length > 1) {
 				//庄家发牌了，说明结束了，加倍不会有黑杰克
 				showResult(aoPlayer);
+				//动画说明:因为输赢小框盖注了筹码，故不去实现收付筹码动画。
 				get(Action).newHand = true;
 				get(Player).inGame = false;
 			}

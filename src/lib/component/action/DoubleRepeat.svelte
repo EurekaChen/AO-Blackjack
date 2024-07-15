@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n';
 	import { Action } from '$lib/store/Action';
+	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
 	import { Player } from '$lib/store/Player';
 	import { Waiting } from '$lib/store/Waiting';
 
@@ -19,8 +20,15 @@
 		}
 
 		Player.clearState();
-		$Player.balance -= 2 * handAmount;
-		$Player.state.hands[0].amount = 2 * handAmount;
+		
+		$Player.balance -= 2 * handAmount;		
+		//产生移动效果：
+		$MoveChip.startPosition=ChipPosition.player;
+		$MoveChip.endPosition=ChipPosition.hand1;
+		//触发移动
+		$MoveChip.amount=2*handAmount;		
+		//在动画结束处处理：$Player.state.hands[0].amount +=2* handAmount;			
+		
 		Action.clearAll();
 		Action.beforeDeal();
 	}

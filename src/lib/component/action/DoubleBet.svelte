@@ -10,6 +10,7 @@
 	import { Waiting } from '$lib/store/Waiting';
 	import { t } from '$lib/i18n';
 	import { log } from '$lib/store/Debug';
+	import { ChipPosition, MoveChip } from '$lib/store/MoveChip';
 
 
 	async function doubleBet() {
@@ -24,6 +25,22 @@
 		}	
 
 		Action.clearAll();
+		//移动筹码：
+		let handAmount=$Player.state.originalAmount;
+		$Player.balance -= handAmount;
+		//产生移动效果：
+		$MoveChip.startPosition=ChipPosition.player;
+		if($Player.state.activeHandIndex==0){
+			$MoveChip.endPosition=ChipPosition.hand1;
+		}
+		else{
+			$MoveChip.endPosition=ChipPosition.hand2;
+		}		
+		//触发移动
+		$MoveChip.amount=handAmount;		
+		//在动画结束处处理：$Player.state.hands[0or1].amount += handAmount;
+
+
 		Spinner.info($t('action.aoDoubling'));
 		const doubleBetMsgId = await message({
 			process: bjProcess,
