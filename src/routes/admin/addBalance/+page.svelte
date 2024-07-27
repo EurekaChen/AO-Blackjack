@@ -39,7 +39,7 @@
 
 <div class="fs-5">请输入玩家钱包地址</div>
 <input type="text" class="form-control" bind:value={addr} placeholder="请输入钱包地址" />
-<div class="fs-5">请输入玩家余额</div>
+<div class="fs-5">请输入要添加的数量</div>
 <input type="number" class="form-control" bind:value={amount} placeholder="金额数量" />
 <hr />
 <button class="btn btn-outline-primary form-control" on:click={addBalance}>添加玩家余额</button>

@@ -29,5 +29,5 @@
 </script>
 
 
-<button class="btn btn-primary" on:click={GetPlayers}>点击清理（删除）所有玩家</button>
+<button class="btn btn-primary" on:click={GetPlayers} disabled>点击清理（删除）所有玩家</button>
 
