@@ -28,9 +28,7 @@
 		$Waiting.waitingText = '解析数据';
 		let tansferResult = await result({ message: msgId, process: bjProcess });
 		$Waiting.isWaiting = false;
-		log("转账信息:",tansferResult)
-		data = tansferResult.Messages[0].Data;
-		log("转账data:",data);		
+		log("转账信息:",tansferResult);
 		
 	}
 </script>
