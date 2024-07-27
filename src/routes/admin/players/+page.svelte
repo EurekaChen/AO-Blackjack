@@ -65,11 +65,14 @@
 					<td>{player.name}</td>
 					<td title={player.addr}>{player.addr.substring(0, 6)}</td>
 					<td>{player.balance}</td>
-					<td>{#if player.state}
-						<span>游戏中</span>
-						{:else}
-						<span>未在游戏</span>
-						{/if}
+					<td>
+						<a href="/admin/player?addr={player.addr}">
+							{#if player.state}
+							游戏中
+							{:else}
+							未在游戏
+						{/if}</a>
+						
 					</td>
 				</tr>
 			{/each}
