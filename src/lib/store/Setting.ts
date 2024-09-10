@@ -6,8 +6,7 @@ export const ChipRank = writable([
 ]);
 
 export const { result, results, message, spawn, monitor, unmonitor, dryrun } = connect({
-	MU_URL: 'https://ao-mu-1.onrender.com',
-	CU_URL: "https://ao-cu-1.onrender.com",   
+	//MU_URL: 'https://ao-mu-1.onrender.com',
+	//CU_URL: "https://ao-cu-1.onrender.com",   
     GATEWAY_URL: "https://ar-io.dev/",
-
 });

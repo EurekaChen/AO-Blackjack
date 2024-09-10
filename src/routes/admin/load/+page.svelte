@@ -4,7 +4,9 @@
 	import { Waiting } from '$lib/store/Waiting';
 
 	//21点进程
-	let process = 'lKZ6SpyB_V8YwewgPmctsRDWaKQaLY3fP_3s-AnjzAs';
+	//let process = 'lKZ6SpyB_V8YwewgPmctsRDWaKQaLY3fP_3s-AnjzAs';
+	//EGC进程
+	let process='JsroQVXlDCD9Ansr-n45SrTTB2LwqX_X6jDeaGiIHMo';
 
 	let data = 'Players = Players or {}';
 
@@ -51,7 +53,7 @@
 
 			<div class="card-body col-9">
 				<div class="mb-3">
-					<label for="process" class="fs-5">21点进程(ProcessID)</label>
+					<label for="process" class="fs-5">(ProcessID)</label>
 					<div>{process}</div>
 				</div>
 				<div class="mb-3">
